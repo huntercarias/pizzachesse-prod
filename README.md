@@ -4,3 +4,5 @@ DISEÑO, DESARROLLO E IMPLEMENTACIÓN DE UNA APLICACIÓN WEB  PARA LA ADMINISTRA
 
 
 ### informacion de creacion de proyecto comandos.
+## backend 
+composer create-project laravel/laravel appBackend
