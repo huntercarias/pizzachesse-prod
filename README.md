@@ -6,3 +6,8 @@ DISEÑO, DESARROLLO E IMPLEMENTACIÓN DE UNA APLICACIÓN WEB  PARA LA ADMINISTRA
 ### informacion de creacion de proyecto comandos.
 ## backend 
 composer create-project laravel/laravel appBackend
+php artisan migrate
+
+## ELIMINARA Y EJECUTARA LA MIGRACION NUEVAMENTE
+php artisan migrate:fresh
+
