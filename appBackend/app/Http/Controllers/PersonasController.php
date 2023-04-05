@@ -12,7 +12,20 @@ class PersonasController extends Controller
      */
     public function index()
     {
-        //
+        $personas = Personas::get();
+
+        $data = $personas->map(function ($personas) {
+            return [
+                'id' => $personas->id,
+                'nombre' => $personas->nombre,
+            ];
+        });
+
+        return response()->json([
+            'mensaje' => 'Listado de personas disponibles',
+            'data' => $data,
+        ]);
+
     }
 
     /**
@@ -28,7 +41,29 @@ class PersonasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+                //Validación
+                $request->validate([
+                    'nombre' => ['required'],
+                    'apellido' => ['required'],
+                    'correo' => ['required'],
+                    'dpi' => ['required'],
+                    'sexo' => ['required'],
+                    'fechaNacimiento' => ['required'],
+                ]);
+
+                $personas = personas::create([
+                    'nombre' => $request['nombre'],
+                    'apellido' => $request['apellido'],
+                    'correo' => $request['correo'],
+                    'dpi' => $request['dpi'],
+                    'sexo' => $request['sexo'],
+                    'fechaNacimiento' => $request['fechaNacimiento'],
+                ]);
+
+                return response()->json([
+                    'mensaje' => 'Se Agrego Correctamente la persona',
+                    'data' => $personas,
+                ]);
     }
 
     /**

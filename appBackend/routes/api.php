@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PersonasController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+//muestra todos las personas
+Route::get('getAllPersonas', [PersonasController::class, 'index']);
+
+// Registra una persona
+Route::post('RegistraPersona', [PersonasController::class, 'store']);

@@ -11,3 +11,6 @@ php artisan migrate
 ## ELIMINARA Y EJECUTARA LA MIGRACION NUEVAMENTE
 php artisan migrate:fresh
 
+## valida estatus de la migracion
+php artisan migrate:status
+
