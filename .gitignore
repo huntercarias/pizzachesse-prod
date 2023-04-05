@@ -22,5 +22,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-/appbackend/.env
-/appbackend/vendor
+/appBackend/.env
+/appBackend/vendor
