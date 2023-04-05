@@ -1,0 +1,86 @@
+php artisan make:model personas -mcr
+	* id-persona   int
+	* nombre	
+	* apellido
+	* email
+	* fecha-nacimiento
+	* sexo
+	* fecha-modificacion
+	* fecha-adicion
+	* hora-modificacion
+	* hora-adicion
+
+php artisan make:model direcciones -mcr
+	* id-direccion
+	* id-persona
+	* nomenclatura
+	* zona
+	* ciudad
+	* departamento
+	* municipio
+	* lote
+	* fecha-modificacion
+	* fecha-adicion
+	* hora-modificacion
+	* hora-adicion
+
+php artisan make:model telefono -mcr
+	* id-telefono
+	* id-persona
+	* numero-telefono
+	* extension
+	* numero-celular
+
+//nota este va servir para ver el estatus de los productos
+php artisan make:model pedido_encabezado -mcr
+	* id-pedidoencabezado
+	* id-usuario
+	* status-pedido
+	* fecha-hora-adicion
+	* fecha-hora-modificacion
+
+
+php artisan make:model pedidos_detalle -mcr
+	* id-pedidodetalle
+	* id-usuario
+	* id-pedidoencabezado
+	* id-producto
+	* cantidad
+	* monto
+	* fecha-hora-adicion
+	* fecha-hora-modificacion
+
+php artisan make:model productos -mcr
+	* id-producto
+	* id-tiposproducto
+	* descripcion
+	* ruta-imagen
+	* monto
+	* cantidad
+	* fecha-hora-modificacion
+	* fecha-hora-adicion
+	
+php artisan make:model caracteristicas_produtos -mcr
+	* id-caracteristicasproduto
+	* id-producto
+	* descripcion
+	* fecha-hora-modificacion
+	* fecha-hora-adicion
+
+
+php artisan make:model tiposproducto -mcr
+	* id-tiposproducto
+	* descripcion
+	* ruta-imagen
+	* fecha-hora-modificacion
+	* fecha-hora-adicion
+
+php artisan make:model promociones -mcr
+	* id-promociones
+	* id-producto
+	* id-tipoproducto
+	* porcentaje-descuento
+	* cantidad
+	* activo-inactivo
+	* fecha-hora-modificacion
+	* fecha-hora-adicion
