@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('caracteristicas_produtos', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('id-producto');
+            $table->foreign('id-producto')->references('id')->on('productos');
+            $table->string('descripcion');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

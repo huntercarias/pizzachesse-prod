@@ -13,7 +13,14 @@ return new class extends Migration
     {
         Schema::create('personas', function (Blueprint $table) {
             $table->id();
+            $table->string('nombre');
+            $table->string('apellido');
+            $table->string('correo')->unique();
+            $table->string('dpi')->unique();
+            $table->string('sexo');
+            $table->date('fechaNacimiento');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

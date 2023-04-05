@@ -13,12 +13,23 @@ return new class extends Migration
     {
         Schema::create('direcciones', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('id_persona');
+            $table->foreign('id_persona')->references('id')->on('personas');
+            $table->string('nomenclatura');
+            $table->string('zona');
+            $table->string('ciudad');
+            $table->string('departamento');
+            $table->string('municipio');
+            $table->string('lote');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
     /**
      * Reverse the migrations.
+     * $table->decimal('amount', $precision = 8, $scale = 2);
+     * $table->set('flavors', ['strawberry', 'vanilla']);
      */
     public function down(): void
     {
