@@ -28,7 +28,27 @@ class TelefonoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+                 //Validación
+                 $request->validate([
+                     'id_persona' => ['required'],
+                     'numero-telefono' => ['required'],
+                     'extension' => ['required'],
+                     'numero-celular' => ['required'],
+                     'numero de whatzap' => ['required'],
+                 ]);
+
+                $personas = personas::create([
+                    'id_persona' => $request['id_persona'],
+                    'numero-telefono' => $request['numero-telefono'],
+                    'extension' => $request['extension'],
+                    'numero-celular' => $request['numero-celular'],
+                    'numero de whatzap' => $request['numero de whatzap'],
+                ]);
+
+                return response()->json([
+                    'mensaje' => 'Se Agrego Correctamente la direccion',
+                    'data' => $personas,
+                ]);
     }
 
     /**

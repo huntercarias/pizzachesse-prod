@@ -28,7 +28,27 @@ class ProductosController extends Controller
      */
     public function store(Request $request)
     {
-        //
+                //Validación
+                $request->validate([
+                    'id-tiposproducto' => ['required'],
+                    'descripcion' => ['required'],
+                    'ruta-imagen' => ['required'],
+                    'monto' => ['required'],
+                    'cantidad' => ['required'],
+                ]);
+
+                $personas = personas::create([
+                    'id-tiposproducto' => $request['id-tiposproducto'],
+                    'descripcion' => $request['descripcion'],
+                    'ruta-imagen' => $request['ruta-imagen'],
+                    'monto' => $request['monto'],
+                    'cantidad' => $request['cantidad'],
+                ]);
+
+                return response()->json([
+                    'mensaje' => 'Se Agrego Correctamente la direccion',
+                    'data' => $personas,
+                ]);
     }
 
     /**

@@ -28,7 +28,31 @@ class DireccionesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+                //Validación
+                $request->validate([
+                    'id_persona' => ['required'],
+                    'nomenclatura' => ['required'],
+                    'zona' => ['required'],
+                    'ciudad' => ['required'],
+                    'departamento' => ['required'],
+                    'municipio' => ['required'],
+                    'lote' => ['required'],
+                ]);
+
+                $personas = personas::create([
+                    'id_persona' => $request['id_persona'],
+                    'nomenclatura' => $request['nomenclatura'],
+                    'zona' => $request['zona'],
+                    'ciudad' => $request['ciudad'],
+                    'departamento' => $request['departamento'],
+                    'municipio' => $request['municipio'],
+                    'lote' => $request['lote'],
+                ]);
+
+                return response()->json([
+                    'mensaje' => 'Se Agrego Correctamente la direccion',
+                    'data' => $personas,
+                ]);
     }
 
     /**
