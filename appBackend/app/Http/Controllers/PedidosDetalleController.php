@@ -28,7 +28,28 @@ class PedidosDetalleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+                //Validación
+                $request->validate([
+                    'id-usuario' => ['required'],
+                    'id-pedidoencabezado' => ['required'],
+                    'id-producto' => ['required'],
+                    'cantidad' => ['required'],
+                    'monto' => ['required'],
+                ]);
+
+                $personas = personas::create([
+                    'id-usuario' => $request['id-usuario'],
+                    'id-pedidoencabezado' => $request['id-pedidoencabezado'],
+                    'id-producto' => $request['id-producto'],
+                    'cantidad' => $request['cantidad'],
+                    'monto' => $request['monto'],
+                ]);
+
+                return response()->json([
+                    'mensaje' => 'Se Agrego Correctamente la direccion',
+                    'data' => $personas,
+                ]);
+
     }
 
     /**

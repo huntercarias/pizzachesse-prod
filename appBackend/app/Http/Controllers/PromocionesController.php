@@ -28,7 +28,27 @@ class PromocionesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+                //Validación
+                $request->validate([
+                    'id-producto' => ['required'],
+                    'id-tiposproducto' => ['required'],
+                    'porcentaje-descuento' => ['required'],
+                    'cantidad' => ['required'],
+                    'activo-inactivo' => ['required'],
+                ]);
+
+                $personas = personas::create([
+                    'id-producto' => $request['id-producto'],
+                    'id-tiposproducto' => $request['id-tiposproducto'],
+                    'porcentaje-descuento' => $request['porcentaje-descuento'],
+                    'cantidad' => $request['cantidad'],
+                    'activo-inactivo' => $request['activo-inactivo'],
+                ]);
+
+                return response()->json([
+                    'mensaje' => 'Se Agrego Correctamente la direccion',
+                    'data' => $personas,
+                ]);
     }
 
     /**

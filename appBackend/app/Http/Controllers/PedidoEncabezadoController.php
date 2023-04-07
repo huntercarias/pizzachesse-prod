@@ -28,7 +28,22 @@ class PedidoEncabezadoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+                //Validación
+                $request->validate([
+                    'id-usuario' => ['required'],
+                    'status-pedido' => ['required'],
+                ]);
+
+                $personas = personas::create([
+                    'id-usuario' => $request['id-usuario'],
+                    'status-pedido' => $request['status-pedido'],
+                ]);
+
+                return response()->json([
+                    'mensaje' => 'Se Agrego Correctamente la direccion',
+                    'data' => $personas,
+                ]);
+
     }
 
     /**
