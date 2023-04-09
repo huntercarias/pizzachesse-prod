@@ -14,3 +14,6 @@ php artisan migrate:fresh
 ## valida estatus de la migracion
 php artisan migrate:status
 
+## para configurar los discos para almacenar las imagenes 
+php artisan storage:link
+

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\telefono;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class TelefonoController extends Controller
 {
@@ -28,13 +31,14 @@ class TelefonoController extends Controller
      */
     public function store(Request $request)
     {
-                 //Validación
+            try {
+                //Validación
                  $request->validate([
-                     'id_persona' => ['required'],
-                     'numero-telefono' => ['required'],
-                     'extension' => ['required'],
-                     'numero-celular' => ['required'],
-                     'numero de whatzap' => ['required'],
+                     'id_persona' => ['required', 'numeric', 'min:0'],
+                     'numero-telefono' => ['required', 'numeric'],
+                     'extension' => ['required', 'numeric'],
+                     'numero-celular' => ['required', 'numeric', 'min:0'],
+                     'numero de whatzap' => ['required', 'numeric'],
                  ]);
 
                 $personas = personas::create([
@@ -49,6 +53,21 @@ class TelefonoController extends Controller
                     'mensaje' => 'Se Agrego Correctamente la direccion',
                     'data' => $personas,
                 ]);
+            } catch (ValidationException $exception) {
+                return response()->json(['errores' => $exception->errors()]);
+            } catch (QueryException $e) {
+                // Manejo de excepciones de consulta a la base de datos
+                return response()->json([
+                    'mensaje' => 'Error al crear el registro en la base de datos.',
+                    'data' => $e->getMessage(),
+                ]);
+            } catch (Exception $e) {
+                // Manejo de excepciones generales
+                return response()->json([
+                    'mensaje' => 'Error general intentar adicionar registro',
+                    'data' => $e->getMessage(),
+                ]);
+            }
     }
 
     /**

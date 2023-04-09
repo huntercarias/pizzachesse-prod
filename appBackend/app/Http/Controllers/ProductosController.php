@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\productos;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class ProductosController extends Controller
 {
@@ -28,27 +31,57 @@ class ProductosController extends Controller
      */
     public function store(Request $request)
     {
-                //Validación
-                $request->validate([
-                    'id-tiposproducto' => ['required'],
-                    'descripcion' => ['required'],
-                    'ruta-imagen' => ['required'],
-                    'monto' => ['required'],
-                    'cantidad' => ['required'],
-                ]);
+        try {
+        //Validación
+            $request->validate([
+                'id-tiposproducto' => ['required', 'numeric', 'min:0'],
+                'descripcion' => ['required', 'string', 'min:3', 'max:255', 'unique:productos'],
+                'ruta-imagen' => ['required', 'mimes:,jpg,png'],
+                'monto' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
+                'cantidad' => ['required', 'numeric', 'min:0'],
+            ]);
 
-                $personas = personas::create([
-                    'id-tiposproducto' => $request['id-tiposproducto'],
-                    'descripcion' => $request['descripcion'],
-                    'ruta-imagen' => $request['ruta-imagen'],
-                    'monto' => $request['monto'],
-                    'cantidad' => $request['cantidad'],
-                ]);
-
+            // validacion para ver si no trae archivo envia mensaje
+            if (! $request->hasFile('ruta-imagen')) {
                 return response()->json([
-                    'mensaje' => 'Se Agrego Correctamente la direccion',
-                    'data' => $personas,
-                ]);
+                    'mensaje' => 'Debe seleccionar un archivo para cargar.',
+                ], 400);
+            }
+
+            // Obtener el nombre original del archivo cargado
+            $nombreArchivo = $request->file('archivo')->getClientOriginalName();
+
+            // Guardar el archivo en una carpeta con su nombre real
+            $path = $request->file('archivo')->storeAs('public', $nombreArchivo);
+
+            $personas = personas::create([
+                'id-tiposproducto' => $request['id-tiposproducto'],
+                'descripcion' => $request['descripcion'],
+                'ruta-imagen' => $path,
+                'monto' => $request['monto'],
+                'cantidad' => $request['cantidad'],
+            ]);
+
+            return response()->json([
+                'mensaje' => 'Se Agrego Correctamente el producto',
+                'data' => $personas,
+            ]);
+
+        } catch (ValidationException $exception) {
+            return response()->json(['errores' => $exception->errors()]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**

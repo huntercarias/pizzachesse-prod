@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\promociones;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class PromocionesController extends Controller
 {
@@ -28,13 +31,15 @@ class PromocionesController extends Controller
      */
     public function store(Request $request)
     {
+            try {
+
                 //Validación
                 $request->validate([
-                    'id-producto' => ['required'],
-                    'id-tiposproducto' => ['required'],
-                    'porcentaje-descuento' => ['required'],
-                    'cantidad' => ['required'],
-                    'activo-inactivo' => ['required'],
+                    'id-producto' => ['required', 'numeric', 'min:0'],
+                    'id-tiposproducto' => ['required', 'numeric', 'min:0'],
+                    'porcentaje-descuento' => ['required', 'numeric'],
+                    'cantidad' => ['required', 'numeric', 'min:0'],
+                    'activo-inactivo' => ['required', 'string', 'min:3', 'max:255'],
                 ]);
 
                 $personas = personas::create([
@@ -46,9 +51,25 @@ class PromocionesController extends Controller
                 ]);
 
                 return response()->json([
-                    'mensaje' => 'Se Agrego Correctamente la direccion',
+                    'mensaje' => 'Se Agrego Correctamente la promocion',
                     'data' => $personas,
                 ]);
+            } catch (ValidationException $exception) {
+                return response()->json(['errores' => $exception->errors()]);
+            } catch (QueryException $e) {
+                // Manejo de excepciones de consulta a la base de datos
+                return response()->json([
+                    'mensaje' => 'Error al crear el registro en la base de datos.',
+                    'data' => $e->getMessage(),
+                ]);
+            } catch (Exception $e) {
+                // Manejo de excepciones generales
+                return response()->json([
+                    'mensaje' => 'Error general intentar adicionar registro',
+                    'data' => $e->getMessage(),
+                ]);
+            }
+
     }
 
     /**

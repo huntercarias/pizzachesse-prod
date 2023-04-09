@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\personas;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class PersonasController extends Controller
 {
@@ -41,14 +44,16 @@ class PersonasController extends Controller
      */
     public function store(Request $request)
     {
+        try {
+
                 //Validación
                 $request->validate([
-                    'nombre' => ['required'],
-                    'apellido' => ['required'],
-                    'correo' => ['required'],
-                    'dpi' => ['required'],
-                    'sexo' => ['required'],
-                    'fechaNacimiento' => ['required'],
+                    'nombre' => ['required', 'string', 'min:3', 'max:255'],
+                    'apellido' => ['required', 'string', 'min:3', 'max:255'],
+                    'correo' => ['required', 'email', 'unique:personas'],
+                    'dpi' => ['required', 'numeric', 'min:0', 'unique:personas'],
+                    'sexo' => ['required', 'string', 'min:3', 'max:255'],
+                    'fechaNacimiento' => ['required', 'date', 'date_format:Y-m-d'],
                 ]);
 
                 $personas = personas::create([
@@ -64,6 +69,21 @@ class PersonasController extends Controller
                     'mensaje' => 'Se Agrego Correctamente la persona',
                     'data' => $personas,
                 ]);
+            } catch (ValidationException $exception) {
+                return response()->json(['errores' => $exception->errors()]);
+            } catch (QueryException $e) {
+                // Manejo de excepciones de consulta a la base de datos
+                return response()->json([
+                    'mensaje' => 'Error al crear el registro en la base de datos.',
+                    'data' => $e->getMessage(),
+                ]);
+            } catch (Exception $e) {
+                // Manejo de excepciones generales
+                return response()->json([
+                    'mensaje' => 'Error general intentar adicionar registro',
+                    'data' => $e->getMessage(),
+                ]);
+            }
     }
 
     /**

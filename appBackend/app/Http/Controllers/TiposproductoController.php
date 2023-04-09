@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\tiposproducto;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class TiposproductoController extends Controller
 {
@@ -28,21 +31,50 @@ class TiposproductoController extends Controller
      */
     public function store(Request $request)
     {
-                //Validación
-                $request->validate([
-                    'descripcion' => ['required'],
-                    'ruta-imagen' => ['required'],
-                ]);
+        try {
+            //Validación
+            $request->validate([
+                'descripcion' => ['required', 'string', 'min:3', 'max:255',  'unique:tiposproductos'],
+                'ruta-imagen' => ['required', 'mimes:,jpg,png'],
+            ]);
 
-                $personas = personas::create([
-                    'descripcion' => $request['descripcion'],
-                    'ruta-imagen' => $request['ruta-imagen'],
-                ]);
-
+            // validacion para ver si no trae archivo envia mensaje
+            if (! $request->hasFile('ruta-imagen')) {
                 return response()->json([
-                    'mensaje' => 'Se Agrego Correctamente la direccion',
-                    'data' => $personas,
-                ]);
+                    'mensaje' => 'Debe seleccionar un archivo para cargar.',
+                ], 400);
+            }
+
+            // Obtener el nombre original del archivo cargado
+            $nombreArchivo = $request->file('archivo')->getClientOriginalName();
+
+            // Guardar el archivo en una carpeta con su nombre real
+            $path = $request->file('archivo')->storeAs('public', $nombreArchivo);
+
+            $personas = personas::create([
+                'descripcion' => $request['descripcion'],
+                'ruta-imagen' => $path,
+            ]);
+
+            return response()->json([
+                'mensaje' => 'Se Agrego correctamente el tipo de producto',
+                'data' => $personas,
+            ]);
+        } catch (ValidationException $exception) {
+            return response()->json(['errores' => $exception->errors()]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
