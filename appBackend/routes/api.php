@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PersonasController;
+use App\Http\Controllers\ProductosController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,3 +25,9 @@ Route::get('getAllPersonas', [PersonasController::class, 'index']);
 
 // Registra una persona
 Route::post('RegistraPersona', [PersonasController::class, 'store']);
+
+// Registra una producto
+Route::post('ADDProductos', [ProductosController::class, 'store']);
+
+// Registra una tipoProducto
+Route::post('ADDProductos', [ProductosController::class, 'store']);

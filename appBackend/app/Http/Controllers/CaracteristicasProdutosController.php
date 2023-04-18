@@ -34,7 +34,7 @@ class CaracteristicasProdutosController extends Controller
             try {
                 //Validación
                 $request->validate([
-                    'id-producto' => ['required', 'numeric', 'min:0'],
+                    'id-producto' => ['required', 'numeric', 'min:0', 'exists:productos,id'],
                     'descripcion' => ['required', 'string', 'min:3', 'max:255'],
                 ]);
 

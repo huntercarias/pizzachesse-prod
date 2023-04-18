@@ -15,7 +15,48 @@ class ProductosController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $personas = PersonasCorreo::get();
+            $data = $personas->map(function ($persona) {
+                $path = storage_path('app/public/'.$persona->imagenes);
+                if (! File::exists($path)) {
+                    return [
+                        'id' => $persona->id,
+                        'nombre' => $persona->nombre,
+                        'mensaje' => 'no existe imagen',
+                        //'mensaje' => $path,
+                    ];
+                }
+                $file = File::get($path);
+                $type = File::mimeType($path);
+
+                return [
+                    'id' => $persona->id,
+                    'nombre' => $persona->nombre,
+                    'imagenes' => base64_encode($file),
+                ];
+            });
+
+            return response()->json([
+                'mensaje' => 'Listado de personas disponibles',
+                'data' => $data,
+            ])->header('Content-Type', 'application/json');
+        } catch (ValidationException $exception) {
+            return response()->json(['errores' => $exception->errors()]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+
     }
 
     /**
@@ -52,9 +93,10 @@ class ProductosController extends Controller
             $nombreArchivo = $request->file('archivo')->getClientOriginalName();
 
             // Guardar el archivo en una carpeta con su nombre real
-            $path = $request->file('archivo')->storeAs('public', $nombreArchivo);
+            //$path = $request->file('archivo')->storeAs('public', $nombreArchivo);
+            $path = $request->file('archivo')->storeAs($nombreArchivo);
 
-            $personas = personas::create([
+            $productos = productos::create([
                 'id-tiposproducto' => $request['id-tiposproducto'],
                 'descripcion' => $request['descripcion'],
                 'ruta-imagen' => $path,
@@ -64,11 +106,14 @@ class ProductosController extends Controller
 
             return response()->json([
                 'mensaje' => 'Se Agrego Correctamente el producto',
-                'data' => $personas,
+                'data' => $productos,
             ]);
 
         } catch (ValidationException $exception) {
-            return response()->json(['errores' => $exception->errors()]);
+            return response()->json([
+                'mensaje' => 'Error en informacion ingresada',
+                'errores' => $exception->errors()]
+            );
         } catch (QueryException $e) {
             // Manejo de excepciones de consulta a la base de datos
             return response()->json([

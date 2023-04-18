@@ -15,12 +15,19 @@ class PersonasController extends Controller
      */
     public function index()
     {
-        $personas = Personas::get();
+        $personas = personas::get();
 
         $data = $personas->map(function ($personas) {
             return [
                 'id' => $personas->id,
                 'nombre' => $personas->nombre,
+                'apellido' => $personas->apellido,
+                'correo' => $personas->correo,
+                'sexo' => $personas->sexo,
+                'fechaNacimiento' => $personas->fechaNacimiento,
+                'created_at' => $personas->created_at,
+                'updated_at' => $personas->updated_at,
+                'deleted_at' => $personas->deleted_at,
             ];
         });
 
@@ -51,8 +58,7 @@ class PersonasController extends Controller
                     'nombre' => ['required', 'string', 'min:3', 'max:255'],
                     'apellido' => ['required', 'string', 'min:3', 'max:255'],
                     'correo' => ['required', 'email', 'unique:personas'],
-                    'dpi' => ['required', 'numeric', 'min:0', 'unique:personas'],
-                    'sexo' => ['required', 'string', 'min:3', 'max:255'],
+                    'sexo' => ['required', 'string', 'in:masculino,femenino', 'min:3', 'max:255'],
                     'fechaNacimiento' => ['required', 'date', 'date_format:Y-m-d'],
                 ]);
 
@@ -60,7 +66,6 @@ class PersonasController extends Controller
                     'nombre' => $request['nombre'],
                     'apellido' => $request['apellido'],
                     'correo' => $request['correo'],
-                    'dpi' => $request['dpi'],
                     'sexo' => $request['sexo'],
                     'fechaNacimiento' => $request['fechaNacimiento'],
                 ]);
@@ -70,7 +75,10 @@ class PersonasController extends Controller
                     'data' => $personas,
                 ]);
             } catch (ValidationException $exception) {
-                return response()->json(['errores' => $exception->errors()]);
+                return response()->json([
+                    'mensaje' => 'Error en informacion ingresada',
+                    'errores' => $exception->errors()]
+                );
             } catch (QueryException $e) {
                 // Manejo de excepciones de consulta a la base de datos
                 return response()->json([

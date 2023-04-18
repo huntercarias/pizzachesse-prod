@@ -17,3 +17,6 @@ php artisan migrate:status
 ## para configurar los discos para almacenar las imagenes 
 php artisan storage:link
 
+## creacion de modelos 
+php artisan make:model users -mcr
+
