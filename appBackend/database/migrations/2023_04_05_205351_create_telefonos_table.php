@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_persona');
             $table->foreign('id_persona')->references('id')->on('personas');
-            $table->string('numero-telefono');
+            $table->string('numero_telefono');
             $table->string('extension');
-            $table->string('numero-celular');
-            $table->string('numero de whatzap');
+            $table->string('numero_celular');
+            $table->string('numero_de_whatzap');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PersonasController;
 use App\Http\Controllers\ProductosController;
+use App\Http\Controllers\TiposproductoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,4 +31,7 @@ Route::post('RegistraPersona', [PersonasController::class, 'store']);
 Route::post('ADDProductos', [ProductosController::class, 'store']);
 
 // Registra una tipoProducto
-Route::post('ADDProductos', [ProductosController::class, 'store']);
+Route::post('ADDtipoProductos', [TiposproductoController::class, 'store']);
+
+//muestra todos las personas
+Route::get('getAllProductos', [ProductosController::class, 'index']);

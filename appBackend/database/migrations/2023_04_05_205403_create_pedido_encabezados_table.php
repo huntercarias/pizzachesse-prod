@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('pedido_encabezados', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id-usuario');
-            $table->foreign('id-usuario')->references('id')->on('users');
-            $table->string('status-pedido');
+            $table->unsignedBigInteger('id_usuario');
+            $table->foreign('id_usuario')->references('id')->on('users');
+            $table->string('status_pedido');
             $table->timestamps();
             $table->softDeletes();
         });

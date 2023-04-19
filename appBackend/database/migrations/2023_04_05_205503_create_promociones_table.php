@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('promociones', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id-producto');
-            $table->foreign('id-producto')->references('id')->on('productos');
-            $table->unsignedBigInteger('id-tiposproducto');
-            $table->foreign('id-tiposproducto')->references('id')->on('tiposproductos');
-            $table->integer('porcentaje-descuento');
+            $table->unsignedBigInteger('id_producto');
+            $table->foreign('id_producto')->references('id')->on('productos');
+            $table->unsignedBigInteger('id_tiposproducto');
+            $table->foreign('id_tiposproducto')->references('id')->on('tiposproductos');
+            $table->integer('porcentaje_descuento');
             $table->integer('cantidad');
-            $table->string('activo-inactivo');
+            $table->string('activo_inactivo');
             $table->timestamps();
             $table->softDeletes();
         });

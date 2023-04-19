@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\productos;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
@@ -16,23 +18,15 @@ class ProductosController extends Controller
     public function index()
     {
         try {
-            $personas = PersonasCorreo::get();
-            $data = $personas->map(function ($persona) {
-                $path = storage_path('app/public/'.$persona->imagenes);
-                if (! File::exists($path)) {
-                    return [
-                        'id' => $persona->id,
-                        'nombre' => $persona->nombre,
-                        'mensaje' => 'no existe imagen',
-                        //'mensaje' => $path,
-                    ];
-                }
+            $productos = productos::get();
+            $data = $productos->map(function ($producto) {
+                $path = storage_path('app/'.$producto->ruta_imagen);
                 $file = File::get($path);
                 $type = File::mimeType($path);
 
                 return [
-                    'id' => $persona->id,
-                    'nombre' => $persona->nombre,
+                    'id' => $producto->id,
+                    'nombre' => $producto->nombre,
                     'imagenes' => base64_encode($file),
                 ];
             });
@@ -41,8 +35,14 @@ class ProductosController extends Controller
                 'mensaje' => 'Listado de personas disponibles',
                 'data' => $data,
             ])->header('Content-Type', 'application/json');
+        } catch (FileNotFoundException $e) {
+            // Manejar la excepción aquí
+            return response()->json(['mensaje' => 'El archivo no existe'], 404);
         } catch (ValidationException $exception) {
-            return response()->json(['errores' => $exception->errors()]);
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $exception->errors(),
+            ]);
         } catch (QueryException $e) {
             // Manejo de excepciones de consulta a la base de datos
             return response()->json([
@@ -77,7 +77,7 @@ class ProductosController extends Controller
             $request->validate([
                 'id-tiposproducto' => ['required', 'numeric', 'min:0'],
                 'descripcion' => ['required', 'string', 'min:3', 'max:255', 'unique:productos'],
-                'ruta-imagen' => ['required', 'mimes:,jpg,png'],
+                'ruta-imagen' => ['required', 'mimes:,jpg,png,jpeg', 'max:2048'],
                 'monto' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
                 'cantidad' => ['required', 'numeric', 'min:0'],
             ]);
@@ -90,11 +90,11 @@ class ProductosController extends Controller
             }
 
             // Obtener el nombre original del archivo cargado
-            $nombreArchivo = $request->file('archivo')->getClientOriginalName();
+            $nombreArchivo = $request->file('ruta-imagen')->getClientOriginalName();
 
             // Guardar el archivo en una carpeta con su nombre real
             //$path = $request->file('archivo')->storeAs('public', $nombreArchivo);
-            $path = $request->file('archivo')->storeAs($nombreArchivo);
+            $path = $request->file('ruta-imagen')->storeAs($nombreArchivo);
 
             $productos = productos::create([
                 'id-tiposproducto' => $request['id-tiposproducto'],
@@ -112,7 +112,7 @@ class ProductosController extends Controller
         } catch (ValidationException $exception) {
             return response()->json([
                 'mensaje' => 'Error en informacion ingresada',
-                'errores' => $exception->errors()]
+                'data' => $exception->errors()]
             );
         } catch (QueryException $e) {
             // Manejo de excepciones de consulta a la base de datos

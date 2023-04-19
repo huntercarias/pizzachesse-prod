@@ -16,6 +16,47 @@ class TiposproductoController extends Controller
     public function index()
     {
         //
+        try {
+            $tiposproducto = tiposproducto::get();
+            $data = $tiposproducto->map(function ($tiposproducto) {
+                $path = storage_path('app/public/'.$tiposproducto->imagenes);
+                if (! File::exists($path)) {
+                    return [
+                        'id' => $tiposproducto->id,
+                        'nombre' => $tiposproducto->nombre,
+                        'mensaje' => 'no existe imagen',
+                        //'mensaje' => $path,
+                    ];
+                }
+                $file = File::get($path);
+                $type = File::mimeType($path);
+
+                return [
+                    'id' => $tiposproducto->id,
+                    'nombre' => $tiposproducto->nombre,
+                    'imagenes' => base64_encode($file),
+                ];
+            });
+
+            return response()->json([
+                'mensaje' => 'Listado de personas disponibles',
+                'data' => $data,
+            ])->header('Content-Type', 'application/json');
+        } catch (ValidationException $exception) {
+            return response()->json(['errores' => $exception->errors()]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -31,11 +72,12 @@ class TiposproductoController extends Controller
      */
     public function store(Request $request)
     {
+
         try {
             //Validación
             $request->validate([
-                'descripcion' => ['required', 'string', 'min:3', 'max:255',  'unique:tiposproductos'],
-                'ruta-imagen' => ['required', 'mimes:,jpg,png'],
+                'descripcion' => ['required', 'string', 'min:3', 'max:255', 'unique:tiposproductos'],
+                'ruta-imagen' => ['required', 'mimes:jpg,png,jpeg', 'max:2048'],
             ]);
 
             // validacion para ver si no trae archivo envia mensaje
@@ -46,22 +88,25 @@ class TiposproductoController extends Controller
             }
 
             // Obtener el nombre original del archivo cargado
-            $nombreArchivo = $request->file('archivo')->getClientOriginalName();
+            $nombreArchivo = $request->file('ruta-imagen')->getClientOriginalName();
 
             // Guardar el archivo en una carpeta con su nombre real
-            $path = $request->file('archivo')->storeAs('public', $nombreArchivo);
+            $path = $request->file('ruta-imagen')->storeAs($nombreArchivo);
 
-            $personas = personas::create([
+            $tiposproducto = tiposproducto::create([
                 'descripcion' => $request['descripcion'],
                 'ruta-imagen' => $path,
             ]);
 
             return response()->json([
                 'mensaje' => 'Se Agrego correctamente el tipo de producto',
-                'data' => $personas,
-            ]);
+                'data' => $tiposproducto,
+            ])->header('Content-Type', 'application/json');
         } catch (ValidationException $exception) {
-            return response()->json(['errores' => $exception->errors()]);
+            return response()->json([
+                'mensaje' => 'Error en informacion ingresada',
+                'data' => $exception->errors(),
+            ]);
         } catch (QueryException $e) {
             // Manejo de excepciones de consulta a la base de datos
             return response()->json([
@@ -69,9 +114,9 @@ class TiposproductoController extends Controller
                 'data' => $e->getMessage(),
             ]);
         } catch (Exception $e) {
-            // Manejo de excepciones generales
+            // Manejo de excepciones
             return response()->json([
-                'mensaje' => 'Error general intentar adicionar registro',
+                'mensaje' => 'Error al crear el registro en la base de datos.',
                 'data' => $e->getMessage(),
             ]);
         }

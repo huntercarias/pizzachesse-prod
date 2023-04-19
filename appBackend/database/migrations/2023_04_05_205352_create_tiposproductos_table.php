@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tiposproductos', function (Blueprint $table) {
             $table->id();
             $table->string('descripcion');
-            $table->string('ruta-imagen');
+            $table->string('ruta_imagen');
             $table->timestamps();
             $table->softDeletes();
         });
