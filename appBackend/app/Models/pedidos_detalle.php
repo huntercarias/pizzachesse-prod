@@ -29,9 +29,9 @@ class pedidos_detalle extends Model
      * @var array
      */
     protected $fillable = [
-        'id-usuario',
-        'id-pedidoencabezado',
-        'id-producto',
+        'id_usuario',
+        'id_pedidoencabezado',
+        'id_producto',
         'cantidad',
         'monto',
     ];

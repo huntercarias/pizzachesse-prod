@@ -29,9 +29,9 @@ class productos extends Model
      * @var array
      */
     protected $fillable = [
-        'id-tiposproducto',
+        'id_tiposproducto',
         'descripcion',
-        'ruta-imagen',
+        'ruta_imagen',
         'monto',
         'cantidad',
     ];

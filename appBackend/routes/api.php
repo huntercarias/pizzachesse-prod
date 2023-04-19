@@ -27,11 +27,13 @@ Route::get('getAllPersonas', [PersonasController::class, 'index']);
 // Registra una persona
 Route::post('RegistraPersona', [PersonasController::class, 'store']);
 
-// Registra una producto
-Route::post('ADDProductos', [ProductosController::class, 'store']);
-
 // Registra una tipoProducto
 Route::post('ADDtipoProductos', [TiposproductoController::class, 'store']);
 
+Route::get('getAlltipoProductos', [TiposproductoController::class, 'index']);
+
 //muestra todos las personas
 Route::get('getAllProductos', [ProductosController::class, 'index']);
+
+// Registra una producto
+Route::post('ADDProductos', [ProductosController::class, 'store']);

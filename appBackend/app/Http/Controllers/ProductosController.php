@@ -26,13 +26,19 @@ class ProductosController extends Controller
 
                 return [
                     'id' => $producto->id,
-                    'nombre' => $producto->nombre,
-                    'imagenes' => base64_encode($file),
+                    'id_tiposproducto' => $producto->id_tiposproducto,
+                    'descripcion' => $producto->descripcion,
+                    'ruta_imagen' => base64_encode($file),
+                    'monto' => $producto->monto,
+                    'cantidad' => $producto->cantidad,
+                    'created_at' => $producto->created_at,
+                    'updated_at' => $producto->updated_at,
+                    'deleted_at' => $producto->deleted_at,
                 ];
             });
 
             return response()->json([
-                'mensaje' => 'Listado de personas disponibles',
+                'mensaje' => 'Listado de productos disponibles',
                 'data' => $data,
             ])->header('Content-Type', 'application/json');
         } catch (FileNotFoundException $e) {
@@ -75,31 +81,31 @@ class ProductosController extends Controller
         try {
         //Validación
             $request->validate([
-                'id-tiposproducto' => ['required', 'numeric', 'min:0'],
+                'id_tiposproducto' => ['required', 'numeric', 'min:0'],
                 'descripcion' => ['required', 'string', 'min:3', 'max:255', 'unique:productos'],
-                'ruta-imagen' => ['required', 'mimes:,jpg,png,jpeg', 'max:2048'],
+                'ruta_imagen' => ['required', 'mimes:,jpg,png,jpeg', 'max:2048'],
                 'monto' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
                 'cantidad' => ['required', 'numeric', 'min:0'],
             ]);
 
             // validacion para ver si no trae archivo envia mensaje
-            if (! $request->hasFile('ruta-imagen')) {
+            if (! $request->hasFile('ruta_imagen')) {
                 return response()->json([
                     'mensaje' => 'Debe seleccionar un archivo para cargar.',
                 ], 400);
             }
 
             // Obtener el nombre original del archivo cargado
-            $nombreArchivo = $request->file('ruta-imagen')->getClientOriginalName();
+            $nombreArchivo = $request->file('ruta_imagen')->getClientOriginalName();
 
             // Guardar el archivo en una carpeta con su nombre real
             //$path = $request->file('archivo')->storeAs('public', $nombreArchivo);
-            $path = $request->file('ruta-imagen')->storeAs($nombreArchivo);
+            $path = $request->file('ruta_imagen')->storeAs($nombreArchivo);
 
             $productos = productos::create([
-                'id-tiposproducto' => $request['id-tiposproducto'],
+                'id_tiposproducto' => $request['id_tiposproducto'],
                 'descripcion' => $request['descripcion'],
-                'ruta-imagen' => $path,
+                'ruta_imagen' => $path,
                 'monto' => $request['monto'],
                 'cantidad' => $request['cantidad'],
             ]);

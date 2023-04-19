@@ -29,7 +29,7 @@ class pedido_encabezado extends Model
      * @var array
      */
     protected $fillable = [
-        'id-usuario',
+        'id_usuario',
         'status-pedido',
     ];
 

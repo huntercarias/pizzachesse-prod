@@ -29,11 +29,11 @@ class promociones extends Model
      * @var array
      */
     protected $fillable = [
-        'id-producto',
-        'id-tiposproducto',
-        'porcentaje-descuento',
+        'id_producto',
+        'id_tiposproducto',
+        'porcentaje_descuento',
         'cantidad',
-        'activo-inactivo',
+        'activo_inactivo',
     ];
 
     /**

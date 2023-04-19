@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\tiposproducto;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
@@ -19,31 +21,32 @@ class TiposproductoController extends Controller
         try {
             $tiposproducto = tiposproducto::get();
             $data = $tiposproducto->map(function ($tiposproducto) {
-                $path = storage_path('app/public/'.$tiposproducto->imagenes);
-                if (! File::exists($path)) {
-                    return [
-                        'id' => $tiposproducto->id,
-                        'nombre' => $tiposproducto->nombre,
-                        'mensaje' => 'no existe imagen',
-                        //'mensaje' => $path,
-                    ];
-                }
+                $path = storage_path('app/'.$tiposproducto->ruta_imagen);
                 $file = File::get($path);
                 $type = File::mimeType($path);
 
                 return [
                     'id' => $tiposproducto->id,
-                    'nombre' => $tiposproducto->nombre,
-                    'imagenes' => base64_encode($file),
+                    'descripcion' => $tiposproducto->descripcion,
+                    'ruta_imagen' => base64_encode($file),
+                    'created_at' => $tiposproducto->created_at,
+                    'updated_at' => $tiposproducto->updated_at,
+                    'deleted_at' => $tiposproducto->deleted_at,
                 ];
             });
 
             return response()->json([
-                'mensaje' => 'Listado de personas disponibles',
+                'mensaje' => 'Listado de tipo de productos disponibles',
                 'data' => $data,
             ])->header('Content-Type', 'application/json');
+        } catch (FileNotFoundException $e) {
+            // Manejar la excepción aquí
+            return response()->json(['mensaje' => 'El archivo no existe'], 404);
         } catch (ValidationException $exception) {
-            return response()->json(['errores' => $exception->errors()]);
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $exception->errors(),
+            ]);
         } catch (QueryException $e) {
             // Manejo de excepciones de consulta a la base de datos
             return response()->json([
@@ -77,25 +80,25 @@ class TiposproductoController extends Controller
             //Validación
             $request->validate([
                 'descripcion' => ['required', 'string', 'min:3', 'max:255', 'unique:tiposproductos'],
-                'ruta-imagen' => ['required', 'mimes:jpg,png,jpeg', 'max:2048'],
+                'ruta_imagen' => ['required', 'mimes:jpg,png,jpeg', 'max:2048'],
             ]);
 
             // validacion para ver si no trae archivo envia mensaje
-            if (! $request->hasFile('ruta-imagen')) {
+            if (! $request->hasFile('ruta_imagen')) {
                 return response()->json([
                     'mensaje' => 'Debe seleccionar un archivo para cargar.',
                 ], 400);
             }
 
             // Obtener el nombre original del archivo cargado
-            $nombreArchivo = $request->file('ruta-imagen')->getClientOriginalName();
+            $nombreArchivo = $request->file('ruta_imagen')->getClientOriginalName();
 
             // Guardar el archivo en una carpeta con su nombre real
-            $path = $request->file('ruta-imagen')->storeAs($nombreArchivo);
+            $path = $request->file('ruta_imagen')->storeAs($nombreArchivo);
 
             $tiposproducto = tiposproducto::create([
                 'descripcion' => $request['descripcion'],
-                'ruta-imagen' => $path,
+                'ruta_imagen' => $path,
             ]);
 
             return response()->json([

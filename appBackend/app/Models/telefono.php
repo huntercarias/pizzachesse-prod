@@ -30,9 +30,9 @@ class telefono extends Model
      */
     protected $fillable = [
         'id_persona',
-        'numero-telefono',
+        'numero_telefono',
         'extension',
-        'numero-celular',
+        'numero_celular',
         'numero de whatzap',
     ];
 

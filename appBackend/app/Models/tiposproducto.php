@@ -30,7 +30,7 @@ class tiposproducto extends Model
      */
     protected $fillable = [
         'descripcion',
-        'ruta-imagen',
+        'ruta_imagen',
     ];
 
     /**

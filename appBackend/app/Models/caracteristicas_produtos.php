@@ -29,7 +29,7 @@ class caracteristicas_produtos extends Model
      * @var array
      */
     protected $fillable = [
-        'id-producto',
+        'id_producto',
         'descripcion',
     ];
 
