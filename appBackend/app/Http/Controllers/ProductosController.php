@@ -15,10 +15,14 @@ class ProductosController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $productos = productos::get();
+            $tipoproducto = $request->input('tipoproducto');
+            //$productos = productos::get();
+            $productos = productos::where('id_tiposproducto', $tipoproducto)
+                                    ->orderBy('created_at', 'desc')
+                                    ->paginate(10);
             $data = $productos->map(function ($producto) {
                 $path = storage_path('app/'.$producto->ruta_imagen);
                 $file = File::get($path);

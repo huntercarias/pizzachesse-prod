@@ -24,20 +24,41 @@ const Inicio = () => {
 
     return (
         <div>
+
             {cargando ? (
                 <p>Cargando productos...</p>
             ) : error ? (
                 <p>{error}</p>
             ) : productos.length > 0 ? (
                 productos.map((producto) => (
+
                     <div className="col" key={producto.id}>
-                        <p>{producto.descripcion}</p>
-                        <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} width="50%" height="80%" />
+                        {producto.id === 1 ? (
+                            <a href="http://localhost:3000/Productos">
+                                <p>{producto.descripcion}</p>
+                                <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" />
+                            </a>
+                        ) : (
+
+                            producto.id === 2 ? (
+                                <a href="http://localhost:3000/Productos">
+                                    <p>{producto.descripcion}</p>
+                                    <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" />
+                                </a>
+                            ) : (
+                                <a href="http://localhost:3000/Productos">
+                                    <p>{producto.descripcion}</p>
+                                    <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" />
+                                </a>
+                            )
+
+                        )}
                     </div>
                 ))
             ) : (
                 <p>No se encontraron productos.</p>
             )}
+            <a href="http://localhost:3000/Productos">Ir a la página de productos</a>
         </div>
     );
 };
