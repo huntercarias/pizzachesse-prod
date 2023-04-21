@@ -4,7 +4,10 @@ import './App.css';
 
 function App() {
   return (
-    <AppRouter />
+    <div>
+      <AppRouter />
+      ** {process.env.REACT_APP_API_URL} **
+    </div>
   );
 }
 

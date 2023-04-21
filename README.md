@@ -20,3 +20,6 @@ php artisan storage:link
 ## creacion de modelos 
 php artisan make:model users -mcr
 
+## creacion de variables de entorno
+npm install env-cmd
+npm run local
