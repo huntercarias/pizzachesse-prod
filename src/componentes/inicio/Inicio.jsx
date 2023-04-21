@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import '../../App.css';
 
 const Inicio = () => {
     const [productos, setProductos] = useState([]);
@@ -24,41 +25,49 @@ const Inicio = () => {
 
     return (
         <div>
+            <div class="album py-5 bg-body-tertiary">
+                <div class="container">
+                    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 g-1">
 
-            {cargando ? (
-                <p>Cargando productos...</p>
-            ) : error ? (
-                <p>{error}</p>
-            ) : productos.length > 0 ? (
-                productos.map((producto) => (
+                        {cargando ? (
+                            <p>Cargando productos...</p>
+                        ) : error ? (
+                            <p>{error}</p>
+                        ) : productos.length > 0 ? (
+                            productos.map((producto) => (
 
-                    <div className="col" key={producto.id}>
-                        {producto.id === 1 ? (
-                            <a href="http://localhost:3000/Productos">
-                                <p>{producto.descripcion}</p>
-                                <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" />
-                            </a>
+                                <div className="col" key={producto.id}>
+                                    <div class="card shadow-sm">
+                                        {producto.id === 1 ? (
+                                            <a href="http://localhost:3000/Productos">
+                                                <p>{producto.descripcion}</p>
+                                                <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="100%" height="700" />
+                                            </a>
+                                        ) : (
+
+                                            producto.id === 2 ? (
+                                                <a href="http://localhost:3000/Productos">
+                                                    <p>{producto.descripcion}</p>
+                                                    <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="100%" height="700" />
+                                                </a>
+                                            ) : (
+                                                <a href="http://localhost:3000/Productos">
+                                                    <p>{producto.descripcion}</p>
+                                                    <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="100%" height="700" />
+                                                </a>
+                                            )
+
+                                        )}
+                                    </div>
+                                </div>
+                            ))
                         ) : (
-
-                            producto.id === 2 ? (
-                                <a href="http://localhost:3000/Productos">
-                                    <p>{producto.descripcion}</p>
-                                    <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" />
-                                </a>
-                            ) : (
-                                <a href="http://localhost:3000/Productos">
-                                    <p>{producto.descripcion}</p>
-                                    <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" />
-                                </a>
-                            )
-
+                            <p>No se encontraron productos.</p>
                         )}
+
                     </div>
-                ))
-            ) : (
-                <p>No se encontraron productos.</p>
-            )}
-            <a href="http://localhost:3000/Productos">Ir a la página de productos</a>
+                </div>
+            </div>
         </div>
     );
 };

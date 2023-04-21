@@ -22,7 +22,7 @@ class ProductosController extends Controller
             //$productos = productos::get();
             $productos = productos::where('id_tiposproducto', $tipoproducto)
                                     ->orderBy('created_at', 'desc')
-                                    ->paginate(10);
+                                    ->paginate(12);
             $data = $productos->map(function ($producto) {
                 $path = storage_path('app/'.$producto->ruta_imagen);
                 $file = File::get($path);
