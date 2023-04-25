@@ -9,7 +9,7 @@ const Inicio = () => {
 
     const fetchProductos = async () => {
         try {
-            const response = await axios.get('http://localhost/pizzachesse-prod/appBackend/public/api/getAlltipoProductos');
+            const response = await axios.get('https://pizzacheesse.com/appBackend/public/api/getAlltipoProductos');
             setProductos(response.data.data);
             console.log(response.data.data);
             setCargando(false);
@@ -39,19 +39,21 @@ const Inicio = () => {
                                 <div className="col" key={producto.id}>
                                     <div class="card shadow-sm">
                                         {producto.id === 1 ? (
-                                            <a href="http://localhost:3000/Productos">
+
+                                            <a href={`${process.env.REACT_APP_API_URL} /Productos`}>
+                                                ** {process.env.REACT_APP_API_URL} **
                                                 <p>{producto.descripcion}</p>
                                                 <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="100%" height="700" />
                                             </a>
                                         ) : (
 
                                             producto.id === 2 ? (
-                                                <a href="http://localhost:3000/Productos">
+                                                <a href={`${process.env.REACT_APP_API_URL} /Productos`}>
                                                     <p>{producto.descripcion}</p>
                                                     <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="100%" height="700" />
                                                 </a>
                                             ) : (
-                                                <a href="http://localhost:3000/Productos">
+                                                <a href={`${process.env.REACT_APP_API_URL} /Productos`}>
                                                     <p>{producto.descripcion}</p>
                                                     <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="100%" height="700" />
                                                 </a>

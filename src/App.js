@@ -6,7 +6,7 @@ function App() {
   return (
     <div>
       <AppRouter />
-      ** {process.env.REACT_APP_API_URL} **
+
     </div>
   );
 }

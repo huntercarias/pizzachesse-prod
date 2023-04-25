@@ -57,7 +57,7 @@ class PersonasController extends Controller
                 $request->validate([
                     'nombre' => ['required', 'string', 'min:3', 'max:255'],
                     'apellido' => ['required', 'string', 'min:3', 'max:255'],
-                    'correo' => ['required', 'email', 'unique:personas'],
+                    'correo' => ['required', 'email', 'min:3', 'max:255', 'unique:personas'],
                     'sexo' => ['required', 'string', 'in:masculino,femenino', 'min:3', 'max:255'],
                     'fechaNacimiento' => ['required', 'date', 'date_format:Y-m-d'],
                 ]);
