@@ -19,7 +19,24 @@ php artisan storage:link
 
 ## creacion de modelos 
 php artisan make:model users -mcr
+php artisan make:model AuthControllerr -mcr
+
+##instalacion paquete sanctum para autenticacion
+composer require laravel/sanctum
+
+##  instalar Fortify 
+composer require laravel/fortify
 
 ## creacion de variables de entorno
 npm install env-cmd
 npm run local
+
+## JWT autenticacion
+composer require tymon/jwt-auth
+php artisan vendor:publish
+- escoger este servicio App\JWTAuth\Providers\LaravelServiceProvider::class,
+- despues escoger la opcion 
+- Provider: Tymon/JWTAuth/Providers/LaravelServiceProvider
+- php artisan jwt.secret
+hnc
+php artisan jwt:secret

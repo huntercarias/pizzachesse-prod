@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthjwtController;
 use App\Http\Controllers\PersonasController;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\TiposproductoController;
@@ -37,3 +38,17 @@ Route::get('getAllProductos', [ProductosController::class, 'index']);
 
 // Registra una producto
 Route::post('ADDProductos', [ProductosController::class, 'store']);
+
+// Registra una producto
+//Route::post('register', [AuthController::class, 'register']);
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth',
+], function ($router) {
+    Route::post('login', [AuthjwtController::class, 'login']);
+    Route::post('logout', [AuthjwtController::class, 'logout']);
+    Route::post('refresh', [AuthjwtController::class, 'refresh']);
+    Route::post('me', [AuthjwtController::class, 'me']);
+    Route::post('register', [AuthjwtController::class, 'register']);
+});
