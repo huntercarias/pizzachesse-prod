@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../App.css';
-const Productos = () => {
+const Lazana = () => {
     const [productos, setProductos] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
@@ -10,7 +10,7 @@ const Productos = () => {
 
     const fetchProductos = async () => {
         try {
-            const response = await axios.get(`https://pizzacheesse.com/appBackend/public/api/getAllProductos?page=${currentPage}&tipoproducto=1`);
+            const response = await axios.get(`https://pizzacheesse.com/appBackend/public/api/getAllProductos?page=${currentPage}&tipoproducto=2`);
             setProductos(response.data.data);
             console.log(response.data.data);
             setCargando(false);
@@ -73,10 +73,4 @@ const Productos = () => {
     );
 };
 
-export default Productos;
-
-
-
-
-
-
+export default Lazana;

@@ -90,6 +90,7 @@ class AuthjwtController extends Controller
                 'name' => 'required',
                 'email' => 'required|string|email|max:100|unique:users',
                 'password' => 'required|string|min:6',
+                'rol' => 'required|string|min:6',
             ]);
             if ($validator->fails()) {
                 return response()->json($validator->errors()->toJson(), 400);
@@ -97,8 +98,7 @@ class AuthjwtController extends Controller
 
             $user = User::create(array_merge(
                 $validator->validate(),
-                ['password' => bcrypt($request->password)],
-                ['rol' => 'CLIENTE']
+                ['password' => bcrypt($request->password)]
             ));
 
             return response()->json([

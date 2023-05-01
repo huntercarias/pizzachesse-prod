@@ -26,7 +26,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('getAllPersonas', [PersonasController::class, 'index']);
 
 // Registra una persona
-Route::post('RegistraPersona', [PersonasController::class, 'store']);
 
 // Registra una tipoProducto
 Route::post('ADDtipoProductos', [TiposproductoController::class, 'store']);
@@ -51,4 +50,5 @@ Route::group([
     Route::post('refresh', [AuthjwtController::class, 'refresh']);
     Route::post('me', [AuthjwtController::class, 'me']);
     Route::post('register', [AuthjwtController::class, 'register']);
+    Route::post('RegistraPersona', [PersonasController::class, 'store']);
 });
