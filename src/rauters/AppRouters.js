@@ -30,7 +30,6 @@ export const AppRouter = () => {
                 <Route exact path='/Bebidas' element={<Bebidas />} />
                 <Route exact path='/Login' element={<Login />} />
                 <Route exact path='/Registro' element={<Registro />} />
-
             </Routes>
         </Router>
     )

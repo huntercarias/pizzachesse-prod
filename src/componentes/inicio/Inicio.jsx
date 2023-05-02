@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../App.css';
 
+
 const Inicio = () => {
     const [productos, setProductos] = useState([]);
     const [cargando, setCargando] = useState(true);
@@ -9,12 +10,12 @@ const Inicio = () => {
 
     const fetchProductos = async () => {
         try {
-            const response = await axios.get('https://pizzacheesse.com/appBackend/public/api/getAlltipoProductos');
+            const response = await axios.get(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/getAlltipoProductos`);
             setProductos(response.data.data);
             console.log(response.data.data);
             setCargando(false);
         } catch (error) {
-            setError('Ocurrió un error al cargar los productos. Por favor, inténtalo de nuevo más tarde.');
+            setError('Ocurrió un error al cargar los tipos de producto. Por favor, inténtalo de nuevo más tarde.');
             setCargando(false);
         }
     };
@@ -25,6 +26,7 @@ const Inicio = () => {
 
     return (
         <div>
+
             <div class="album py-5 bg-body-tertiary">
                 <div class="container">
                     <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 g-1">

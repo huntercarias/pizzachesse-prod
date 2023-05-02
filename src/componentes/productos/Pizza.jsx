@@ -8,6 +8,12 @@ const Pizza = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const productsPerPage = 10; // Cambiar por la cantidad de productos por página
 
+    //const [usuario, setUsurio] = useState([]);
+    //const [cargandoU, setCargandoU] = useState(true);
+
+    //const baseURL = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/me`;
+    //const miToken = localStorage.getItem('miToken');
+
     const fetchProductos = async () => {
         try {
             const response = await axios.get(`https://pizzacheesse.com/appBackend/public/api/getAllProductos?page=${currentPage}&tipoproducto=1`);
@@ -21,12 +27,37 @@ const Pizza = () => {
         }
     };
 
+    // const fetchUsuario = async () => {
+    //     try {
+    //         console.log(miToken);
+    //         const response = await axios.post(baseURL, null, {
+    //             headers: {
+    //                 Authorization: `Bearer ${miToken}`,
+    //                 //"Authorization": `Bearer ${miToken}`,
+    //             },
+    //         });
+
+    //         setUsurio(response.data);
+    //         console.log(usuario.email);
+    //         setCargandoU(false);
+    //         //console.log(process.env.REACT_APP_API_HOST);
+    //     } catch (error) {
+    //         setError('Ocurrió un error con el usuario. Por favor, inténtalo de nuevo más tarde.');
+    //          console.log("error");
+    //          setCargandoU(false);
+    //      }
+    //  };
+
+
     useEffect(() => {
         fetchProductos();
+        //fetchUsuario();
+
     }, [currentPage]);
 
     return (
         <div class="container-fluid">
+
 
             <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>Atras</button>
             <button onClick={() => setCurrentPage(currentPage + 1)} disabled={productos.length === 0 || productos.length < productsPerPage}>Next</button>

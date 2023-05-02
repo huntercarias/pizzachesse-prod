@@ -1,6 +1,7 @@
-import { AppRouter } from './rauters/AppRouters'
 
+import { AppRouter } from './rauters/AppRouters';
 import './App.css';
+
 
 function App() {
   return (
