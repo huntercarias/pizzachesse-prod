@@ -4,7 +4,6 @@ import {
     BrowserRouter as Router,
     Routes,
     Route,
-    Link,
 } from "react-router-dom";
 
 import Inicio from '../componentes/inicio/Inicio';
@@ -16,6 +15,12 @@ import Bebidas from '../componentes/productos/Bebidas';
 import Login from '../componentes/aut/Login';
 import Registro from '../componentes/aut/Registro';
 import { Navbar } from '../componentes/Navbar/Navbar';
+import UpdatePizza from '../componentes/productos/UpdatePizza';
+import Circulares from '../componentes/graficas/Circulares';
+import Graficas from '../componentes/graficas/Graficas';
+import AddPizza from '../componentes/productos/AddPizza';
+
+const numeroActualliza = "que bueno que funciono";
 
 export const AppRouter = () => {
     return (
@@ -23,13 +28,24 @@ export const AppRouter = () => {
             <Navbar />
             <Routes>
                 <Route exact path='/' element={<Inicio />} />
+                <Route exact path='/Login' element={<Login />} />
+
+
+
                 <Route exact path='/Pizza' element={<Pizza />} />
                 <Route exact path='/Lazana' element={<Lazana />} />
                 <Route exact path='/Calzone' element={<Calzone />} />
                 <Route exact path='/Combos' element={<Combos />} />
                 <Route exact path='/Bebidas' element={<Bebidas />} />
-                <Route exact path='/Login' element={<Login />} />
+
+
+
+
                 <Route exact path='/Registro' element={<Registro />} />
+                <Route exact path='/UpdatePizza' element={<UpdatePizza variable={numeroActualliza} />} />
+                <Route exact path='/Circulares' element={<Circulares />} />
+                <Route exact path='/Graficas' element={<Graficas />} />
+                <Route exact path='/AddProducto' element={<AddPizza />} />
             </Routes>
         </Router>
     )

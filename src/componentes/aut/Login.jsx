@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import '../../App.css';
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 const baseURL = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/login`;
 
 const Login = () => {
+    const navigate = useNavigate();
 
     const [formState, setFormState] = useState({
         email: "",
@@ -36,7 +38,7 @@ const Login = () => {
             //almacena variable en la locallstorage de la maquina
             localStorage.setItem('miToken', response.data.access_token);
             console.log("Entro aqui");
-
+            navigate('/');
         } catch (error) {
             alert(error.message);
             localStorage.setItem('miToken', "");

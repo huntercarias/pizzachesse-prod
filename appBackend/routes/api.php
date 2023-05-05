@@ -27,16 +27,10 @@ Route::get('getAllPersonas', [PersonasController::class, 'index']);
 
 // Registra una persona
 
-// Registra una tipoProducto
-Route::post('ADDtipoProductos', [TiposproductoController::class, 'store']);
-
 Route::get('getAlltipoProductos', [TiposproductoController::class, 'index']);
 
 //muestra todos las personas
 Route::get('getAllProductos', [ProductosController::class, 'index']);
-
-// Registra una producto
-Route::post('ADDProductos', [ProductosController::class, 'store']);
 
 // Registra una producto
 //Route::post('register', [AuthController::class, 'register']);
@@ -50,5 +44,11 @@ Route::group([
     Route::post('refresh', [AuthjwtController::class, 'refresh']);
     Route::post('me', [AuthjwtController::class, 'me']);
     Route::post('register', [AuthjwtController::class, 'register']);
-    Route::post('RegistraPersona', [PersonasController::class, 'store']);
+    // Rutas protegidas con jwt.auth
+    Route::middleware(['jwt.auth'])->group(function () {
+        Route::post('RegistraPersona', [PersonasController::class, 'store']);
+        Route::post('ADDProductos', [ProductosController::class, 'store']);
+        // Registra una tipoProducto
+        Route::post('ADDtipoProductos', [TiposproductoController::class, 'store']);
+    });
 });
