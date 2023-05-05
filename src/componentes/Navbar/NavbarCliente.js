@@ -38,7 +38,7 @@ export const NavbarCliente = () => {
 
 
     return (
-        <div class="col-sm-7 col-md-5 col-lg-7">
+        <div class="col-sm-7 col-md-5 col-lg-2">
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <h1>MENU</h1>

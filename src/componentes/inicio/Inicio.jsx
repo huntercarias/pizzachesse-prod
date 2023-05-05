@@ -42,7 +42,7 @@ const Inicio = () => {
                                     <div class="card shadow-sm">
                                         {producto.id === 1 ? (
 
-                                            <a href={`${process.env.REACT_APP_API_URL} /Productos`}>
+                                            <a href={`/Pizza`}>
                                                 ** {process.env.REACT_APP_API_URL} **
                                                 <p>{producto.descripcion}</p>
                                                 <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="100%" height="700" />
@@ -50,12 +50,12 @@ const Inicio = () => {
                                         ) : (
 
                                             producto.id === 2 ? (
-                                                <a href={`${process.env.REACT_APP_API_URL} /Productos`}>
+                                                <a href={`/Lazana`}>
                                                     <p>{producto.descripcion}</p>
                                                     <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="100%" height="700" />
                                                 </a>
                                             ) : (
-                                                <a href={`${process.env.REACT_APP_API_URL} /Productos`}>
+                                                <a href={`/Productos`}>
                                                     <p>{producto.descripcion}</p>
                                                     <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="100%" height="700" />
                                                 </a>

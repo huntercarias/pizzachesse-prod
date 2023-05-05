@@ -10,7 +10,7 @@ const Lazana = () => {
 
     const fetchProductos = async () => {
         try {
-            const response = await axios.get(`https://pizzacheesse.com/appBackend/public/api/getAllProductos?page=${currentPage}&tipoproducto=2`);
+            const response = await axios.get(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/getAllProductos?page=${currentPage}&tipoproducto=2`);
             setProductos(response.data.data);
             console.log(response.data.data);
             setCargando(false);
