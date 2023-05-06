@@ -7,11 +7,7 @@ import {
 } from "react-router-dom";
 
 import Inicio from '../componentes/inicio/Inicio';
-import Pizza from '../componentes/productos/Pizza';
 import Lazana from '../componentes/productos/Lazana';
-import Calzone from '../componentes/productos/Calzone';
-import Combos from '../componentes/productos/Combos';
-import Bebidas from '../componentes/productos/Bebidas';
 import Login from '../componentes/aut/Login';
 import Registro from '../componentes/aut/Registro';
 import { Navbar } from '../componentes/Navbar/Navbar';
@@ -20,7 +16,12 @@ import Circulares from '../componentes/graficas/Circulares';
 import Graficas from '../componentes/graficas/Graficas';
 import AddPizza from '../componentes/productos/AddPizza';
 
-const numeroActualliza = "que bueno que funciono";
+
+const productoPizza = 1;
+const productoLazana = 2;
+const productoCalzone = 3;
+const productoCombos = 4;
+const productoBebidas = 5;
 
 export const AppRouter = () => {
     return (
@@ -32,17 +33,17 @@ export const AppRouter = () => {
 
 
 
-                <Route exact path='/Pizza' element={<Pizza />} />
-                <Route exact path='/Lazana' element={<Lazana />} />
-                <Route exact path='/Calzone' element={<Calzone />} />
-                <Route exact path='/Combos' element={<Combos />} />
-                <Route exact path='/Bebidas' element={<Bebidas />} />
+                <Route exact path='/Pizza' element={<Lazana variable={productoPizza} />} />
+                <Route exact path='/Lazana' element={<Lazana variable={productoLazana} />} />
+                <Route exact path='/Calzone' element={<Lazana variable={productoCalzone} />} />
+                <Route exact path='/Combos' element={<Lazana variable={productoCombos} />} />
+                <Route exact path='/Bebidas' element={<Lazana variable={productoBebidas} />} />
 
 
 
 
                 <Route exact path='/Registro' element={<Registro />} />
-                <Route exact path='/UpdatePizza' element={<UpdatePizza variable={numeroActualliza} />} />
+                <Route exact path='/UpdatePizza/:id' element={<UpdatePizza />} />
                 <Route exact path='/Circulares' element={<Circulares />} />
                 <Route exact path='/Graficas' element={<Graficas />} />
                 <Route exact path='/AddProducto' element={<AddPizza />} />
@@ -50,3 +51,4 @@ export const AppRouter = () => {
         </Router>
     )
 }
+

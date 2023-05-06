@@ -49,9 +49,11 @@ function AddPizza() {
                     Authorization: `Bearer ${miToken}`,
                 },
             });
-            console.log(response);
+            alert(response.data.mensaje + "\n" + response.data.data.descripcion);
+            console.log(response.data.data.descripcion);
         } catch (error) {
             console.log(error);
+            alert("Error al agregar Producto");
         }
     };
 

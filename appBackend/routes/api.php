@@ -29,9 +29,12 @@ Route::get('getAllPersonas', [PersonasController::class, 'index']);
 
 Route::get('getAlltipoProductos', [TiposproductoController::class, 'index']);
 
+Route::get('getProducto', [ProductosController::class, 'show']);
+
 //muestra todos las personas
 Route::get('getAllProductos', [ProductosController::class, 'index']);
 
+Route::delete('eliminaProducto', [ProductosController::class, 'destroy']);
 // Registra una producto
 //Route::post('register', [AuthController::class, 'register']);
 
@@ -50,5 +53,7 @@ Route::group([
         Route::post('ADDProductos', [ProductosController::class, 'store']);
         // Registra una tipoProducto
         Route::post('ADDtipoProductos', [TiposproductoController::class, 'store']);
+        Route::post('updateProducto', [ProductosController::class, 'update']);
+
     });
 });

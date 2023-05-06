@@ -41,7 +41,7 @@ export const NavbarAdministrador = () => {
                     <li><a class="dropdown-item" href="#">
                         <NavLink className="nav-link" to="/Pizza"> <h3>PIZZA</h3></NavLink>
                     </a></li>
-                    <li><a class="dropdown-item" href="#">
+                    <li><a class="dropdown-item" href="/Lazana">
                         <NavLink className="nav-link" to="/Lazana"><h3>LAZAÑA</h3></NavLink>
                     </a></li>
                     <li><a class="dropdown-item" href="#">

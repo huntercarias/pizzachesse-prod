@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../App.css';
-const Lazana = () => {
+
+import { useNavigate } from 'react-router-dom';
+
+const Lazana = (props) => {
     const [productos, setProductos] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
@@ -10,7 +13,7 @@ const Lazana = () => {
 
     const fetchProductos = async () => {
         try {
-            const response = await axios.get(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/getAllProductos?page=${currentPage}&tipoproducto=2`);
+            const response = await axios.get(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/getAllProductos?page=${currentPage}&tipoproducto=${props.variable}`);
             setProductos(response.data.data);
             console.log(response.data.data);
             setCargando(false);
@@ -24,6 +27,24 @@ const Lazana = () => {
     useEffect(() => {
         fetchProductos();
     }, [currentPage]);
+
+    async function handleDelete(id) {
+        try {
+            const response = await axios.delete(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/eliminaProducto?id=${id}`);
+            setProductos(prevProductos => prevProductos.filter(producto => producto.id !== id));
+            console.log(response.data.data);
+            setCargando(false);
+        } catch (error) {
+            setError('Ocurrió un error al eliminar el producto. Por favor, inténtalo de nuevo más tarde.');
+            setCargando(false);
+        }
+    }
+
+    const navigate = useNavigate();
+
+    async function handleEditarClick(id) {
+        navigate(`/UpdatePizza/${id}`);
+    };
 
     return (
         <div class="container-fluid">
@@ -52,8 +73,10 @@ const Lazana = () => {
                                             <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="btn-group">
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleDelete(producto.id)}>Eliminar</button>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(producto.id)}>
+                                                        EDITAR
+                                                    </button>
                                                 </div>
                                                 <small class="text-body-secondary">9 mins</small>
                                             </div>

@@ -142,32 +142,147 @@ class ProductosController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(productos $productos)
+    public function show(Request $request)
     {
-        //
+        try {
+            $idproducto = $request->input('id');
+            $productos = productos::find($idproducto);
+            if (! $productos) {
+                return response()->json(['mensaje' => 'Producto no encontrado'], 404);
+            }
+            $path = storage_path('app/'.$productos->ruta_imagen);
+            $file = File::get($path);
+            $type = File::mimeType($path);
+            $data = [
+                'id' => $productos->id,
+                'id_tiposproducto' => $productos->id_tiposproducto,
+                'descripcion' => $productos->descripcion,
+                'ruta_imagen' => base64_encode($file),
+                'monto' => $productos->monto,
+                'cantidad' => $productos->cantidad,
+                'created_at' => $productos->created_at,
+                'updated_at' => $productos->updated_at,
+                'deleted_at' => $productos->deleted_at,
+            ];
+
+            return response()->json([
+                'mensaje' => 'Producto encontrado',
+                'data' => $data,
+            ])->header('Content-Type', 'application/json');
+        } catch (FileNotFoundException $e) {
+            // Manejar la excepción aquí
+            return response()->json(['mensaje' => 'El archivo no existe'], 404);
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $exception->errors(),
+            ]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(productos $productos)
+    public function update(Request $request)
     {
-        //
+        try {
+            //Validación
+            $request->validate([
+                'id' => ['required', 'numeric', 'min:0'],
+                'id_tiposproducto' => ['required', 'numeric', 'min:0'],
+                'descripcion' => ['required', 'string', 'min:3', 'max:255'],
+                'ruta_imagen' => ['nullable', 'mimes:,jpg,png,jpeg', 'max:2048'],
+                'monto' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
+                'cantidad' => ['required', 'numeric', 'min:0'],
+            ]);
+
+            $producto = productos::findOrFail($request->input('id'));
+
+            // Actualizar los campos del modelo
+            $producto->id_tiposproducto = $request->input('id_tiposproducto');
+            $producto->descripcion = $request->input('descripcion');
+            $producto->monto = $request->input('monto');
+            $producto->cantidad = $request->input('cantidad');
+
+            // Si se proporciona un archivo, actualizar la ruta de la imagen
+            if ($request->hasFile('ruta_imagen')) {
+                // Obtener el nombre original del archivo cargado
+                $nombreArchivo = $request->file('ruta_imagen')->getClientOriginalName();
+                // Guardar el archivo en una carpeta con su nombre real
+                $path = $request->file('ruta_imagen')->storeAs($nombreArchivo);
+                $producto->ruta_imagen = $path;
+            }
+
+            // Guardar los cambios en la base de datos
+            $producto->save();
+
+            return response()->json([
+                'mensaje' => 'Se actualizó correctamente el producto',
+                'data' => $producto,
+            ]);
+
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error en información ingresada',
+                'data' => $exception->errors(),
+            ], 400);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al actualizar el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar actualizar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, productos $productos)
+    public function destroy(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'id' => 'required|integer',
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(productos $productos)
-    {
-        //
+        try {
+            $producto = productos::findOrFail($request->input('id'));
+            $producto->delete();
+
+            return response()->json([
+                'mensaje' => 'Se eliminó correctamente el producto',
+            ]);
+
+        } catch (ModelNotFoundException $exception) {
+            return response()->json([
+                'mensaje' => 'El producto que intenta eliminar no existe',
+            ], 404);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al eliminar el registro de la base de datos',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar eliminar el registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
     }
 }
