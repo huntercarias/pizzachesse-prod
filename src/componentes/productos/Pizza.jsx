@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../App.css';
+
+import { useNavigate } from 'react-router-dom';
+
 const Pizza = (props) => {
     const [productos, setProductos] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const productsPerPage = 10; // Cambiar por la cantidad de productos por página
-
-    //const [usuario, setUsurio] = useState([]);
-    //const [cargandoU, setCargandoU] = useState(true);
-
-    //const baseURL = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/me`;
-    //const miToken = localStorage.getItem('miToken');
 
     const fetchProductos = async () => {
         try {
@@ -27,37 +24,30 @@ const Pizza = (props) => {
         }
     };
 
-    // const fetchUsuario = async () => {
-    //     try {
-    //         console.log(miToken);
-    //         const response = await axios.post(baseURL, null, {
-    //             headers: {
-    //                 Authorization: `Bearer ${miToken}`,
-    //                 //"Authorization": `Bearer ${miToken}`,
-    //             },
-    //         });
-
-    //         setUsurio(response.data);
-    //         console.log(usuario.email);
-    //         setCargandoU(false);
-    //         //console.log(process.env.REACT_APP_API_HOST);
-    //     } catch (error) {
-    //         setError('Ocurrió un error con el usuario. Por favor, inténtalo de nuevo más tarde.');
-    //          console.log("error");
-    //          setCargandoU(false);
-    //      }
-    //  };
-
-
     useEffect(() => {
         fetchProductos();
-        //fetchUsuario();
-
     }, [currentPage]);
+
+    async function handleDelete(id) {
+        try {
+            const response = await axios.delete(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/eliminaProducto?id=${id}`);
+            setProductos(prevProductos => prevProductos.filter(producto => producto.id !== id));
+            console.log(response.data.data);
+            setCargando(false);
+        } catch (error) {
+            setError('Ocurrió un error al eliminar el producto. Por favor, inténtalo de nuevo más tarde.');
+            setCargando(false);
+        }
+    }
+
+    const navigate = useNavigate();
+
+    async function handleEditarClick(id) {
+        navigate(`/UpdatePizza/${id}`);
+    };
 
     return (
         <div class="container-fluid">
-
 
             <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>Atras</button>
             <button onClick={() => setCurrentPage(currentPage + 1)} disabled={productos.length === 0 || productos.length < productsPerPage}>Next</button>
@@ -80,13 +70,15 @@ const Pizza = (props) => {
 
                                         <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="100%" height="225" />
                                         <div class="card-body">
-                                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                            <p class="card-text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus, provident? Ex, modi quia? Molestiae, maiores dolores eius repellat molestias sed! Distinctio sunt consectetur vero commodi adipisci perspiciatis reiciendis repellat tempora.</p>
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="btn-group">
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleDelete(producto.id)}>Eliminar</button>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(producto.id)}>
+                                                        EDITAR
+                                                    </button>
                                                 </div>
-                                                <small class="text-body-secondary">9 mins</small>
+
                                             </div>
                                         </div>
                                     </div>

@@ -45,19 +45,19 @@ export const NavbarCliente = () => {
                 </button>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="#">
-                        <NavLink className="nav-link" to="/Pizza"> <h3>PIZZA</h3></NavLink>
+                        <NavLink className="nav-link" to="/Pizzac"> <h3>PIZZA</h3></NavLink>
                     </a></li>
                     <li><a class="dropdown-item" href="#">
-                        <NavLink className="nav-link" to="/Lazana"><h3>LAZAÑA</h3></NavLink>
+                        <NavLink className="nav-link" to="/Lazanac"><h3>LAZAÑA</h3></NavLink>
                     </a></li>
                     <li><a class="dropdown-item" href="#">
-                        <NavLink className="nav-link" to="/Calzone"><h3>CALZONE</h3></NavLink>
+                        <NavLink className="nav-link" to="/Calzonec"><h3>CALZONE</h3></NavLink>
                     </a></li>
                     <li><a class="dropdown-item" href="#">
-                        <NavLink className="nav-link" to="/Combos"><h3>COMBOS</h3></NavLink>
+                        <NavLink className="nav-link" to="/Combosc"><h3>COMBOS</h3></NavLink>
                     </a></li>
                     <li><a class="dropdown-item" href="#">
-                        <NavLink className="nav-link" to="/Bebidas"><h3>BEBIDAS</h3></NavLink>
+                        <NavLink className="nav-link" to="/Bebidasc"><h3>BEBIDAS</h3></NavLink>
                     </a></li>
                     <li><a class="dropdown-item" href="#">
                         <NavLink className="nav-link" to="/Carrito"><h3>CARRITO DE COMPRAS</h3></NavLink>

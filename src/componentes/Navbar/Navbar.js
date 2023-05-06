@@ -38,7 +38,7 @@ export const Navbar = () => {
 
     useEffect(() => {
         fetchUsuario();
-    }, []); // lista de dependencias vacía para evitar que se ejecute en cada renderizado
+    }, [usuario]); // lista de dependencias vacía para evitar que se ejecute en cada renderizado
 
     return (
         <nav className="text-light bg-dark">
