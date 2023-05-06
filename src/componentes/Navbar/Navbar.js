@@ -51,7 +51,7 @@ export const Navbar = () => {
                 ) : error ? (
                     <NavbarDefault />
                 ) : (
-                    usuario.rol === "administrador" ? (
+                    usuario.rol === "ADMINISTRADOR" ? (
                         <NavbarAdministrador />
                     ) : usuario.rol === "CLIENTE" ? (
                         <NavbarCliente />

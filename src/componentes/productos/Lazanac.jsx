@@ -4,7 +4,7 @@ import '../../App.css';
 
 import { useNavigate } from 'react-router-dom';
 
-const Calzonec = (props) => {
+const Lazanac = (props) => {
     const [productos, setProductos] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
@@ -43,7 +43,7 @@ const Calzonec = (props) => {
     const navigate = useNavigate();
 
     async function handleEditarClick(id) {
-        navigate(`/UpdatePizza/${id}`);
+        navigate(`/DetalleProducto/${id}`);
     };
 
     return (
@@ -73,6 +73,9 @@ const Calzonec = (props) => {
                                             <p class="card-text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus, provident? Ex, modi quia? Molestiae, maiores dolores eius repellat molestias sed! Distinctio sunt consectetur vero commodi adipisci perspiciatis reiciendis repellat tempora.</p>
 
                                         </div>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(producto.id)}>
+                                            VER DETALLE
+                                        </button>
                                     </div>
                                 </div>
                             ))
@@ -88,4 +91,4 @@ const Calzonec = (props) => {
     );
 };
 
-export default Calzonec;
+export default Lazanac;

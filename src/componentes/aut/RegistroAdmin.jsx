@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import '../../App.css';
 import axios from "axios";
 
@@ -6,7 +7,9 @@ const baseURL = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBac
 
 
 
-const Registro = () => {
+const RegistroAdmin = () => {
+    const params = useParams();
+
     const [formData, setFormData] = useState({
         name: '',
         apellido: '',
@@ -14,7 +17,7 @@ const Registro = () => {
         password: '',
         fecha: '',
         genero: '',
-        rol: 'CLIENTE'
+        rol: params.id
     });
 
     // Función para manejar los cambios en los campos del formulario
@@ -36,12 +39,12 @@ const Registro = () => {
                 },
             });
             alert(response.data.mensaje + "\n" + response.data.data.descripcion);
-            console.log(response.data);
+            console.log(response.data.data.descripcion);
 
         } catch (error) {
             alert(error.message);
             alert("Error Login");
-            console.log(error);
+            console.log("Error");
         }
     };
 
@@ -155,4 +158,4 @@ const Registro = () => {
     )
 }
 
-export default Registro;
+export default RegistroAdmin;

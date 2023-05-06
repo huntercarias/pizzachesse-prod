@@ -11,7 +11,7 @@ export const NavbarAdministrador = () => {
     // consulta token almacenado en la localstorage
     const miToken = localStorage.getItem('miToken');
 
-    const SalirUsuario = async () => {
+    async function SalirUsuario() {
 
 
         try {
@@ -22,12 +22,12 @@ export const NavbarAdministrador = () => {
             });
             console.log("entro aqui");
 
-            navigate('/Login');
+            navigate(`/Login`);
         } catch (error) {
 
             console.log("error");
         }
-    };
+    }
 
 
 
@@ -60,7 +60,9 @@ export const NavbarAdministrador = () => {
                     <li> <form class="form-inline" onSubmit={SalirUsuario}>
                         <NavLink className="nav-link" >
 
-                            <button class="btn btn-outline-primary" type="submit"><h3>SALIR</h3></button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => SalirUsuario}>
+                                SALIR
+                            </button>
 
                         </NavLink>
                     </form></li>

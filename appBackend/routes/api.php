@@ -33,10 +33,7 @@ Route::get('getProducto', [ProductosController::class, 'show']);
 
 //muestra todos las personas
 Route::get('getAllProductos', [ProductosController::class, 'index']);
-
-Route::delete('eliminaProducto', [ProductosController::class, 'destroy']);
-// Registra una producto
-//Route::post('register', [AuthController::class, 'register']);
+Route::post('RegistraPersona', [PersonasController::class, 'store']);
 
 Route::group([
     'middleware' => 'api',
@@ -49,11 +46,10 @@ Route::group([
     Route::post('register', [AuthjwtController::class, 'register']);
     // Rutas protegidas con jwt.auth
     Route::middleware(['jwt.auth'])->group(function () {
-        Route::post('RegistraPersona', [PersonasController::class, 'store']);
         Route::post('ADDProductos', [ProductosController::class, 'store']);
         // Registra una tipoProducto
         Route::post('ADDtipoProductos', [TiposproductoController::class, 'store']);
         Route::post('updateProducto', [ProductosController::class, 'update']);
-
+        Route::delete('eliminaProducto', [ProductosController::class, 'destroy']);
     });
 });

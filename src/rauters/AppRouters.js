@@ -13,6 +13,14 @@ import Combos from '../componentes/productos/Combos';
 import Bebidas from '../componentes/productos/Bebidas';
 import Pizza from '../componentes/productos/Pizza';
 import Pizzac from '../componentes/productos/Pizzac';
+import Lazanac from '../componentes/productos/Lazanac';
+import Calzonec from '../componentes/productos/Calzonec';
+import Combosc from '../componentes/productos/Combosc';
+import Bebidasc from '../componentes/productos/Bebidasc';
+import RegistroAdmin from '../componentes/aut/RegistroAdmin';
+
+import DetalleProducto from '../componentes/productos/DetalleProducto';
+
 import Login from '../componentes/aut/Login';
 import Registro from '../componentes/aut/Registro';
 import { Navbar } from '../componentes/Navbar/Navbar';
@@ -46,10 +54,12 @@ export const AppRouter = () => {
 
 
                 <Route exact path='/Pizzac' element={<Pizzac variable={productoPizza} />} />
-                <Route exact path='/Lazanac' element={<Lazana variable={productoLazana} />} />
-                <Route exact path='/Calzonec' element={<Calzone variable={productoCalzone} />} />
-                <Route exact path='/Combosc' element={<Combos variable={productoCombos} />} />
-                <Route exact path='/Bebidasc' element={<Bebidas variable={productoBebidas} />} />
+                <Route exact path='/Lazanac' element={<Lazanac variable={productoLazana} />} />
+                <Route exact path='/Calzonec' element={<Calzonec variable={productoCalzone} />} />
+                <Route exact path='/Combosc' element={<Combosc variable={productoCombos} />} />
+                <Route exact path='/Bebidasc' element={<Bebidasc variable={productoBebidas} />} />
+                <Route exact path='/DetalleProducto/:id' element={<DetalleProducto />} />
+                <Route exact path='/RegistroAdmin/:id' element={<RegistroAdmin />} />
 
 
 

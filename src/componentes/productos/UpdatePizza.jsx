@@ -22,13 +22,6 @@ const UpdatePizza = () => {
         });
     };
 
-    // Función para manejar la carga del archivo
-    const handleFileChange = (event) => {
-        setFormState({
-            ...formState,
-            ruta_imagen: event.target.files[0],
-        });
-    };
 
     // Función para manejar el envío del formulario
     const handleSubmit = async (event) => {
@@ -40,6 +33,14 @@ const UpdatePizza = () => {
         formData.append("monto", formState.monto);
         formData.append("cantidad", formState.cantidad);
         formData.append("ruta_imagen", formState.ruta_imagen);
+
+        // Utilizar imagen o ruta_imagen según imagenCargada
+        if (formState.imagenCargada) {
+            formData.append("ruta_imagen", formState.imagen);
+        } else {
+            formData.append("ruta_imagen", formState.ruta_imagen);
+        }
+
         try {
             const response = await axios.post(baseURL, formData, {
                 headers: {
@@ -66,8 +67,18 @@ const UpdatePizza = () => {
         monto: "",
         cantidad: "",
         ruta_imagen: null,
-
+        imagenCargada: false, // Agregar imagenCargada al estado
     });
+
+
+    // Función para manejar la carga del archivo
+    const handleFileChange = (event) => {
+        setFormState({
+            ...formState,
+            ruta_imagen: event.target.files[0],
+            imagenCargada: false, // Cambiar a false cuando se carga una nueva imagen
+        });
+    };
 
     const [productos, setProductos] = useState([]);
     const fetchProductos = async () => {
@@ -86,8 +97,14 @@ const UpdatePizza = () => {
 
 
     useEffect(() => {
-        fetchProductos();
-    }, []);
+        if (productos.ruta_imagen && !formState.imagenCargada) {
+            setFormState({
+                ...formState,
+                imagen: productos.ruta_imagen,
+                imagenCargada: true, // Cambiar a true después de cargar la imagen
+            });
+        }
+    }, [productos.ruta_imagen]);
 
     return (
         <div>
@@ -188,8 +205,7 @@ const UpdatePizza = () => {
                             </div>
 
                         </div>
-                        <div class="col-sm-12  col-md-6 col-lg-6 offset-s1">
-
+                        <div class="col-sm-12 col-md-6 col-lg-6 offset-s1">
                             <div class="card-content">
                                 <div class="card-image">
                                     <img
@@ -201,16 +217,14 @@ const UpdatePizza = () => {
                                     />
                                 </div>
                             </div>
-
-
                             <div class="form-group mx-sm-3 mb-2 mt-3">
-                                <label htmlFor="ruta_imagen">Seleccionar archivo:</label>
+                                <label for="ruta_imagen">Seleccionar archivo:</label>
                                 <input
                                     type="file"
                                     id="ruta_imagen"
                                     name="ruta_imagen"
                                     accept=".jpg,.png"
-                                    onChange={handleFileChange}
+                                    onchange={handleFileChange}
                                 />
                             </div>
                         </div>
