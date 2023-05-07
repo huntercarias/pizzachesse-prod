@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\carritoCompras;
+use App\Models\detalleCarrito;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -120,6 +122,59 @@ class AuthjwtController extends Controller
             // Manejo de excepciones generales
             return response()->json([
                 'mensaje' => 'Error general intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function showMe(Request $request)
+    {
+        try {
+            $user = auth()->user(); // Obtiene el usuario autenticado
+            $request->validate([
+                'id_productos' => ['required', 'numeric', 'min:0'],
+                'total' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
+                'cantidad' => ['required', 'numeric', 'min:0'],
+            ]);
+            $cabeceraCarrito = carritoCompras::where('id_usuario', $user->id)->first(); // Busca la cabecera del carrito para el usuario autenticado
+            if (! $cabeceraCarrito) {
+                $cabeceraCarrito = carritoCompras::create([
+                    'id_usuario' => $user->id,
+                    'total' => 0.00,
+                ]);
+            }
+
+            $data = detalleCarrito::create([
+                'id_carrito_compras' => $cabeceraCarritor->id,
+                'id_productos' => $request['id_productos'],
+                'cantidad' => $request['cantidad'],
+                'total' => $request['total'],
+            ]);
+
+            return response()->json([
+                'mensaje' => 'Producto cargado',
+                'data' => $data,
+            ]);
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $exception->errors(),
+            ]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar adicionar registro',
                 'data' => $e->getMessage(),
             ]);
         }

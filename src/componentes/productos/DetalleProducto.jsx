@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import image1 from '../../imagenes/logoPizzaCheese.jpg';
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-
+import { useNavigate } from 'react-router-dom';
 
 
 const DetalleProducto = () => {
@@ -10,16 +10,12 @@ const DetalleProducto = () => {
 
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
-
-
-
     const [productos, setProductos] = useState([]);
+
+    const baseURLproductos = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/getProducto?id=${params.id}`;
     const fetchProductos = async () => {
         try {
-            const response = await axios.get(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/getProducto?id=${params.id}`);
-            console.log(response.data.data);
-
-
+            const response = await axios.get(baseURLproductos);
             setProductos(response.data.data);
             setCargando(false);
         } catch (error) {
@@ -33,15 +29,54 @@ const DetalleProducto = () => {
         fetchProductos();
     }, []);
 
+
+    async function valida_existe_carrito(id) {
+        try {
+            const response = await axios.get(`http://${process.env.REACT_APP_API_URL}/appBackend/public/api/getCarritoCompras?idusuario=${id}`);
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+            setCargando(false);
+        }
+    }
+
+    const baseURLusuario = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/showMe`;
+    // consulta token almacenado en la localstorage
+    const miToken = localStorage.getItem('miToken');
+    const navigate = useNavigate();
+    const [usuario, setUsuario] = useState([]);
+    const consulta_usuario = async (id = 1, monto) => {
+        const formData = new FormData();
+        formData.append("total", monto);
+        formData.append("cantidad", "1");
+        formData.append("id_productos", id);
+        try {
+            const response = await axios.post(baseURLusuario, formData, {
+                headers: {
+                    Authorization: `Bearer ${miToken}`,
+                },
+            });
+            setUsuario(response.data);
+            console.log(response);
+            //valida_existe_carrito(usuario.id);
+        } catch (error) {
+            setUsuario(error);
+            //navigate('/Login');
+        }
+    };
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        consulta_usuario();
+    };
+
+
     return (
         <div>
             <h1>ProductDetails: {params.id}</h1>
-
-
-
             {cargando && <p>Cargando...</p>}
+            {error && <p>Error cargando el Detalle del producto</p>}
             {!cargando && (
-                <form class="form-inline mt-5" >
+                <form class="form-inline mt-5" onSubmit={handleSubmit(productos.id, productos.monto)}>
                     <div class="row">
                         <div class="col-sm-12  col-md-6 col-lg-6  offset-s1">
                             <div class="card">
@@ -63,16 +98,11 @@ const DetalleProducto = () => {
                                         <label for="monto">Monto:</label>
                                         {productos.monto}
                                     </div>
-
                                     <button type="submit" class="btn btn-primary btn-block">Agregar Carrito</button>
-
                                 </div>
-
                             </div>
-
                         </div>
                         <div class="col-sm-12  col-md-6 col-lg-6 offset-s1">
-
                             <div class="card-content">
                                 <div class="card-image">
                                     <img
@@ -84,18 +114,10 @@ const DetalleProducto = () => {
                                     />
                                 </div>
                             </div>
-
-
-
                         </div>
                     </div>
-
                 </form>
-
             )}
-
-
-
         </div>
     )
 }

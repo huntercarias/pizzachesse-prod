@@ -47,20 +47,41 @@ export const Navbar = () => {
                     <img src={image1} alt="Logo" className="rounded" width="80%" height="175" />
                 </Link>
                 {cargandoU ? (
-                    <NavbarDefault />
+                    <div className="row">
+                        <NavbarDefault />
+                        <div className="col-sm-4 col-md-3 col-lg-2">
+                            <h5> {usuario.email} </h5>
+                            <h5> {usuario.rol} </h5>
+                        </div>
+                    </div>
                 ) : error ? (
-                    <NavbarDefault />
+                    <div className="row">
+                        <NavbarDefault /><div className="col-sm-4 col-md-3 col-lg-2">
+                            <h5> {usuario.email} </h5>
+                            <h5> {usuario.rol} </h5>
+                        </div>
+                    </div>
+
                 ) : (
                     usuario.rol === "ADMINISTRADOR" ? (
-                        <NavbarAdministrador />
+                        <div className="row">
+                            <NavbarAdministrador />
+                            <h5> {usuario.email} </h5>
+                            <h5> {usuario.rol} </h5>
+                        </div>
+
                     ) : usuario.rol === "CLIENTE" ? (
-                        <NavbarCliente />
+                        <div className="row">
+                            <NavbarCliente />
+                            <div className="col-sm-4 col-md-3 col-lg-2">
+                                <h5> {usuario.email} </h5>
+                                <h5> {usuario.rol} </h5>
+                            </div>
+                        </div>
+
                     ) : null
                 )}
-                <div className="col-sm-4 col-md-3 col-lg-2">
-                    <h5> {usuario.email} </h5>
-                    <h5> {usuario.rol} </h5>
-                </div>
+
             </div>
         </nav>
     );

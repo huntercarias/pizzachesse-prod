@@ -14,7 +14,7 @@ class detalleCarrito extends Model
      *
      * @var string
      */
-    protected $table = 'carrito_compras';
+    protected $table = 'detalle_carritos';
 
     /**
      * The primary key associated with the table.

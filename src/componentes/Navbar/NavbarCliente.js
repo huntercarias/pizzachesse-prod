@@ -1,23 +1,25 @@
 import { NavLink } from 'react-router-dom';
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import { useNavigate } from 'react-router-dom';
 
 
 export const NavbarCliente = () => {
     //`${process.env.REACT_APP_API_URL}/Login`
 
-
+    //console.log("estoy aqui ciente");
     const baseURL = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/logout`;
 
     // consulta token almacenado en la localstorage
     const miToken = localStorage.getItem('miToken');
+    const navigate = useNavigate();
+    const [usuario, setUsurio] = useState([]);
+    const [cargandoU, setCargandoU] = useState(true);
+    const [error, setError] = useState(null);
 
-    const SalirUsuario = async () => {
+    async function SalirUsuario() {
 
-        const [usuario, setUsurio] = useState([]);
-        const [cargandoU, setCargandoU] = useState(true);
-        const [error, setError] = useState(null);
+
 
         try {
             const response = await axios.post(baseURL, null, {
@@ -25,10 +27,13 @@ export const NavbarCliente = () => {
                     Authorization: `Bearer ${miToken}`,
                 },
             });
+            navigate('/Login');
 
-            setUsurio(response.data);
-            setCargandoU(false);
+
         } catch (error) {
+            console.log(error);
+            alert("error salida");
+
             setError('Ocurrió un error con el usuario. Por favor, inténtalo de nuevo más tarde.');
             setCargandoU(false);
         }
@@ -66,10 +71,11 @@ export const NavbarCliente = () => {
                         <NavLink className="nav-link" to="/Pedidos"><h3>PEDIDOS REALIZADOS</h3></NavLink>
                     </a></li>
                     <li><a class="dropdown-item" href="#">
-                        <NavLink className="nav-link" to="/Login">
-                            <form class="form-inline" onSubmit={SalirUsuario}>
-                                <button class="btn btn-outline-primary" type="submit"><h3>SALIR</h3></button>
-                            </form>
+                        <NavLink className="nav-link" >
+
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => SalirUsuario()}>
+                                SALIR
+                            </button>
                         </NavLink>
                     </a></li>
                 </ul>

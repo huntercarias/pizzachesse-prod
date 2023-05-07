@@ -37,7 +37,8 @@ const Login = () => {
             console.log(response.data.access_token);
             //almacena variable en la locallstorage de la maquina
             localStorage.setItem('miToken', response.data.access_token);
-            console.log("Entro aqui");
+
+            alert(response.data.id);
             navigate('/');
         } catch (error) {
             alert(error.message);
