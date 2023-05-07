@@ -49,7 +49,8 @@ Route::group([
     Route::post('logout', [AuthjwtController::class, 'logout']);
     Route::post('refresh', [AuthjwtController::class, 'refresh']);
     Route::post('me', [AuthjwtController::class, 'me']);
-    Route::post('showMe', [AuthjwtController::class, 'showMe']);
+    Route::post('StoreProducto', [AuthjwtController::class, 'StoreProductoCarrito']);
+    Route::post('ShowDetalleCarrito', [AuthjwtController::class, 'ShowDetalleCarrito']);
     Route::post('register', [AuthjwtController::class, 'register']);
     // Rutas protegidas con jwt.auth
     Route::middleware(['jwt.auth'])->group(function () {

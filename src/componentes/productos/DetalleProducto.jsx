@@ -30,33 +30,26 @@ const DetalleProducto = () => {
     }, []);
 
 
-    async function valida_existe_carrito(id) {
-        try {
-            const response = await axios.get(`http://${process.env.REACT_APP_API_URL}/appBackend/public/api/getCarritoCompras?idusuario=${id}`);
-            console.log(response);
-        } catch (error) {
-            console.log(error);
-            setCargando(false);
-        }
-    }
 
-    const baseURLusuario = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/showMe`;
+    const baseURLusuario = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/StoreProducto`;
+    //const baseURLusuario = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/ShowDetalleCarrito`;
     // consulta token almacenado en la localstorage
     const miToken = localStorage.getItem('miToken');
     const navigate = useNavigate();
     const [usuario, setUsuario] = useState([]);
-    const consulta_usuario = async (id = 1, monto) => {
+    const consulta_usuario = async (productos) => {
+        console.log("carrito de compras");
         const formData = new FormData();
-        formData.append("total", monto);
-        formData.append("cantidad", "1");
-        formData.append("id_productos", id);
+        formData.append("total", productos.monto);
+        formData.append("cantidad", productos.cantidad);
+        formData.append("id_productos", productos.id);
         try {
             const response = await axios.post(baseURLusuario, formData, {
                 headers: {
                     Authorization: `Bearer ${miToken}`,
                 },
             });
-            setUsuario(response.data);
+            //setUsuario(response.data);
             console.log(response);
             //valida_existe_carrito(usuario.id);
         } catch (error) {
@@ -64,11 +57,10 @@ const DetalleProducto = () => {
             //navigate('/Login');
         }
     };
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        consulta_usuario();
-    };
 
+    async function handleEditarClick(productos) {
+        consulta_usuario(productos);
+    };
 
     return (
         <div>
@@ -76,47 +68,49 @@ const DetalleProducto = () => {
             {cargando && <p>Cargando...</p>}
             {error && <p>Error cargando el Detalle del producto</p>}
             {!cargando && (
-                <form class="form-inline mt-5" onSubmit={handleSubmit(productos.id, productos.monto)}>
-                    <div class="row">
-                        <div class="col-sm-12  col-md-6 col-lg-6  offset-s1">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h4 class="text-center">DETALLE PRODUCTO</h4>
-                                </div>
-                                <div class="card-body">
 
-                                    <div class="form-group">
-                                        <label for="email">Descripción:</label>
-                                        {productos.descripcion}
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="cantidad">Cantidad: </label>
-                                        {productos.cantidad}
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="monto">Monto:</label>
-                                        {productos.monto}
-                                    </div>
-                                    <button type="submit" class="btn btn-primary btn-block">Agregar Carrito</button>
-                                </div>
+                <div class="row">
+                    <div class="col-sm-12  col-md-6 col-lg-6  offset-s1">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="text-center">DETALLE PRODUCTO</h4>
                             </div>
-                        </div>
-                        <div class="col-sm-12  col-md-6 col-lg-6 offset-s1">
-                            <div class="card-content">
-                                <div class="card-image">
-                                    <img
-                                        src={`data:image/jpg;base64,${productos.ruta_imagen}`}
-                                        alt="default"
-                                        class="img-fluid"
-                                        width="80%"
-                                        height="100"
-                                    />
+                            <div class="card-body">
+
+                                <div class="form-group">
+                                    <label for="email">Descripción:</label>
+                                    {productos.descripcion}
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="cantidad">Cantidad: </label>
+                                    {productos.cantidad}
+                                </div>
+                                <div class="form-group">
+                                    <label for="monto">Monto:</label>
+                                    {productos.monto}
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(productos)}>
+                                    AGREGAR AL CARRITO DE COMPRAS
+                                </button>
                             </div>
                         </div>
                     </div>
-                </form>
+                    <div class="col-sm-12  col-md-6 col-lg-6 offset-s1">
+                        <div class="card-content">
+                            <div class="card-image">
+                                <img
+                                    src={`data:image/jpg;base64,${productos.ruta_imagen}`}
+                                    alt="default"
+                                    class="img-fluid"
+                                    width="80%"
+                                    height="100"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             )}
         </div>
     )

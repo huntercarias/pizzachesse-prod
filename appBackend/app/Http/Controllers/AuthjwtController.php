@@ -132,14 +132,14 @@ class AuthjwtController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function showMe(Request $request)
+    public function StoreProductoCarrito(Request $request)
     {
         try {
             $user = auth()->user(); // Obtiene el usuario autenticado
             $request->validate([
-                'id_productos' => ['required', 'numeric', 'min:0'],
-                'total' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
-                'cantidad' => ['required', 'numeric', 'min:0'],
+                'id_productos' => ['required', 'numeric'],
+                'total' => ['required', 'numeric'],
+                'cantidad' => ['required', 'numeric'],
             ]);
             $cabeceraCarrito = carritoCompras::where('id_usuario', $user->id)->first(); // Busca la cabecera del carrito para el usuario autenticado
             if (! $cabeceraCarrito) {
@@ -149,16 +149,93 @@ class AuthjwtController extends Controller
                 ]);
             }
 
-            $data = detalleCarrito::create([
-                'id_carrito_compras' => $cabeceraCarritor->id,
-                'id_productos' => $request['id_productos'],
-                'cantidad' => $request['cantidad'],
-                'total' => $request['total'],
-            ]);
+            $detalleCarrito = detalleCarrito::where('id_carrito_compras', $cabeceraCarrito->id)
+                             ->where('id_productos', $request['id_productos'])
+                             ->first();
+
+            if (! $detalleCarrito) {
+                 $data = detalleCarrito::create([
+                     'id_carrito_compras' => $cabeceraCarrito->id,
+                     'id_productos' => $request['id_productos'],
+                     'cantidad' => $request['cantidad'],
+                     'total' => $request['total'],
+                 ]);
+            } else {
+                $data = detalleCarrito::findOrFail($detalleCarrito->id);
+                $data->cantidad = $data->cantidad + $request['cantidad'];
+                $data->total = $data->total + $request['total'];
+                $data->save();
+            }
+
+            $data->totales = $detalleCarritoSumatoria = detalleCarrito::where('id_carrito_compras', $cabeceraCarrito->id)->sum('total');
+
+            $cabeceraCarritototales = carritoCompras::findOrFail($cabeceraCarrito->id);
+
+            // Actualizar los campos del modelo
+            $cabeceraCarritototales->total = $data->totales;
+
+            // Guardar los cambios en la base de datos
+            $cabeceraCarritototales->save();
 
             return response()->json([
                 'mensaje' => 'Producto cargado',
                 'data' => $data,
+            ]);
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $exception->errors(),
+            ]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function ShowDetalleCarrito()
+    {
+        try {
+            $user = auth()->user(); // Obtiene el usuario autenticado
+            $cabeceraCarrito = carritoCompras::where('id_usuario', $user->id)->first(); // Busca la cabecera del carrito para el usuario autenticado
+            if (! $cabeceraCarrito) {
+                $cabeceraCarrito = carritoCompras::create([
+                    'id_usuario' => $user->id,
+                    'total' => 0.00,
+                ]);
+            }
+
+            $detalleCarrito = detalleCarrito::where('id_carrito_compras', $cabeceraCarrito->id)->get();
+            $detalleCarritoContar = 0;
+            $detalleCarritoContar = detalleCarrito::where('id_carrito_compras', $cabeceraCarrito->id)->count();
+            if ($detalleCarritoContar == 0) {
+                return response()->json(['mensaje' => 'Carrito Vacio'], 404);
+            }
+
+            $cabeceraCarritototales = carritoCompras::findOrFail($cabeceraCarrito->id);
+
+            // Actualizar los campos del modelo
+            $cabeceraCarritototales->total = $detalleCarritoSumatoria = detalleCarrito::where('id_carrito_compras', $cabeceraCarrito->id)->sum('total');
+
+            // Guardar los cambios en la base de datos
+            $cabeceraCarritototales->save();
+
+            return response()->json([
+                'mensaje' => 'Detalle Carrito Compras',
+                'data' => $detalleCarrito,
             ]);
         } catch (ValidationException $exception) {
             return response()->json([
