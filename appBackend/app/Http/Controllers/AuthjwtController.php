@@ -218,7 +218,13 @@ class AuthjwtController extends Controller
                 ]);
             }
 
-            $detalleCarrito = detalleCarrito::where('id_carrito_compras', $cabeceraCarrito->id)->get();
+            //$detalleCarrito = detalleCarrito::where('id_carrito_compras', $cabeceraCarrito->id)->get();
+
+            $detalleCarrito = detalleCarrito::select('detalle_carritos.*', 'productos.*')
+                    ->join('productos', 'productos.id', '=', 'detalle_carritos.id_productos')
+                    ->where('detalle_carritos.id_carrito_compras', $cabeceraCarrito->id)
+                    ->get();
+
             $detalleCarritoContar = 0;
             $detalleCarritoContar = detalleCarrito::where('id_carrito_compras', $cabeceraCarrito->id)->count();
             if ($detalleCarritoContar == 0) {
@@ -232,6 +238,8 @@ class AuthjwtController extends Controller
 
             // Guardar los cambios en la base de datos
             $cabeceraCarritototales->save();
+
+            $detalleCarrito->totalCarrito = $detalleCarritoSumatoria;
 
             return response()->json([
                 'mensaje' => 'Detalle Carrito Compras',

@@ -18,6 +18,7 @@ import Calzonec from '../componentes/productos/Calzonec';
 import Combosc from '../componentes/productos/Combosc';
 import Bebidasc from '../componentes/productos/Bebidasc';
 import RegistroAdmin from '../componentes/aut/RegistroAdmin';
+import ProductosCarritoCompras from '../componentes/carrito/ProductosCarritoCompra';
 
 import DetalleProducto from '../componentes/productos/DetalleProducto';
 
@@ -61,6 +62,7 @@ export const AppRouter = () => {
                 <Route exact path='/DetalleProducto/:id' element={<DetalleProducto />} />
                 <Route exact path='/RegistroAdmin/:id' element={<RegistroAdmin />} />
 
+                <Route exact path='/ProductosCarritoCompra' element={<ProductosCarritoCompras />} />
 
 
                 <Route exact path='/Registro' element={<Registro />} />
