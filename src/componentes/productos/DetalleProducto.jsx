@@ -41,7 +41,7 @@ const DetalleProducto = () => {
         console.log("carrito de compras");
         const formData = new FormData();
         formData.append("total", productos.monto);
-        formData.append("cantidad", productos.cantidad);
+        formData.append("cantidad", "1");
         formData.append("id_productos", productos.id);
         try {
             const response = await axios.post(baseURLusuario, formData, {

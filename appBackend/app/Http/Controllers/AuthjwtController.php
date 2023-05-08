@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\carritoCompras;
 use App\Models\detalleCarrito;
 use App\Models\User;
+use Exception;
+use FileNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -220,12 +223,11 @@ class AuthjwtController extends Controller
 
             //$detalleCarrito = detalleCarrito::where('id_carrito_compras', $cabeceraCarrito->id)->get();
 
-            $detalleCarrito = detalleCarrito::select('detalle_carritos.*', 'productos.*')
+            $detalleCarrito = detalleCarrito::select('detalle_carritos.*', 'productos.descripcion', 'productos.ruta_imagen')
                     ->join('productos', 'productos.id', '=', 'detalle_carritos.id_productos')
                     ->where('detalle_carritos.id_carrito_compras', $cabeceraCarrito->id)
                     ->get();
 
-            $detalleCarritoContar = 0;
             $detalleCarritoContar = detalleCarrito::where('id_carrito_compras', $cabeceraCarrito->id)->count();
             if ($detalleCarritoContar == 0) {
                 return response()->json(['mensaje' => 'Carrito Vacio'], 404);
@@ -239,13 +241,74 @@ class AuthjwtController extends Controller
             // Guardar los cambios en la base de datos
             $cabeceraCarritototales->save();
 
-            $detalleCarrito->totalCarrito = $detalleCarritoSumatoria;
+            $data = [];
+
+            foreach ($detalleCarrito as $detalle) {
+                $path = storage_path('app/'.$detalle->ruta_imagen);
+                $file = File::get($path);
+                $type = File::mimeType($path);
+
+                $producto = [
+                    'id' => $detalle->id,
+                    'cantidad' => $detalle->cantidad,
+                    'descripcion' => $detalle->descripcion,
+                    'total' => $detalle->total,
+                    'ruta_imagen' => base64_encode($file),
+                    'tipo_imagen' => $type,
+                ];
+
+                array_push($data, $producto);
+            }
 
             return response()->json([
                 'mensaje' => 'Detalle Carrito Compras',
-                'data' => $detalleCarrito,
+                'data' => $data,
             ]);
+        } catch (FileNotFoundException $e) {
+            // Manejar la excepción aquí
+            return response()->json(['mensaje' => 'El archivo no existe'], 404);
         } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $exception->errors(),
+            ]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function ConsultaCarrito()
+    {
+        try {
+            $user = auth()->user(); // Obtiene el usuario autenticado
+            $cabeceraCarrito = carritoCompras::where('id_usuario', $user->id)->first(); // Busca la cabecera del carrito para el usuario autenticado
+            if (! $cabeceraCarrito) {
+                $cabeceraCarrito = carritoCompras::create([
+                    'id_usuario' => $user->id,
+                    'total' => 0.00,
+                ]);
+            }
+
+            return response()->json([
+                'mensaje' => 'Detalle Carrito Compras',
+                'data' => $cabeceraCarrito,
+            ]);
+       } catch (ValidationException $exception) {
             return response()->json([
                 'mensaje' => 'Error al crear el registro en la base de datos.',
                 'data' => $exception->errors(),

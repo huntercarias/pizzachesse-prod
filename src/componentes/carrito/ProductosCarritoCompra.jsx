@@ -1,11 +1,11 @@
 import axios from 'axios';
 import '../../App.css';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
 
 
 const ProductosCarritoCompra = () => {
-    const params = useParams();
+
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
     const [productos, setProductos] = useState([]);
@@ -24,7 +24,7 @@ const ProductosCarritoCompra = () => {
             });
             //setUsuario(response.data);
             setProductos(response.data.data);
-            console.log(response.data.data);
+            //console.log(response.data.data);
             setCargando(false);
             //valida_existe_carrito(usuario.id);
         } catch (error) {
@@ -36,7 +36,37 @@ const ProductosCarritoCompra = () => {
 
     useEffect(() => {
         consulta_usuario();
+        consulta_Saldo();
     }, []);
+
+    const [cargandoA, setCargandoA] = useState(true);
+    const [errorA, setErrorA] = useState(null);
+    const [SaldoCarrito, setSaldoCarrito] = useState([]);
+
+    const baseURLsaldo = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/ConsultaCarritoCompras`;
+
+    const consulta_Saldo = async () => {
+        try {
+            const responseA = await axios.post(baseURLsaldo, null, {
+                headers: {
+                    Authorization: `Bearer ${miToken}`,
+                },
+            });
+            //setUsuario(response.data);
+            // console.log(responseA.data.data);
+            setSaldoCarrito(responseA.data.data);
+            //console.log(response.data.data);
+            setCargandoA(false);
+            //valida_existe_carrito(usuario.id);
+        } catch (errorA) {
+            setSaldoCarrito(errorA);
+            setCargandoA(false);
+            //navigate('/Login');
+        }
+    };
+
+
+
 
 
     return (
@@ -45,10 +75,10 @@ const ProductosCarritoCompra = () => {
             <table class="table">
                 <thead >
                     <tr>
-                        <th scope="col">Producto</th>
-                        <th scope="col">Precio unitario</th>
-                        <th scope="col">Cantidad</th>
-                        <th scope="col">Subtotal</th>
+                        <th scope="col">.</th>
+                        <th scope="col">NOMBRE</th>
+                        <th scope="col">CANTIDAD</th>
+                        <th scope="col">MONTO</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -58,12 +88,23 @@ const ProductosCarritoCompra = () => {
                         <p>{error}</p>
                     ) : productos.length > 0 ? (
                         productos.map((producto) => (
-
                             <tr>
-                                <th scope="row">{producto.ruta_imagen}</th>
-                                <td>{producto.descripcion}</td>
+                                <th scope="row">
+                                    <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="60%" height="225" />
+                                </th>
+                                <td>
+                                    {producto.descripcion}
+                                </td>
                                 <td>{producto.cantidad}</td>
-                                <td>{producto.monto}</td>
+                                <td>
+                                    {producto.total}
+
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" >
+                                        ELIMINAR
+                                    </button>
+                                </td>
                             </tr>
                         ))
                     ) : (
@@ -71,10 +112,20 @@ const ProductosCarritoCompra = () => {
                     )}
                 </tbody>
                 <tfoot>
-                    <tr>
-                        <td colspan="3">Total:</td>
-                        <td>$35.00</td>
-                    </tr>
+                    {cargandoA && <p>Cargando...</p>}
+                    {errorA && <p>Error cargando el Detalle del producto</p>}
+                    {!cargandoA && (
+
+                        <tr>
+                            <td colspan="2">Total:</td>
+                            <td> {SaldoCarrito.total}</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" >
+                                    RELIZAR PEDIDO
+                                </button>
+                            </td>
+                        </tr>
+                    )}
                 </tfoot>
             </table>
         </div>

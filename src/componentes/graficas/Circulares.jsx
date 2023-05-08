@@ -1,55 +1,34 @@
 import React from 'react';
-import { Doughnut } from 'react-chartjs-2';
-import { Container, Navbar, Nav } from 'react-bootstrap';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
-const data = {
-    labels: ['Satisfecho', 'Poco satisfecho', 'Insatisfecho'],
-    datasets: [
-        {
-            label: 'Nivel de satisfacción del cliente',
-            data: [60, 25, 15],
-            backgroundColor: [
-                '#36A2EB',
-                '#FFCE56',
-                '#FF6384'
-            ],
-            hoverBackgroundColor: [
-                '#36A2EB',
-                '#FFCE56',
-                '#FF6384'
-            ]
-        }
-    ]
-};
-
-const options = {
-    maintainAspectRatio: false,
-    responsive: true
-};
+const data = [
+    { producto: 'Producto A', ventas: 900 },
+    { producto: 'Producto B', ventas: 200 },
+    { producto: 'Producto C', ventas: 300 },
+    { producto: 'Producto D', ventas: 400 },
+    { producto: 'Producto E', ventas: 500 },
+];
 
 const Circulares = () => {
     return (
-        <>
-            <Navbar bg="light" expand="lg">
-                <Container>
-                    <Navbar.Brand href="#">Nombre de la empresa</Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="me-auto">
-                            <Nav.Link href="#">Inicio</Nav.Link>
-                            <Nav.Link href="#">Acerca de nosotros</Nav.Link>
-                        </Nav>
-                        <Nav>
-                            <Nav.Link href="#">Usuario logueado</Nav.Link>
-                        </Nav>
-                    </Navbar.Collapse>
-                </Container>
-            </Navbar>
-            <Container>
-                <Doughnut data={data} options={options} />
-                <button className="btn btn-primary mt-3">Ir al menú principal</button>
-            </Container>
-        </>
+        <BarChart
+            width={600}
+            height={300}
+            data={data}
+            margin={{
+                top: 20,
+                right: 30,
+                left: 20,
+                bottom: 5,
+            }}
+        >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="producto" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="ventas" fill="#8884d8" />
+        </BarChart>
     );
 };
 
