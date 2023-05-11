@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import '../../App.css';
 import axios from "axios";
 
@@ -8,7 +8,9 @@ const baseURL = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBac
 
 
 const RegistroAdmin = () => {
+
     const params = useParams();
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         name: '',
@@ -39,8 +41,8 @@ const RegistroAdmin = () => {
                 },
             });
             alert(response.data.mensaje + "\n" + response.data.data.descripcion);
-            console.log(response.data.data.descripcion);
-
+            console.log(response.data);
+            navigate('/');
         } catch (error) {
             alert(error.message);
             alert("Error Login");

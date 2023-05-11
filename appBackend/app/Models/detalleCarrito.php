@@ -32,6 +32,9 @@ class detalleCarrito extends Model
         'id_carrito_compras',
         'id_productos',
         'cantidad',
+        'extra_queso',
+        'extra_jamon',
+        'extra_peperoni',
         'total',
     ];
 

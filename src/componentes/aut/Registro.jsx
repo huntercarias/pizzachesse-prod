@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import '../../App.css';
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 const baseURL = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/register`;
 
 
 
 const Registro = () => {
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         name: '',
         apellido: '',
@@ -36,7 +39,8 @@ const Registro = () => {
                 },
             });
             alert(response.data.mensaje + "\n" + response.data.data.descripcion);
-            console.log(response.data);
+            console.log(response);
+            navigate('/');
 
         } catch (error) {
             alert(error.message);

@@ -30,7 +30,11 @@ class pedido_encabezado extends Model
      */
     protected $fillable = [
         'id_usuario',
+        'id_carrito',
+        'total',
         'status-pedido',
+        'id_direcciones',
+        'id_telefonos',
     ];
 
     /**

@@ -40,3 +40,6 @@ php artisan vendor:publish
 - php artisan jwt.secret
 hnc
 php artisan jwt:secret
+
+
+

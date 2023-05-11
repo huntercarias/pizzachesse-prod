@@ -27,7 +27,6 @@ const UpdatePizza = () => {
         formData.append('descripcion', formState.descripcion);
         formData.append('id_tiposproducto', formState.id_tiposproducto);
         formData.append('monto', formState.monto);
-        formData.append('cantidad', formState.cantidad);
         formData.append('ruta_imagen', formState.ruta_imagen);
 
         // Utilizar imagen o ruta_imagen según imagenCargada
@@ -46,6 +45,7 @@ const UpdatePizza = () => {
             });
             alert(`${response.data.mensaje}\n${response.data.data.descripcion}`);
             console.log(response.data.data.descripcion);
+            window.location.reload();
         } catch (error) {
             console.log(error);
             alert('Error al agregar Producto');
@@ -60,7 +60,6 @@ const UpdatePizza = () => {
         descripcion: '',
         id_tiposproducto: '',
         monto: '',
-        cantidad: '',
         ruta_imagen: null,
         imagenCargada: false, // Agregar imagenCargada al estado
     });
@@ -80,8 +79,8 @@ const UpdatePizza = () => {
         try {
             const response = await axios.get(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/getProducto?id=${params.id}`);
             console.log(response.data.data);
-            const { id, id_tiposproducto, descripcion, ruta_imagen, monto, cantidad } = response.data.data;
-            setFormState({ ...formState, descripcion, id_tiposproducto, monto, cantidad });
+            const { id, id_tiposproducto, descripcion, ruta_imagen, monto } = response.data.data;
+            setFormState({ ...formState, descripcion, id_tiposproducto, monto });
             setProductos(response.data.data);
             setCargando(false);
         } catch {
@@ -167,19 +166,6 @@ const UpdatePizza = () => {
                                                 Bebidas
                                             </label>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="cantidad">Cantidad:</label>
-                                        <input
-                                            type="number"
-                                            class="form-control"
-                                            id="cantidad"
-                                            placeholder="Ingresa la cantidad"
-                                            required
-                                            name="cantidad"
-                                            value={formState.cantidad}
-                                            onChange={handleInputChange}
-                                        ></input>
                                     </div>
                                     <div class="form-group">
                                         <label for="monto">Monto:</label>

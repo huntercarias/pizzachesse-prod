@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('telefonos', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_persona');
-            $table->foreign('id_persona')->references('id')->on('personas');
+            $table->unsignedBigInteger('id_usuario');
+            $table->foreign('id_usuario')->references('id')->on('users');
             $table->string('numero_telefono');
             $table->string('extension');
             $table->string('numero_celular');

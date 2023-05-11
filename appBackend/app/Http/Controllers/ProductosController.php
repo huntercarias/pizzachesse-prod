@@ -89,7 +89,6 @@ class ProductosController extends Controller
                 'descripcion' => ['required', 'string', 'min:3', 'max:255', 'unique:productos'],
                 'ruta_imagen' => ['required', 'mimes:,jpg,png,jpeg', 'max:2048'],
                 'monto' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
-                'cantidad' => ['required', 'numeric', 'min:0'],
             ]);
 
             // validacion para ver si no trae archivo envia mensaje
@@ -111,7 +110,7 @@ class ProductosController extends Controller
                 'descripcion' => $request['descripcion'],
                 'ruta_imagen' => $path,
                 'monto' => $request['monto'],
-                'cantidad' => $request['cantidad'],
+                'cantidad' => '1',
             ]);
 
             return response()->json([
@@ -159,7 +158,7 @@ class ProductosController extends Controller
                 'descripcion' => $productos->descripcion,
                 'ruta_imagen' => base64_encode($file),
                 'monto' => $productos->monto,
-                'cantidad' => $productos->cantidad,
+                'cantidad' => '1',
                 'created_at' => $productos->created_at,
                 'updated_at' => $productos->updated_at,
                 'deleted_at' => $productos->deleted_at,
@@ -205,7 +204,6 @@ class ProductosController extends Controller
                 'descripcion' => ['required', 'string', 'min:3', 'max:255'],
                 'ruta_imagen' => ['nullable', 'mimes:,jpg,png,jpeg', 'max:2048'],
                 'monto' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
-                'cantidad' => ['required', 'numeric', 'min:0'],
             ]);
 
             $producto = productos::findOrFail($request->input('id'));
@@ -214,7 +212,6 @@ class ProductosController extends Controller
             $producto->id_tiposproducto = $request->input('id_tiposproducto');
             $producto->descripcion = $request->input('descripcion');
             $producto->monto = $request->input('monto');
-            $producto->cantidad = $request->input('cantidad');
 
             // Si se proporciona un archivo, actualizar la ruta de la imagen
             if ($request->hasFile('ruta_imagen')) {
@@ -232,6 +229,9 @@ class ProductosController extends Controller
                 'mensaje' => 'Se actualizó correctamente el producto',
                 'data' => $producto,
             ]);
+        } catch (FileNotFoundException $e) {
+            // Manejar la excepción aquí
+            return response()->json(['mensaje' => 'El archivo no existe'], 404);
 
         } catch (ValidationException $exception) {
             return response()->json([

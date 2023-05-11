@@ -18,6 +18,9 @@ return new class extends Migration
             $table->unsignedBigInteger('id_productos');
             $table->foreign('id_productos')->references('id')->on('productos');
             $table->integer('cantidad');
+            $table->integer('extra_queso');
+            $table->integer('extra_jamon');
+            $table->integer('extra_peperoni');
             $table->decimal('total', $precision = 8, $scale = 2);
             $table->timestamps();
             $table->softDeletes();

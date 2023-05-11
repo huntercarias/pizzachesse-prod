@@ -15,7 +15,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_usuario');
             $table->foreign('id_usuario')->references('id')->on('users');
+            $table->integer('id_carrito');
+            $table->decimal('total', $precision = 8, $scale = 2);
             $table->string('status_pedido');
+            $table->integer('id_direcciones');
+            $table->integer('id_telefonos');
             $table->timestamps();
             $table->softDeletes();
         });

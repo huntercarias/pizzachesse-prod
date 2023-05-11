@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../App.css';
-
+import image12 from '../../imagenes/horno_inicio_fondo_pantalla.jpg';
 
 const Inicio = () => {
     const [productos, setProductos] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
+
+    const image1 = image12;
 
     const fetchProductos = async () => {
         try {
@@ -25,11 +27,22 @@ const Inicio = () => {
     }, []);
 
     return (
-        <div>
-
+        <div style={{
+            backgroundImage: `url(${image1})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            fontSize: "16px"
+        }}>
             <div class="album py-5 bg-body-tertiary">
                 <div class="container">
                     <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 g-1">
+
+                        <div class="container">
+                            <h1>Pizzeria Cheese</h1>
+                            <h2>Tu mejor opción</h2>
+                        </div>
+
+
 
                         {cargando ? (
                             <p>Cargando productos...</p>
@@ -72,7 +85,7 @@ const Inicio = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

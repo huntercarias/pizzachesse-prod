@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('direcciones', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_persona');
-            $table->foreign('id_persona')->references('id')->on('personas');
+            $table->unsignedBigInteger('id_usuario');
+            $table->foreign('id_usuario')->references('id')->on('users');
             $table->string('nomenclatura');
             $table->string('zona');
             $table->string('ciudad');

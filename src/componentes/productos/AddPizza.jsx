@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
 import image1 from '../../imagenes/logoPizzaCheese.jpg';
+import { useNavigate } from 'react-router-dom';
 
 const baseURL = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/ADDProductos`;
 // consulta token almacenado en la localstorage
 const miToken = localStorage.getItem('miToken');
 
 function AddPizza() {
+
+
+    const navigate = useNavigate();
+
     const [formState, setFormState] = useState({
         descripcion: "",
         id_tiposproducto: "",
@@ -40,7 +45,6 @@ function AddPizza() {
         formData.append("descripcion", formState.descripcion);
         formData.append("id_tiposproducto", formState.id_tiposproducto);
         formData.append("monto", formState.monto);
-        formData.append("cantidad", formState.cantidad);
         formData.append("ruta_imagen", formState.ruta_imagen);
         try {
             const response = await axios.post(baseURL, formData, {
@@ -51,6 +55,8 @@ function AddPizza() {
             });
             alert(response.data.mensaje + "\n" + response.data.data.descripcion);
             console.log(response.data.data.descripcion);
+            navigate('/AddProducto');
+            window.location.reload();
         } catch (error) {
             console.log(error);
             alert("Error al agregar Producto");
@@ -114,19 +120,7 @@ function AddPizza() {
                                     </label>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="cantidad">Cantidad:</label>
-                                <input
-                                    type="number"
-                                    class="form-control"
-                                    id="cantidad"
-                                    placeholder="Ingresa la cantidad"
-                                    required
-                                    name="cantidad"
-                                    value={formState.cantidad}
-                                    onChange={handleInputChange}
-                                ></input>
-                            </div>
+
                             <div class="form-group">
                                 <label for="monto">Monto:</label>
                                 <input

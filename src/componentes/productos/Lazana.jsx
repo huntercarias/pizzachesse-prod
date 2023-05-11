@@ -30,7 +30,7 @@ const Lazana = (props) => {
 
     async function handleDelete(id) {
         try {
-            const response = await axios.delete(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/eliminaProducto?id=${id}`);
+            const response = await axios.delete(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/eliminaProducto?id=${id}`);
             setProductos(prevProductos => prevProductos.filter(producto => producto.id !== id));
             console.log(response.data.data);
             setCargando(false);

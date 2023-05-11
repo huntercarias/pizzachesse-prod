@@ -97,6 +97,7 @@ class AuthjwtController extends Controller
                 'password' => 'required|string|min:6',
                 'rol' => 'required|string|min:6',
             ]);
+
             if ($validator->fails()) {
                 return response()->json($validator->errors()->toJson(), 400);
             }
@@ -143,6 +144,9 @@ class AuthjwtController extends Controller
                 'id_productos' => ['required', 'numeric'],
                 'total' => ['required', 'numeric'],
                 'cantidad' => ['required', 'numeric'],
+                'extra_queso' => ['required', 'numeric'],
+                'extra_jamon' => ['required', 'numeric'],
+                'extra_peperoni' => ['required', 'numeric'],
             ]);
             $cabeceraCarrito = carritoCompras::where('id_usuario', $user->id)->first(); // Busca la cabecera del carrito para el usuario autenticado
             if (! $cabeceraCarrito) {
@@ -154,6 +158,9 @@ class AuthjwtController extends Controller
 
             $detalleCarrito = detalleCarrito::where('id_carrito_compras', $cabeceraCarrito->id)
                              ->where('id_productos', $request['id_productos'])
+                             ->where('extra_queso', $request['extra_queso'])
+                             ->where('extra_jamon', $request['extra_jamon'])
+                             ->where('extra_peperoni', $request['extra_peperoni'])
                              ->first();
 
             if (! $detalleCarrito) {
@@ -161,12 +168,15 @@ class AuthjwtController extends Controller
                      'id_carrito_compras' => $cabeceraCarrito->id,
                      'id_productos' => $request['id_productos'],
                      'cantidad' => $request['cantidad'],
-                     'total' => $request['total'],
+                     'extra_queso' => $request['extra_queso'],
+                     'extra_jamon' => $request['extra_jamon'],
+                     'extra_peperoni' => $request['extra_peperoni'],
+                     'total' => $request['total'] * $request['cantidad'],
                  ]);
             } else {
                 $data = detalleCarrito::findOrFail($detalleCarrito->id);
                 $data->cantidad = $data->cantidad + $request['cantidad'];
-                $data->total = $data->total + $request['total'];
+                $data->total = $data->cantidad * $request['total'];
                 $data->save();
             }
 
@@ -253,6 +263,9 @@ class AuthjwtController extends Controller
                     'cantidad' => $detalle->cantidad,
                     'descripcion' => $detalle->descripcion,
                     'total' => $detalle->total,
+                    'extra_queso' => $detalle->extra_queso,
+                    'extra_jamon' => $detalle->extra_jamon,
+                    'extra_peperoni' => $detalle->extra_peperoni,
                     'ruta_imagen' => base64_encode($file),
                     'tipo_imagen' => $type,
                 ];
@@ -309,6 +322,71 @@ class AuthjwtController extends Controller
                 'data' => $cabeceraCarrito,
             ]);
        } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $exception->errors(),
+            ]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function SolicitaPedido()
+    {
+        try {
+            $user = auth()->user(); // Obtiene el usuario autenticado
+            $cabeceraCarrito = carritoCompras::where('id_usuario', $user->id)->first(); // Busca la cabecera del carrito para el usuario autenticado
+            if (! $cabeceraCarrito) {
+                return response()->json(['mensaje' => 'CARRITO DE COMPRA VACIO'], 404);
+            }
+            if ($cabeceraCarrito->total == 0) {
+                return response()->json(['mensaje' => 'CARRITO DE COMPRA VACIO'], 404);
+            }
+
+            $cabeceraCarritoSolicitud = carritoCompras::select('carrito_compras.*', 'direcciones.*', 'telefonos.*')
+                ->join('direcciones', 'carrito_compras.id_direccion', '=', 'direcciones.id')
+                ->join('telefonos', 'carrito_compras.id_telefono', '=', 'telefonos.id')
+                ->where('carrito_compras.id', $cabeceraCarrito->id)
+                ->get();
+
+            if ($cabeceraCarritoSolicitud->isEmpty()) {
+                return response()->json(['mensaje' => 'CARRITO DE COMPRA VACIO'], 404);
+            }
+
+            $data = [];
+
+            foreach ($cabeceraCarritoSolicitud as $carrito) {
+                $carritoCompra = [
+                    'id_usuario' => $carrito->id_usuario,
+                    'id_carrito' => $carrito->id_carrito,
+                    'total' => $carrito->total,
+                    'status_pedido' => 'SOLICITUD-PEDIDO',
+                    'nomenclatura' => $carrito->id_direccion,
+                ];
+
+                array_push($data, $carritoCompra);
+            }
+
+            return response()->json([
+                'mensaje' => 'Detalle Carrito Compras',
+                'data' => $data,
+            ]);
+        } catch (ValidationException $exception) {
             return response()->json([
                 'mensaje' => 'Error al crear el registro en la base de datos.',
                 'data' => $exception->errors(),
