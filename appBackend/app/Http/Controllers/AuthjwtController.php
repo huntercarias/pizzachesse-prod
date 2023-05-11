@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\carritoCompras;
-use App\Models\detalleCarrito;
 use App\Models\User;
 use Exception;
 use FileNotFoundException;
