@@ -32,7 +32,7 @@ class pedido_encabezado extends Model
         'id_usuario',
         'id_carrito',
         'total',
-        'status-pedido',
+        'status_pedido',
         'id_direcciones',
         'id_telefonos',
         'forma_pago',

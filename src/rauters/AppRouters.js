@@ -19,6 +19,11 @@ import Combosc from '../componentes/productos/Combosc';
 import Bebidasc from '../componentes/productos/Bebidasc';
 import RegistroAdmin from '../componentes/aut/RegistroAdmin';
 import ProductosCarritoCompras from '../componentes/carrito/ProductosCarritoCompra';
+import DetalleDireccionTelefono from '../componentes/carrito/DetalleDirecciones';
+import RegistroDireccionTelefono from '../componentes/carrito/RegistroDireccionTelefono';
+import DetalleTelefono from '../componentes/carrito/DetalleTelefono';
+import DetalleCompra from '../componentes/carrito/DetalleCompra';
+import Pedidos from '../componentes/pedidos/Pedidos';
 
 import DetalleProducto from '../componentes/productos/DetalleProducto';
 
@@ -61,13 +66,18 @@ export const AppRouter = () => {
                 <Route exact path='/Bebidasc' element={<Bebidasc variable={productoBebidas} />} />
                 <Route exact path='/DetalleProducto/:id' element={<DetalleProducto />} />
                 <Route exact path='/RegistroAdmin/:id' element={<RegistroAdmin />} />
+                <Route exact path='/PedidosRealizadosUsuarios' element={<Pedidos />} />
 
+                <Route exact path='/DetalleCompra' element={<DetalleCompra />} />
                 <Route exact path='/ProductosCarritoCompra' element={<ProductosCarritoCompras />} />
                 <Route exact path='/Registro' element={<Registro />} />
                 <Route exact path='/UpdatePizza/:id' element={<UpdatePizza />} />
                 <Route exact path='/Circulares' element={<Circulares />} />
                 <Route exact path='/Graficas' element={<Graficas />} />
                 <Route exact path='/AddProducto' element={<AddPizza />} />
+                <Route exact path='/DetalleDireccionTelefono' element={<DetalleDireccionTelefono />} />
+                <Route exact path='/RegistroDireccionTelefono' element={<RegistroDireccionTelefono />} />
+                <Route exact path='/DetalleTelefono' element={<DetalleTelefono />} />
             </Routes>
         </Router>
     )

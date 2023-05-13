@@ -9,7 +9,7 @@ const DetalleDirecciones = () => {
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
     const [productos, setProductos] = useState([]);
-    const baseURLusuario = `http://localhost/pizzachesse-prod/appBackend/public/api/auth/ConsultaDirecciones`;
+    const baseURLusuario = `http://localhost/pizzachesse-prod/appBackend/public/api/auth/ConsultaTelefonos`;
     //const baseURLusuario = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/ShowDetalleCarrito`;
     // consulta token almacenado en la localstorage
     const miToken = localStorage.getItem('miToken');
@@ -46,7 +46,7 @@ const DetalleDirecciones = () => {
         try {
             const formData = new FormData();
             formData.append("status_pedido", "CREACION PEDIDO");
-            formData.append("id_direcciones", id);
+            formData.append("id_telefonos", id);
             const response = await axios.post(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/RealizaPedido`, formData, {
                 headers: {
                     Authorization: `Bearer ${miToken}`,
@@ -55,15 +55,14 @@ const DetalleDirecciones = () => {
 
             // window.location.reload();
             console.log(response.data.data);
-            alert("seleccion exitosa");
-
-            navigate('/DetalleTelefono');
             //setCargando(false);
+            alert("seleccion exitosa");
+            navigate('/DetalleCompra');
         } catch (error) {
             //setError('Ocurrió un error al eliminar el producto. Por favor, inténtalo de nuevo más tarde.');
             //setCargando(false);
             console.log(error);
-            alert("error en seleccion intente mas tarde");
+            alert("error en la seleccion, intente de nuevo");
         }
     }
 
@@ -99,19 +98,18 @@ const DetalleDirecciones = () => {
 
     return (
         <div>
-            <h1>Detalle Direcciones</h1>
+            <h1>Detalle Telefono</h1>
             <button type="button" className="btn btn-sm btn-outline-secondary">
                 <a href="http://localhost:3000/RegistroDireccionTelefono">REGISTRAR DIRECCIONES Y TELEFONOS</a>
             </button>
             <table className="table">
                 <thead>
                     <tr>
-                        <th scope="col">NOMENCLATURA</th>
-                        <th scope="col">ZONA</th>
-                        <th scope="col">CIUDAD</th>
-                        <th scope="col">DEPARTAMENTO</th>
-                        <th scope="col">MUNICIPIO</th>
-                        <th scope="col">LOTE</th>
+                        <th scope="col">NUMERO TELEFONO</th>
+                        <th scope="col">EXTENSION</th>
+                        <th scope="col">NUMERO CELULAR</th>
+                        <th scope="col">NUMERO DE WHATZAP</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -126,12 +124,11 @@ const DetalleDirecciones = () => {
                         productos.map((producto) => (
                             <tr key={producto.id}>
 
-                                <th scope="row">{producto.nomenclatura}</th>
-                                <td>{producto.zona}</td>
-                                <td>{producto.ciudad}</td>
-                                <td>{producto.departamento}</td>
-                                <td>{producto.municipio}</td>
-                                <td>{producto.lote}</td>
+                                <th scope="row">{producto.numero_telefono}</th>
+                                <td>{producto.extension}</td>
+                                <td>{producto.numero_celular}</td>
+                                <td>{producto.numero_de_whatzap}</td>
+
                                 <td>
                                     <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => SeleccionarDireccion(producto.id)}>
                                         SELECCIONAR

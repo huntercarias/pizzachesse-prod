@@ -1,34 +1,67 @@
-import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-
-const data = [
-    { producto: 'Producto A', ventas: 900 },
-    { producto: 'Producto B', ventas: 200 },
-    { producto: 'Producto C', ventas: 300 },
-    { producto: 'Producto D', ventas: 400 },
-    { producto: 'Producto E', ventas: 500 },
-];
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 
 const Circulares = () => {
+    const [productos, setProductos] = useState([]);
+    const [cargando, setCargando] = useState(false);
+    const [error, setError] = useState(null);
+    const baseURLusuario = 'http://localhost/pizzachesse-prod/appBackend/public/api/auth/ReporteTiposProductos';
+    const miToken = localStorage.getItem('miToken');
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setCargando(true);
+                const response = await axios.post(baseURLusuario, null, {
+                    headers: {
+                        Authorization: `Bearer ${miToken}`,
+                    },
+                });
+                setProductos(response.data.data);
+                setCargando(false);
+            } catch (error) {
+                setError(error.message);
+                setCargando(false);
+            }
+        };
+        fetchData();
+    }, []);
+
+    if (cargando) {
+        return <div>Cargando...</div>;
+    }
+
+    if (error) {
+        return <div>Ha ocurrido un error: {error}</div>;
+    }
+
     return (
-        <BarChart
-            width={600}
-            height={300}
-            data={data}
-            margin={{
-                top: 20,
-                right: 30,
-                left: 20,
-                bottom: 5,
-            }}
-        >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="producto" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="ventas" fill="#8884d8" />
-        </BarChart>
+
+
+        <div>
+            <h1>VENTAS POR TIPO DE PRODUCTO</h1>
+            <BarChart
+                width={600}
+                height={500}
+                data={productos}
+                margin={{
+                    top: 20,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                }}
+            >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="PRODUCTOS" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="total" fill="#8884d8" />
+            </BarChart>
+        </div>
     );
 };
 

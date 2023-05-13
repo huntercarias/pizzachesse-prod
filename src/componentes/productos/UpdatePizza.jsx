@@ -27,7 +27,7 @@ const UpdatePizza = () => {
         formData.append('descripcion', formState.descripcion);
         formData.append('id_tiposproducto', formState.id_tiposproducto);
         formData.append('monto', formState.monto);
-        formData.append('ruta_imagen', formState.ruta_imagen);
+
 
         // Utilizar imagen o ruta_imagen según imagenCargada
         if (formState.imagenCargada) {

@@ -53,6 +53,13 @@ Route::group([
     Route::post('ShowDetalleCarrito', [AuthjwtController::class, 'ShowDetalleCarrito']);
     Route::post('ConsultaCarritoCompras', [AuthjwtController::class, 'ConsultaCarrito']);
     Route::post('register', [AuthjwtController::class, 'register']);
+    Route::post('ConsultaDirecciones', [AuthjwtController::class, 'Muestralistadirecciones']);
+    Route::post('ConsultaTelefonos', [AuthjwtController::class, 'Muestralistatelefono']);
+    Route::post('RealizaPedido', [AuthjwtController::class, 'StorePedidoCarritoDireccion']);
+    Route::post('ConsultaDatosPedidos', [AuthjwtController::class, 'InformacionPedidoCarrito']);
+    Route::post('RealizaSolicituInicial', [AuthjwtController::class, 'SolicitudPedidoCarritoInicial']);
+    Route::post('ListaPedidosRealizadosUser', [AuthjwtController::class, 'MostrarPedidoRealizados']);
+    Route::post('ReporteTiposProductos', [AuthjwtController::class, 'MostrarResultadosProducto']);
 
     // Rutas protegidas con jwt.auth
     Route::middleware(['jwt.auth'])->group(function () {
@@ -66,5 +73,6 @@ Route::group([
         Route::post('creaCarritoCompras', [CarritoComprasController::class, 'store']);
         Route::post('UpdateCarritoCompras', [CarritoComprasController::class, 'update']);
         Route::delete('EliminarProductoCarrito', [AuthjwtController::class, 'EliminarProductoCarrito']);
+        Route::post('GuardaDireccionTelefono', [AuthjwtController::class, 'GuardaDireccion']);
     });
 });

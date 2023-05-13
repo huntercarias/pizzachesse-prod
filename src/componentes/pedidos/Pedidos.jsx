@@ -4,13 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
 
 
-const DetalleDirecciones = () => {
+const Pedidos = () => {
 
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
     const [productos, setProductos] = useState([]);
-    const baseURLusuario = `http://localhost/pizzachesse-prod/appBackend/public/api/auth/ConsultaDirecciones`;
-    //const baseURLusuario = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/ShowDetalleCarrito`;
+    const baseURLusuario = `http://localhost/pizzachesse-prod/appBackend/public/api/auth/ListaPedidosRealizadosUser`;
     // consulta token almacenado en la localstorage
     const miToken = localStorage.getItem('miToken');
     const navigate = useNavigate();
@@ -99,19 +98,15 @@ const DetalleDirecciones = () => {
 
     return (
         <div>
-            <h1>Detalle Direcciones</h1>
-            <button type="button" className="btn btn-sm btn-outline-secondary">
-                <a href="http://localhost:3000/RegistroDireccionTelefono">REGISTRAR DIRECCIONES Y TELEFONOS</a>
-            </button>
+            <h1>Detalle Pedidos</h1>
+
             <table className="table">
                 <thead>
                     <tr>
-                        <th scope="col">NOMENCLATURA</th>
-                        <th scope="col">ZONA</th>
-                        <th scope="col">CIUDAD</th>
-                        <th scope="col">DEPARTAMENTO</th>
-                        <th scope="col">MUNICIPIO</th>
-                        <th scope="col">LOTE</th>
+                        <th scope="col">CARRITO</th>
+                        <th scope="col">TOTAL</th>
+                        <th scope="col">ESTATUS PEDIDO</th>
+                        <th scope="col">FORMA DE PAGO</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -119,30 +114,27 @@ const DetalleDirecciones = () => {
                     {cargando ? (
                         <p>Cargando productos...</p>
                     ) : error ? (
-                        <button type="button" className="btn btn-sm btn-outline-secondary">
-                            <a href="http://localhost:3000/RegistroDireccionTelefono">REGISTRAR DIRECCIONES Y TELEFONOS</a>
-                        </button>
+                        <p>NO TIENE PEDIDOS...</p>
                     ) : productos.length > 0 ? (
                         productos.map((producto) => (
-                            <tr key={producto.id}>
+                            <tr key={productos.id}>
 
-                                <th scope="row">{producto.nomenclatura}</th>
-                                <td>{producto.zona}</td>
-                                <td>{producto.ciudad}</td>
-                                <td>{producto.departamento}</td>
-                                <td>{producto.municipio}</td>
-                                <td>{producto.lote}</td>
+                                <th scope="row">{producto.id_carrito}</th>
+                                <td>Q {producto.total}</td>
+                                <td>{producto.status_pedido}</td>
                                 <td>
-                                    <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => SeleccionarDireccion(producto.id)}>
+                                    {producto.forma_pago === 1 ? 'Cash' : productos.forma_pago === 2 ? 'POS' : 'BOTON DE PAGO'}
+                                </td>
+
+                                <td>
+                                    <button type="button" className="btn btn-sm btn-outline-secondary" >
                                         SELECCIONAR
                                     </button>
                                 </td>
                             </tr>
                         ))
                     ) : (
-                        <button type="button" className="btn btn-sm btn-outline-secondary">
-                            <a href="http://localhost:3000/RegistroDireccionTelefono">REGISTRAR DIRECCIONES Y TELEFONOS</a>
-                        </button>
+                        <p>en espera</p>
                     )}
                 </tbody>
 
@@ -151,4 +143,4 @@ const DetalleDirecciones = () => {
     );
 };
 
-export default DetalleDirecciones;
+export default Pedidos;

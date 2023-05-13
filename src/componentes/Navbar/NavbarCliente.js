@@ -69,7 +69,7 @@ export const NavbarCliente = () => {
                         <NavLink className="nav-link" to="/ProductosCarritoCompra"><h3>CARRITO DE COMPRAS</h3></NavLink>
                     </a></li>
                     <li><a class="dropdown-item" href="#">
-                        <NavLink className="nav-link" to="/Pedidos"><h3>PEDIDOS REALIZADOS</h3></NavLink>
+                        <NavLink className="nav-link" to="/PedidosRealizadosUsuarios"><h3>PEDIDOS REALIZADOS</h3></NavLink>
                     </a></li>
                     <li><a class="dropdown-item" href="#">
                         <NavLink className="nav-link" >

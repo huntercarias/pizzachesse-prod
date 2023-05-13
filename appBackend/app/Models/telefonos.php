@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class telefono extends Model
+class telefonos extends Model
 {
     use SoftDeletes;
 
@@ -29,11 +29,11 @@ class telefono extends Model
      * @var array
      */
     protected $fillable = [
-        'id_persona',
+        'id_usuario',
         'numero_telefono',
         'extension',
         'numero_celular',
-        'numero de whatzap',
+        'numero_de_whatzap',
     ];
 
     /**

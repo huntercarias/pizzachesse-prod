@@ -144,7 +144,7 @@ const ProductosCarritoCompra = () => {
                             <td> {SaldoCarrito.total}</td>
                             <td>
                                 <button type="button" class="btn btn-sm btn-outline-secondary" >
-                                    RELIZAR PEDIDO
+                                    <a href="http://localhost:3000/DetalleDireccionTelefono"> RELIZAR PEDIDO</a>
                                 </button>
                             </td>
                         </tr>

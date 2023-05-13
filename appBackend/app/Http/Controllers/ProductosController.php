@@ -202,7 +202,7 @@ class ProductosController extends Controller
                 'id' => ['required', 'numeric', 'min:0'],
                 'id_tiposproducto' => ['required', 'numeric', 'min:0'],
                 'descripcion' => ['required', 'string', 'min:3', 'max:255'],
-                'ruta_imagen' => ['nullable', 'mimes:,jpg,png,jpeg', 'max:2048'],
+
                 'monto' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
             ]);
 
@@ -212,7 +212,7 @@ class ProductosController extends Controller
             $producto->id_tiposproducto = $request->input('id_tiposproducto');
             $producto->descripcion = $request->input('descripcion');
             $producto->monto = $request->input('monto');
-
+/*
             // Si se proporciona un archivo, actualizar la ruta de la imagen
             if ($request->hasFile('ruta_imagen')) {
                 // Obtener el nombre original del archivo cargado
@@ -221,7 +221,7 @@ class ProductosController extends Controller
                 $path = $request->file('ruta_imagen')->storeAs($nombreArchivo);
                 $producto->ruta_imagen = $path;
             }
-
+*/
             // Guardar los cambios en la base de datos
             $producto->save();
 
