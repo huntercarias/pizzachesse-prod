@@ -29,7 +29,7 @@ class direcciones extends Model
      * @var array
      */
     protected $fillable = [
-        'id_persona',
+        'id_usuario',
         'nomenclatura',
         'zona',
         'ciudad',

@@ -63,8 +63,6 @@ export const AppRouter = () => {
                 <Route exact path='/RegistroAdmin/:id' element={<RegistroAdmin />} />
 
                 <Route exact path='/ProductosCarritoCompra' element={<ProductosCarritoCompras />} />
-
-
                 <Route exact path='/Registro' element={<Registro />} />
                 <Route exact path='/UpdatePizza/:id' element={<UpdatePizza />} />
                 <Route exact path='/Circulares' element={<Circulares />} />
@@ -74,4 +72,5 @@ export const AppRouter = () => {
         </Router>
     )
 }
+
 

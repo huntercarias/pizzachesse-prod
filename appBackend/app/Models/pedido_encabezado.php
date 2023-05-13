@@ -35,6 +35,8 @@ class pedido_encabezado extends Model
         'status-pedido',
         'id_direcciones',
         'id_telefonos',
+        'forma_pago',
+        'id_repartidor',
     ];
 
     /**

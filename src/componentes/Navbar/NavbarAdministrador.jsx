@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,8 +10,12 @@ export const NavbarAdministrador = () => {
 
     // consulta token almacenado en la localstorage
     const miToken = localStorage.getItem('miToken');
+    const [usuario, setUsurio] = useState([]);
+    const [cargandoU, setCargandoU] = useState(true);
+    const [error, setError] = useState(null);
 
     async function SalirUsuario() {
+
 
 
         try {
@@ -20,14 +24,18 @@ export const NavbarAdministrador = () => {
                     Authorization: `Bearer ${miToken}`,
                 },
             });
-            console.log("entro aqui");
+            window.location.reload();
+            navigate('/Login');
 
-            navigate(`/Login`);
+
         } catch (error) {
+            console.log(error);
+            alert("error salida");
 
-            console.log("error");
+            setError('Ocurrió un error con el usuario. Por favor, inténtalo de nuevo más tarde.');
+            setCargandoU(false);
         }
-    }
+    };
 
 
 

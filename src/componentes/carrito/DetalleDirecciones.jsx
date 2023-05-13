@@ -105,7 +105,10 @@ const ProductosCarritoCompra = () => {
                     {cargando ? (
                         <p>Cargando productos...</p>
                     ) : error ? (
-                        <p>{error}</p>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" >
+                            REGISTRAR DIRECCIONES Y TELEFONOS<a href="http://localhost:3000/Registro"></a>
+                        </button>
+
                     ) : productos.length > 0 ? (
                         productos.map((producto) => (
                             <tr key={producto.id}>

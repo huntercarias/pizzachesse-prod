@@ -27,6 +27,7 @@ export const NavbarCliente = () => {
                     Authorization: `Bearer ${miToken}`,
                 },
             });
+            window.location.reload();
             navigate('/Login');
 
 

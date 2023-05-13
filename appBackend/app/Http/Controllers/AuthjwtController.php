@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\carritoCompras;
+use App\Models\detalleCarrito;
+use App\Models\direcciones;
+use App\Models\pedido_encabezado;
+use App\Models\telefono;
 use App\Models\User;
 use Exception;
 use FileNotFoundException;
@@ -94,7 +98,7 @@ class AuthjwtController extends Controller
                 'name' => 'required',
                 'email' => 'required|string|email|max:100|unique:users',
                 'password' => 'required|string|min:6',
-                'rol' => 'required|string|min:6',
+                'rol' => 'required|string|min:2',
             ]);
 
             if ($validator->fails()) {
@@ -316,6 +320,14 @@ class AuthjwtController extends Controller
                 ]);
             }
 
+            $cabeceraCarritototales = carritoCompras::findOrFail($cabeceraCarrito->id);
+
+            // Actualizar los campos del modelo
+            $cabeceraCarritototales->total = detalleCarrito::where('id_carrito_compras', $cabeceraCarrito->id)->sum('total');
+
+            // Guardar los cambios en la base de datos
+            $cabeceraCarritototales->save();
+
             return response()->json([
                 'mensaje' => 'Detalle Carrito Compras',
                 'data' => $cabeceraCarrito,
@@ -345,7 +357,477 @@ class AuthjwtController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function SolicitaPedido()
+    public function GuardaDireccion(Request $request)
+    {
+        try {
+            $user = auth()->user(); // Obtiene el usuario autenticado
+
+            $request->validate([
+                'nomenclatura' => ['required', 'string', 'min:2'],
+                'zona' => ['required', 'numeric'],
+                'ciudad' => ['required', 'string', 'min:2'],
+                'departamento' => ['required', 'string', 'min:2'],
+                'municipio' => ['required', 'string', 'min:2'],
+                'lote' => ['numeric'],
+                'numero_telefono' => ['numeric', 'min:8'],
+                'extension' => ['numeric', 'min:2'],
+                'numero_celular' => ['required',  'numeric', 'min:8'],
+                'numero_de_whatzap' => ['required', 'numeric', 'min:8'],
+            ]);
+
+            if (! $user) {
+                return response()->json(['mensaje' => 'Error usuario no autenticado'], 400);
+            } else {
+                $direccion = direcciones::create([
+                    'id_usuario' => $user->id,
+                    'nomenclatura' => $request['nomenclatura'],
+                    'zona' => $request['zona'],
+                    'ciudad' => $request['ciudad'],
+                    'departamento' => $request['departamento'],
+                    'municipio' => $request['municipio'],
+                    'lote' => $request['lote'],
+                ]);
+                $telefono = telefonos::create([
+                    'id_usuario' => $user->id,
+                    'numero_telefono' => $request['numero_telefono'],
+                    'extension' => $request['extension'],
+                    'numero_celular' => $request['numero_celular'],
+                    'numero_de_whatzap' => $request['numero_de_whatzap'],
+                ]);
+            }
+
+            return response()->json([
+                'mensaje' => 'Direccion y Telefono guardado exitosamente',
+            ]);
+       } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $exception->errors(),
+            ]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function updatedireccion(Request $request)
+    {
+        try {
+            //Validación
+            $request->validate([
+                'id' => ['required', 'numeric'],
+                'nomenclatura' => ['required', 'string', 'min:2'],
+                'zona' => ['required', 'numeric'],
+                'ciudad' => ['required', 'string', 'min:2'],
+                'departamento' => ['required', 'string', 'min:2'],
+                'municipio' => ['required', 'string', 'min:2'],
+                'lote' => ['numeric'],
+            ]);
+            $direcciones = direcciones::findOrFail($request->input('id'));
+            // Actualizar los campos del modelo
+            $direcciones->nomenclatura = $request->input('nomenclatura');
+            $direcciones->zona = $request->input('zona');
+            $direcciones->ciudad = $request->input('ciudad');
+            $direcciones->departamento = $request->input('departamento');
+            $direcciones->municipio = $request->input('municipio');
+            $direcciones->lote = $request->input('lote');
+            // Guardar los cambios en la base de datos
+            $direcciones->save();
+
+            return response()->json([
+                'mensaje' => 'Se actualizó correctamente la direccion',
+                'data' => $direcciones,
+            ]);
+        } catch (FileNotFoundException $e) {
+            // Manejar la excepción aquí
+            return response()->json(['mensaje' => 'El archivo no existe'], 404);
+
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error en información ingresada',
+                'data' => $exception->errors(),
+            ], 400);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al actualizar el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar actualizar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function destroydireccion(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+        ]);
+
+        try {
+            $producto = direcciones::findOrFail($request->input('id'));
+            $producto->delete();
+
+            return response()->json([
+                'mensaje' => 'Se eliminó correctamente el registro',
+            ]);
+
+        } catch (ModelNotFoundException $exception) {
+            return response()->json([
+                'mensaje' => 'El registro que intenta eliminar no existe',
+            ], 404);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al eliminar el registro de la base de datos',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar eliminar el registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function updatetelefono(Request $request)
+    {
+        try {
+            //Validación
+            $request->validate([
+                'id' => ['required', 'numeric'],
+                'numero_telefono' => ['numeric', 'min:8'],
+                'extension' => ['numeric', 'min:2'],
+                'numero_celular' => ['required',  'numeric', 'min:8'],
+                'numero_de_whatzap' => ['required', 'numeric', 'min:8'],
+            ]);
+
+            $telefono = telefonos::findOrFail($request->input('id'));
+            // Actualizar los campos del modelo
+            $telefono->numero_telefono = $request->input('numero_telefono');
+            $telefono->extension = $request->input('extension');
+            $telefono->numero_celular = $request->input('numero_celular');
+            $telefono->numero_de_whatzap = $request->input('numero_de_whatzap');
+            // Guardar los cambios en la base de datos
+            $telefono->save();
+
+            return response()->json([
+                'mensaje' => 'Se actualizó correctamente la telefono',
+                'data' => $telefono,
+            ]);
+        } catch (FileNotFoundException $e) {
+            // Manejar la excepción aquí
+            return response()->json(['mensaje' => 'El archivo no existe'], 404);
+
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error en información ingresada',
+                'data' => $exception->errors(),
+            ], 400);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al actualizar el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar actualizar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function destroytelefonos(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+        ]);
+
+        try {
+            $telefono = telefonos::findOrFail($request->input('id'));
+            $telefono->delete();
+
+            return response()->json([
+                'mensaje' => 'Se eliminó correctamente el registro',
+            ]);
+
+        } catch (ModelNotFoundException $exception) {
+            return response()->json([
+                'mensaje' => 'El registro que intenta eliminar no existe',
+            ], 404);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al eliminar el registro de la base de datos',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar eliminar el registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function Muestralistadirecciones(Request $request)
+    {
+        try {
+            $user = auth()->user(); // Obtiene el usuario autenticado
+
+            if (! $user) {
+                return response()->json(['mensaje' => 'Error usuario no autenticado'], 400);
+            } else {
+                $direccion = direcciones::find($user->id);
+                if (! $direccion) {
+                    return response()->json(['mensaje' => 'no tiene direcciones'], 404);
+                }
+            }
+
+            return response()->json([
+                'mensaje' => 'Lista de todas Direccion',
+                'data' => $direccion,
+            ]);
+       } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $exception->errors(),
+            ]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function Muestralistatelefono(Request $request)
+    {
+        try {
+            $user = auth()->user(); // Obtiene el usuario autenticado
+
+            if (! $user) {
+                return response()->json(['mensaje' => 'Error usuario no autenticado'], 400);
+            } else {
+                $direccion = telefonos::find($user->id);
+                if (! $direccion) {
+                    return response()->json(['mensaje' => 'no tiene telefonos'], 404);
+                }
+            }
+
+            return response()->json([
+                'mensaje' => 'Lista de telefonos Telefono',
+                'data' => $direccion,
+            ]);
+       } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $exception->errors(),
+            ]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function StorePedidoCarritoDireccion(Request $request)
+    {
+        try {
+            $user = auth()->user(); // Obtiene el usuario autenticado
+            $request->validate([
+                'id_direcciones' => ['nullable', 'numeric'],
+                'id_telefonos' => ['nullable', 'numeric'],
+                'forma_pago' => ['nullable', 'numeric'],
+            ]);
+
+            $cabeceraCarrito = carritoCompras::where('id_usuario', $user->id)->first(); // Busca la cabecera del carrito para el usuario autenticado
+            if (! $cabeceraCarrito) {
+                $cabeceraCarrito = carritoCompras::create([
+                    'id_usuario' => $user->id,
+                    'total' => 0.00,
+                ]);
+
+                return response()->json(['mensaje' => 'no hay elementos en carrito'], 404);
+
+            }
+
+            $cabeceraPedido = pedido_encabezado::where('id_usuario', $user->id)->first();
+
+            if (! $cabeceraPedido) {
+                $cabeceraPedido = pedido_encabezado::create([
+                    'id_usuario' => $user->id,
+                    'id_carrito' => $cabeceraCarrito->id,
+                    'status_pedido' => 'creacion_pedido',
+                    'total' => $cabeceraCarrito->total,
+                    'id_direcciones' => $request->input('id_direcciones', 0),
+                    'id_telefonos' => $request->input('id_telefonos', 0),
+                    'forma_pago' => $request->input('forma_pago', 0),
+                ]);
+
+                return response()->json([
+                    'mensaje' => 'Pedido cargado',
+                    'data' => $cabeceraPedido,
+                ]);
+            }
+
+            $cabeceraPedidoupdate = pedido_encabezado::findOrFail($cabeceraPedido->id);
+
+            $cabeceraPedidoupdate->total = $cabeceraCarrito->total;
+
+            if (! empty($request->input('id_direcciones'))) {
+                $cabeceraPedidoupdate->id_direcciones = $request->input('id_direcciones');
+            }
+
+            if (! empty($request->input('id_telefonos'))) {
+                $cabeceraPedidoupdate->id_telefonos = $request->input('id_telefonos');
+            }
+
+            if (! empty($request->input('forma_pago'))) {
+                $cabeceraPedidoupdate->forma_pago = $request->input('forma_pago');
+            }
+
+            $cabeceraPedidoupdate->save();
+
+            return response()->json([
+                'mensaje' => 'pedido cargado',
+                'data' => $cabeceraPedidoupdate,
+            ]);
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $exception->errors(),
+            ]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function EliminarProductoCarrito(Request $request)
+    {
+        $request->validate([
+            'id' => ['required', 'numeric'],
+        ]);
+        try {
+
+            $detalleCarrito = detalleCarrito::find($request->input('id'));
+            $detalleCarrito->delete();
+
+            $user = auth()->user(); // Obtiene el usuario autenticado
+            $cabeceraCarrito = carritoCompras::where('id_usuario', $user->id)->first(); // Busca la cabecera del carrito para el usuario autenticado
+            if (! $cabeceraCarrito) {
+                $cabeceraCarrito = carritoCompras::create([
+                    'id_usuario' => $user->id,
+                    'total' => 0.00,
+                ]);
+            }
+
+            $cabeceraCarritototales = carritoCompras::findOrFail($cabeceraCarrito->id);
+
+            // Actualizar los campos del modelo
+            $cabeceraCarritototales->total = detalleCarrito::where('id_carrito_compras', $cabeceraCarrito->id)->sum('total');
+
+            // Guardar los cambios en la base de datos
+            $cabeceraCarritototales->save();
+
+            return response()->json([
+                'mensaje' => 'Producto eliminado del carrito',
+                'data' => $detalleCarrito,
+            ]);
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $exception->errors(),
+            ]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+/*
+     public function SolicitaPedido()
     {
         try {
             $user = auth()->user(); // Obtiene el usuario autenticado
@@ -404,4 +886,5 @@ class AuthjwtController extends Controller
             ]);
         }
     }
+*/
 }

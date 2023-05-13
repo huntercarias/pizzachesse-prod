@@ -22,68 +22,54 @@ const Inicio = () => {
         }
     };
 
+    const divStyle = {
+        backgroundImage: 'url(../../imagenes/horno_inicio_fondo_pantalla.jpg)',
+        height: '100vh'
+    };
+
     useEffect(() => {
         fetchProductos();
     }, []);
 
     return (
-        <div style={{
-            backgroundImage: `url(${image1})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            fontSize: "16px"
-        }}>
-            <div class="album py-5 bg-body-tertiary">
-                <div class="container">
-                    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 g-1">
+        <div className="container">
+            <div className="row">
 
-                        <div class="container">
-                            <h1>Pizzeria Cheese</h1>
-                            <h2>Tu mejor opción</h2>
-                        </div>
+                {cargando ? (
+                    <p>Cargando productos...</p>
+                ) : error ? (
+                    <p>{error}</p>
+                ) : productos.length > 0 ? (
+                    productos.map((producto) => (
+                        <div className="container">
+                            <div className="row">
+                                {producto.id === 1 ? (
+                                    <div className="col-lg-12">
+                                        <a href={`/Pizzac`}>
 
-
-
-                        {cargando ? (
-                            <p>Cargando productos...</p>
-                        ) : error ? (
-                            <p>{error}</p>
-                        ) : productos.length > 0 ? (
-                            productos.map((producto) => (
-
-                                <div className="col" key={producto.id}>
-                                    <div class="card shadow-sm">
-                                        {producto.id === 1 ? (
-
-                                            <a href={`/Pizzac`}>
-
-                                                <p>{producto.descripcion}</p>
-                                                <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="100%" height="700" />
-                                            </a>
-                                        ) : (
-
-                                            producto.id === 2 ? (
-                                                <a href={`/Lazanac`}>
-                                                    <p>{producto.descripcion}</p>
-                                                    <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="100%" height="700" />
-                                                </a>
-                                            ) : (
-                                                <a href={`/Calzonec`}>
-                                                    <p>{producto.descripcion}</p>
-                                                    <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="100%" height="700" />
-                                                </a>
-                                            )
-
-                                        )}
+                                            <p>{producto.descripcion}</p>
+                                            <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="100%" height="700" />
+                                        </a>
                                     </div>
-                                </div>
-                            ))
-                        ) : (
-                            <p>No se encontraron productos.</p>
-                        )}
+                                ) : (
 
-                    </div>
-                </div>
+
+                                    <div className="col-6 col-md-4">
+                                        <a href={`/Lazanac`}>
+                                            <p>{producto.descripcion}</p>
+                                            <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="100%" height="700" />
+                                        </a>
+                                    </div>
+
+
+
+                                )}
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <p>No se encontraron productos.</p>
+                )}
             </div>
         </div >
     );

@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('status_pedido');
             $table->integer('id_direcciones');
             $table->integer('id_telefonos');
+            $table->integer('forma_pago');
+            $table->integer('id_repartidor');
             $table->timestamps();
             $table->softDeletes();
         });

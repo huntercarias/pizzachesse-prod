@@ -29,6 +29,22 @@ const DetalleProducto = () => {
         fetchProductos();
     }, []);
 
+    const [extras, setExtras] = useState({
+        extra_queso: false,
+        extra_jamon: false,
+        extra_peperoni: false
+    });
+    const handleExtrasChange = (event) => {
+        setExtras({
+            ...extras,
+            [event.target.name]: event.target.checked
+        });
+        if (event.target.checked) {
+            setProductos({ ...productos, monto: Number(productos.monto) + 8 });
+        } else {
+            setProductos({ ...productos, monto: Number(productos.monto) - 8 });
+        }
+    };
 
 
     const baseURLusuario = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/StoreProducto`;
@@ -43,6 +59,9 @@ const DetalleProducto = () => {
         formData.append("total", productos.monto);
         formData.append("cantidad", "1");
         formData.append("id_productos", productos.id);
+        formData.append("extra_queso", extras.extra_queso ? "1" : "0");
+        formData.append("extra_jamon", extras.extra_jamon ? "1" : "0");
+        formData.append("extra_peperoni", extras.extra_peperoni ? "1" : "0");
         try {
             const response = await axios.post(baseURLusuario, formData, {
                 headers: {
@@ -50,6 +69,8 @@ const DetalleProducto = () => {
                 },
             });
             //setUsuario(response.data);
+            alert("Agregado al carrito de compras")
+            window.location.reload();
             console.log(response);
             //valida_existe_carrito(usuario.id);
         } catch (error) {
@@ -90,6 +111,61 @@ const DetalleProducto = () => {
                                     <label for="monto">Monto:</label>
                                     {productos.monto}
                                 </div>
+
+
+
+
+
+
+
+
+                                <div class="form-group">
+                                    <label>Extras:</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input
+                                                type="checkbox"
+                                                id="extra_queso"
+                                                name="extra_queso"
+                                                checked={extras.extra_queso}
+                                                onChange={handleExtrasChange}
+                                                class="form-check-input"
+                                                disabled={productos.id_tiposproducto === 5 && true}
+                                            />
+                                            <label class="form-check-label" for="extra_queso">Extra Queso</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input
+                                                type="checkbox"
+                                                id="extra_jamon"
+                                                name="extra_jamon"
+                                                checked={extras.extra_jamon}
+                                                onChange={handleExtrasChange}
+                                                class="form-check-input"
+                                                disabled={productos.id_tiposproducto === 5 && true}
+                                            />
+                                            <label class="form-check-label" for="extra_jamon">Extra Jamón</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input
+                                                type="checkbox"
+                                                id="extra_peperoni"
+                                                name="extra_peperoni"
+                                                checked={extras.extra_peperoni}
+                                                onChange={handleExtrasChange}
+                                                class="form-check-input"
+                                                disabled={productos.id_tiposproducto === 5 && true}
+                                            />
+                                            <label class="form-check-label" for="extra_peperoni">Extra Pepperoni</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+
+
                                 <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(productos)}>
                                     AGREGAR AL CARRITO DE COMPRAS
                                 </button>

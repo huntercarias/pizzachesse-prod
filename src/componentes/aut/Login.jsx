@@ -34,11 +34,12 @@ const Login = () => {
                     "Content-Type": "multipart/form-data",
                 },
             });
-            //console.log(response.data.access_token);
+            console.log(response.data.access_token);
             //almacena variable en la locallstorage de la maquina
+
             localStorage.setItem('miToken', response.data.access_token);
-            window.location.reload();
-            navigate('/');
+            //window.location.reload();
+            //navigate('/');
 
         } catch (error) {
             alert(error.message);

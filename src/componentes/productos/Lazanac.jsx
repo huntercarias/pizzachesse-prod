@@ -70,7 +70,7 @@ const Lazanac = (props) => {
 
                                         <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="100%" height="225" />
                                         <div class="card-body">
-                                            <p class="card-text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Delectus, provident? Ex, modi quia? Molestiae, maiores dolores eius repellat molestias sed! Distinctio sunt consectetur vero commodi adipisci perspiciatis reiciendis repellat tempora.</p>
+                                            <p class="card-text">Q {producto.monto}</p>
 
                                         </div>
                                         <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(producto.id)}>

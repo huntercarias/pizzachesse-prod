@@ -53,6 +53,7 @@ Route::group([
     Route::post('ShowDetalleCarrito', [AuthjwtController::class, 'ShowDetalleCarrito']);
     Route::post('ConsultaCarritoCompras', [AuthjwtController::class, 'ConsultaCarrito']);
     Route::post('register', [AuthjwtController::class, 'register']);
+
     // Rutas protegidas con jwt.auth
     Route::middleware(['jwt.auth'])->group(function () {
         Route::post('ADDProductos', [ProductosController::class, 'store']);
@@ -64,5 +65,6 @@ Route::group([
 
         Route::post('creaCarritoCompras', [CarritoComprasController::class, 'store']);
         Route::post('UpdateCarritoCompras', [CarritoComprasController::class, 'update']);
+        Route::delete('EliminarProductoCarrito', [AuthjwtController::class, 'EliminarProductoCarrito']);
     });
 });
