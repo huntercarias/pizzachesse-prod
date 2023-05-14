@@ -722,13 +722,17 @@ class AuthjwtController extends Controller
 
                 return response()->json([
                     'mensaje' => 'Pedido cargado',
-                    'data' => $cabeceraCarrito,
+                    'data' => $cabeceraPedido,
                 ]);
             }
 
             $cabeceraPedidoupdate = pedido_encabezado::findOrFail($cabeceraPedido->id);
 
             $cabeceraPedidoupdate->total = $cabeceraCarrito->total;
+
+            if (! empty($request->input('status_pedido'))) {
+                $cabeceraPedidoupdate->status_pedido = $request->input('status_pedido');
+            }
 
             if (! empty($request->input('id_direcciones'))) {
                 $cabeceraPedidoupdate->id_direcciones = $request->input('id_direcciones');
@@ -804,7 +808,7 @@ class AuthjwtController extends Controller
                     'id_carrito' => $cabeceraCarrito->id,
 
                     'total' => $cabeceraCarrito->total,
-                    'status_pedido' => $request->input('status_pedido', null),
+                    'status_pedido' => $request->input('status_pedido', ''),
                     'id_direcciones' => $request->input('id_direcciones', 0),
                     'id_telefonos' => $request->input('id_telefonos', 0),
                     'forma_pago' => $request->input('forma_pago', 0),
@@ -820,6 +824,10 @@ class AuthjwtController extends Controller
             $cabeceraPedidoupdate = pedido_encabezado::findOrFail($cabeceraPedido->id);
 
             $cabeceraPedidoupdate->total = $cabeceraCarrito->total;
+
+            if (! empty($request->input('status_pedido'))) {
+                $cabeceraPedidoupdate->status_pedido = $request->input('status_pedido');
+            }
 
             if (! empty($request->input('id_direcciones'))) {
                 $cabeceraPedidoupdate->id_direcciones = $request->input('id_direcciones');
