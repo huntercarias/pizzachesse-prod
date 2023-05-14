@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class AuthjwtController extends Controller
@@ -1014,6 +1015,117 @@ class AuthjwtController extends Controller
                 'mensaje' => 'Pedido cargado',
                 'data' => $cabeceraPedidos,
             ]);
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $exception->errors(),
+            ]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function MostrarPedidosCreados(Request $request)
+    {
+        try {
+            $user = auth()->user(); // Obtiene el usuario autenticado
+            if (! $user->count()) {
+                return response()->json(['mensaje' => 'No autorizado'], 404);
+            }
+
+            $cabeceraPedidos = pedido_encabezado::where('status_pedido', 'CREACION-PEDIDO')
+                                     ->orWhere('status_pedido', 'CREACION PEDIDO')
+                                     ->get();
+            if (! $cabeceraPedidos->count()) {
+                return response()->json(['mensaje' => 'No hay elementos'], 404);
+            }
+
+            return response()->json([
+                'mensaje' => 'Pedido cargado',
+                'data' => $cabeceraPedidos,
+            ]);
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $exception->errors(),
+            ]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function MostrarPedidosCreadosDetalle(Request $request)
+    {
+        try {
+            $user = auth()->user(); // Obtiene el usuario autenticado
+            if (! $user->count()) {
+                return response()->json(['mensaje' => 'No autorizado'], 404);
+            }
+
+            $request->validate([
+                'id_carrito_compras' => ['required', 'numeric', Rule::exists('detalle_carritos', 'id_carrito_compras')],
+            ]);
+
+            $detalleCarrito = detalleCarrito::select('detalle_carritos.*', 'productos.descripcion', 'productos.ruta_imagen')
+                    ->join('productos', 'productos.id', '=', 'detalle_carritos.id_productos')
+                    ->where('detalle_carritos.id_carrito_compras', $request->input('id_carrito_compras'))
+                    ->get();
+
+            $detalleCarritoContar = detalleCarrito::where('id_carrito_compras', $request->input('id_carrito_compras'))->count();
+            if ($detalleCarritoContar == 0) {
+                 return response()->json(['mensaje' => 'Carrito Vacio'], 404);
+            }
+
+            $data = [];
+
+            foreach ($detalleCarrito as $detalle) {
+                $path = storage_path('app/'.$detalle->ruta_imagen);
+                $file = File::get($path);
+                $type = File::mimeType($path);
+
+                $producto = [
+                    'id' => $detalle->id,
+                    'cantidad' => $detalle->cantidad,
+                    'descripcion' => $detalle->descripcion,
+                    'total' => $detalle->total,
+                    'extra_queso' => $detalle->extra_queso,
+                    'extra_jamon' => $detalle->extra_jamon,
+                    'extra_peperoni' => $detalle->extra_peperoni,
+                    'ruta_imagen' => base64_encode($file),
+                    'tipo_imagen' => $type,
+                ];
+
+                array_push($data, $producto);
+            }
+
+            return response()->json([
+                'mensaje' => 'Pedido cargado',
+                'data' => $data,
+            ]);
+
+        } catch (FileNotFoundException $e) {
+            // Manejar la excepción aquí
+            return response()->json(['mensaje' => 'El archivo no existe'], 404);
         } catch (ValidationException $exception) {
             return response()->json([
                 'mensaje' => 'Error al crear el registro en la base de datos.',

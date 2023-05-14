@@ -24,7 +24,8 @@ import RegistroDireccionTelefono from '../componentes/carrito/RegistroDireccionT
 import DetalleTelefono from '../componentes/carrito/DetalleTelefono';
 import DetalleCompra from '../componentes/carrito/DetalleCompra';
 import Pedidos from '../componentes/pedidos/Pedidos';
-
+import PedidosAdministrador from '../componentes/pedidos/PedidosAdministrador';
+import DetallePedidosAdmin from '../componentes/pedidos/DetallePedidosAdmin';
 import DetalleProducto from '../componentes/productos/DetalleProducto';
 
 import Login from '../componentes/aut/Login';
@@ -78,6 +79,8 @@ export const AppRouter = () => {
                 <Route exact path='/DetalleDireccionTelefono' element={<DetalleDireccionTelefono />} />
                 <Route exact path='/RegistroDireccionTelefono' element={<RegistroDireccionTelefono />} />
                 <Route exact path='/DetalleTelefono' element={<DetalleTelefono />} />
+                <Route exact path='/PedidosSolicitados' element={<PedidosAdministrador />} />
+                <Route exact path='/DetalleProductosAdmin/:id' element={<DetallePedidosAdmin />} />
             </Routes>
         </Router>
     )

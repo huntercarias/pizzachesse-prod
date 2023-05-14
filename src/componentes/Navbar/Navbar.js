@@ -8,6 +8,16 @@ import { NavbarAdministrador } from '../Navbar/NavbarAdministrador';
 import { NavbarDefault } from '../Navbar/NavbarDefault';
 export const Navbar = () => {
 
+    const [miToken, setMiToken] = useState(localStorage.getItem('miToken')); // almacenar token en estado
+
+    // agregar evento para escuchar cambios en localStorage
+    window.addEventListener('storage', (event) => {
+        if (event.key === 'miToken') {
+            setMiToken(event.newValue); // actualizar estado con el nuevo valor del token
+        }
+    });
+
+
     const [usuario, setUsurio] = useState({
         email: "INVITADO",
         rol: "INVITADO",
@@ -18,7 +28,7 @@ export const Navbar = () => {
     const baseURL = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/me`;
 
     // consulta token almacenado en la localstorage
-    const miToken = localStorage.getItem('miToken');
+    //const miToken = localStorage.getItem('miToken');
 
     const fetchUsuario = async () => {
         try {
@@ -27,7 +37,7 @@ export const Navbar = () => {
                     Authorization: `Bearer ${miToken}`,
                 },
             });
-
+            console.log(miToken);
             setUsurio(response.data);
             setCargandoU(false);
         } catch (error) {
@@ -38,7 +48,7 @@ export const Navbar = () => {
 
     useEffect(() => {
         fetchUsuario();
-    }, [usuario]); // lista de dependencias vacía para evitar que se ejecute en cada renderizado
+    }, [miToken]); // lista de dependencias vacía para evitar que se ejecute en cada renderizado
 
     return (
         <nav className="text-light bg-dark">
@@ -50,8 +60,10 @@ export const Navbar = () => {
                     <div className="row">
                         <NavbarDefault />
                         <div className="col-sm-4 col-md-3 col-lg-2">
+
                             <h5> {usuario.email} </h5>
                             <h5> {usuario.rol} </h5>
+
                         </div>
                     </div>
                 ) : error ? (
@@ -66,6 +78,7 @@ export const Navbar = () => {
                     usuario.rol === "ADMINISTRADOR" ? (
                         <div className="row">
                             <NavbarAdministrador />
+                            <h5> {miToken}</h5>
                             <h5> {usuario.email} </h5>
                             <h5> {usuario.rol} </h5>
                         </div>
@@ -74,6 +87,7 @@ export const Navbar = () => {
                         <div className="row">
                             <NavbarCliente />
                             <div className="col-sm-4 col-md-3 col-lg-2">
+                                <h5> {miToken}</h5>
                                 <h5> {usuario.email} </h5>
                                 <h5> {usuario.rol} </h5>
                             </div>

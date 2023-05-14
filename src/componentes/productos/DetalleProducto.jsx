@@ -70,12 +70,12 @@ const DetalleProducto = () => {
             });
             //setUsuario(response.data);
             alert("Agregado al carrito de compras")
-            window.location.reload();
-            console.log(response);
+            //window.location.reload();
+            //console.log(response);
             //valida_existe_carrito(usuario.id);
         } catch (error) {
             setUsuario(error);
-            //navigate('/Login');
+            navigate('/Login');
         }
     };
 

@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
 
 
-const Pedidos = () => {
+const PedidosAdministrador = () => {
 
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
     const [productos, setProductos] = useState([]);
-    const baseURLusuario = `http://localhost/pizzachesse-prod/appBackend/public/api/auth/ListaPedidosRealizadosUser`;
+    const baseURLusuario = `http://localhost/pizzachesse-prod/appBackend/public/api/auth/ListaPedidosCreados`;
     // consulta token almacenado en la localstorage
     const miToken = localStorage.getItem('miToken');
     const navigate = useNavigate();
@@ -66,41 +66,16 @@ const Pedidos = () => {
         }
     }
 
-    const [cargandoA, setCargandoA] = useState(true);
-    const [errorA, setErrorA] = useState(null);
-    const [SaldoCarrito, setSaldoCarrito] = useState([]);
-
-    const baseURLsaldo = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/ConsultaCarritoCompras`;
-
-    const consulta_Saldo = async () => {
-        try {
-            const responseA = await axios.post(baseURLsaldo, {
-                headers: {
-                    Authorization: `Bearer ${miToken}`,
-                },
-            });
-            //setUsuario(response.data);
-            // console.log(responseA.data.data);
-            setSaldoCarrito(responseA.data.data);
-            //console.log(response.data.data);
-            setCargandoA(false);
-            //valida_existe_carrito(usuario.id);
-        } catch (errorA) {
-            setSaldoCarrito(errorA);
-            setCargandoA(false);
-            //navigate('/Login');
-        }
-    };
-
 
     async function handleEditarClick(id) {
         navigate(`/DetalleProductosAdmin/${id}`);
     };
 
 
+
     return (
         <div>
-            <h1>PEDIDOS REALIZADOS</h1>
+            <h1>PEDIDOS ENTRANTES</h1>
 
             <table className="table">
                 <thead>
@@ -127,7 +102,11 @@ const Pedidos = () => {
                                 <td>
                                     {producto.forma_pago === 1 ? 'Cash' : productos.forma_pago === 2 ? 'POS' : 'BOTON DE PAGO'}
                                 </td>
-
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(producto.id)}>
+                                        INFORMACION CLIENTE
+                                    </button>
+                                </td>
                                 <td>
                                     <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(producto.id)}>
                                         DETALLE PEDIDO
@@ -145,4 +124,4 @@ const Pedidos = () => {
     );
 };
 
-export default Pedidos;
+export default PedidosAdministrador;
