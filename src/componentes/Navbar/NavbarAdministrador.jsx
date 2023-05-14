@@ -70,6 +70,9 @@ export const NavbarAdministrador = () => {
                     <li><a class="dropdown-item" href="#">
                         <NavLink className="nav-link" to="/PedidosSolicitados"><h3>PEDIDOS ENTRANTES</h3></NavLink>
                     </a></li>
+                    <li><a class="dropdown-item" href="#">
+                        <NavLink className="nav-link" to="/PedidosEnProceso"><h3>PEDIDOS EN PROCESO</h3></NavLink>
+                    </a></li>
                     <li> <form class="form-inline" onSubmit={SalirUsuario}>
                         <NavLink className="nav-link" >
 

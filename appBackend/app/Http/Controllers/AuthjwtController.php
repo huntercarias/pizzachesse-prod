@@ -1146,6 +1146,45 @@ class AuthjwtController extends Controller
         }
     }
 
+    public function MostrarPedidosEnProceso(Request $request)
+    {
+        try {
+            $user = auth()->user(); // Obtiene el usuario autenticado
+            if (! $user->count()) {
+                return response()->json(['mensaje' => 'No autorizado'], 404);
+            }
+
+            $cabeceraPedidos = pedido_encabezado::where('status_pedido', 'EN-PROCESO')
+                                     ->orWhere('status_pedido', 'EN PROCESO')
+                                     ->get();
+            if (! $cabeceraPedidos->count()) {
+                return response()->json(['mensaje' => 'No hay elementos'], 404);
+            }
+
+            return response()->json([
+                'mensaje' => 'Pedido cargado',
+                'data' => $cabeceraPedidos,
+            ]);
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $exception->errors(),
+            ]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+    }
+
     /**
      * Get the authenticated User.
      *

@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
 
 
-const PedidosAdministrador = () => {
+const PedidosEnProcesoAdmin = () => {
 
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
     const [productos, setProductos] = useState([]);
-    const baseURLusuario = `http://localhost/pizzachesse-prod/appBackend/public/api/auth/ListaPedidosCreados`;
+    const baseURLusuario = `http://localhost/pizzachesse-prod/appBackend/public/api/auth/ListaPedidoEnProceso`;
     // consulta token almacenado en la localstorage
     const miToken = localStorage.getItem('miToken');
     const navigate = useNavigate();
@@ -44,9 +44,8 @@ const PedidosAdministrador = () => {
     async function SeleccionarDireccion(id) {
         try {
             const formData = new FormData();
-            formData.append("status_pedido", "CREACION PEDIDO");
-            formData.append("id_direcciones", id);
-            const response = await axios.post(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/RealizaPedido`, formData, {
+            formData.append("status_pedido", "EN PROCESO");
+            const response = await axios.post(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/RealizaSolicituInicial`, formData, {
                 headers: {
                     Authorization: `Bearer ${miToken}`,
                 },
@@ -75,7 +74,7 @@ const PedidosAdministrador = () => {
 
     return (
         <div>
-            <h1>PEDIDOS ENTRANTES</h1>
+            <h1>PEDIDOS EN PROCESO</h1>
 
             <table className="table">
                 <thead>
@@ -115,7 +114,7 @@ const PedidosAdministrador = () => {
                             </tr>
                         ))
                     ) : (
-                        <p>NO HAY PEDIDOS NUEVOS</p>
+                        <p>NO HAY PEDIDOS EN PROCESO</p>
                     )}
                 </tbody>
 
@@ -124,4 +123,4 @@ const PedidosAdministrador = () => {
     );
 };
 
-export default PedidosAdministrador;
+export default PedidosEnProcesoAdmin;

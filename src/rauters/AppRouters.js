@@ -35,6 +35,7 @@ import UpdatePizza from '../componentes/productos/UpdatePizza';
 import Circulares from '../componentes/graficas/Circulares';
 import Graficas from '../componentes/graficas/Graficas';
 import AddPizza from '../componentes/productos/AddPizza';
+import PedidosEnProcesoAdmin from '../componentes/pedidos/PedidosEnProcesoAdmin';
 
 
 const productoPizza = 1;
@@ -81,6 +82,7 @@ export const AppRouter = () => {
                 <Route exact path='/DetalleTelefono' element={<DetalleTelefono />} />
                 <Route exact path='/PedidosSolicitados' element={<PedidosAdministrador />} />
                 <Route exact path='/DetalleProductosAdmin/:id' element={<DetallePedidosAdmin />} />
+                <Route exact path='/PedidosEnProceso' element={<PedidosEnProcesoAdmin />} />
             </Routes>
         </Router>
     )
