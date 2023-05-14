@@ -893,7 +893,8 @@ class AuthjwtController extends Controller
                 ]);
 
             }
-           // $informacionPedido = pedido_encabezado::where('id', $cabeceraPedido->id)
+
+            // $informacionPedido = pedido_encabezado::where('id', $cabeceraPedido->id)
             //->join('direcciones', 'pedido_encabezado.id_direcciones', '=', 'direcciones.id')
             //->join('telefonos', 'pedido_encabezado.id_telefonos', '=', 'telefonos.id')
 
