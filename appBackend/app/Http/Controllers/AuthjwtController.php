@@ -600,7 +600,7 @@ class AuthjwtController extends Controller
         try {
             $user = auth()->user(); // Obtiene el usuario autenticado
 
-            if (! $user) {
+            if (! $user->count()) {
                 return response()->json(['mensaje' => 'Error usuario no autenticado'], 400);
             }
 
@@ -695,7 +695,7 @@ class AuthjwtController extends Controller
             ]);
 
             $cabeceraCarrito = carritoCompras::where('id_usuario', $user->id)->first(); // Busca la cabecera del carrito para el usuario autenticado
-            if (! $cabeceraCarrito) {
+            if (! $cabeceraCarrito->count()) {
                 $cabeceraCarrito = carritoCompras::create([
                     'id_usuario' => $user->id,
                     'total' => 0.00,
@@ -704,15 +704,16 @@ class AuthjwtController extends Controller
                 return response()->json(['mensaje' => 'no hay elementos en carrito'], 404);
             }
 
-            $cabeceraPedido = pedido_encabezado::where('id_usuario', $user->id)->first();
+            $cabeceraPedido = pedido_encabezado::where('id_usuario', $user->id)
+                                   ->where('id_carrito', $cabeceraCarrito->id)
+                                   ->first();
 
-            if (! $cabeceraPedido) {
+            if (! isset($cabeceraPedido) || $cabeceraPedido == null || ! $cabeceraPedido->count()) {
                 $cabeceraPedido = pedido_encabezado::create([
                     'id_usuario' => $user->id,
                     'id_carrito' => $cabeceraCarrito->id,
-
                     'total' => $cabeceraCarrito->total,
-                    'status_pedido' => $request->input('status_pedido', null),
+                    'status_pedido' => $request->input('status_pedido', ''),
                     'id_direcciones' => $request->input('id_direcciones', 0),
                     'id_telefonos' => $request->input('id_telefonos', 0),
                     'forma_pago' => $request->input('forma_pago', 0),
@@ -721,7 +722,7 @@ class AuthjwtController extends Controller
 
                 return response()->json([
                     'mensaje' => 'Pedido cargado',
-                    'data' => $cabeceraPedido,
+                    'data' => $cabeceraCarrito,
                 ]);
             }
 
@@ -784,7 +785,7 @@ class AuthjwtController extends Controller
             ]);
 
             $cabeceraCarrito = carritoCompras::where('id_usuario', $user->id)->first(); // Busca la cabecera del carrito para el usuario autenticado
-            if (! $cabeceraCarrito) {
+            if (! $cabeceraCarrito->count()) {
                 $cabeceraCarrito = carritoCompras::create([
                     'id_usuario' => $user->id,
                     'total' => 0.00,
@@ -793,9 +794,11 @@ class AuthjwtController extends Controller
                 return response()->json(['mensaje' => 'no hay elementos en carrito'], 404);
             }
 
-            $cabeceraPedido = pedido_encabezado::where('id_usuario', $user->id)->first();
+            $cabeceraPedido = pedido_encabezado::where('id_usuario', $user->id)
+                                                ->where('id_carrito', $cabeceraCarrito->id)
+                                                ->first();
 
-            if (! $cabeceraPedido) {
+            if (! $cabeceraPedido->count()) {
                 $cabeceraPedido = pedido_encabezado::create([
                     'id_usuario' => $user->id,
                     'id_carrito' => $cabeceraCarrito->id,
@@ -870,7 +873,7 @@ class AuthjwtController extends Controller
             $user = auth()->user(); // Obtiene el usuario autenticado
 
             $cabeceraCarrito = carritoCompras::where('id_usuario', $user->id)->first(); // Busca la cabecera del carrito para el usuario autenticado
-            if (! $cabeceraCarrito) {
+            if (! $cabeceraCarrito->count()) {
 
                 return response()->json(['mensaje' => 'no hay elementos en carrito'], 404);
             }
@@ -879,7 +882,7 @@ class AuthjwtController extends Controller
                                     ->where('id_carrito', $cabeceraCarrito->id)
                                     ->first();
 
-            if (! $cabeceraPedido) {
+            if (! $cabeceraPedido->count()) {
                 $cabeceraPedido = pedido_encabezado::create([
                     'id_usuario' => $user->id,
                     'id_carrito' => $cabeceraCarrito->id,
@@ -891,16 +894,10 @@ class AuthjwtController extends Controller
                     'forma_pago' => 0,
                     'id_repartidor' => 0,
                 ]);
-
             }
 
-            // $informacionPedido = pedido_encabezado::where('id', $cabeceraPedido->id)
-            //->join('direcciones', 'pedido_encabezado.id_direcciones', '=', 'direcciones.id')
-            //->join('telefonos', 'pedido_encabezado.id_telefonos', '=', 'telefonos.id')
-
-            //->get();
             $informacionPDirecciones = direcciones::where('id', $cabeceraPedido->id_direcciones)->first();
-           $informacionPTelefono = telefonos::where('id', $cabeceraPedido->id_telefonos)->first();
+            $informacionPTelefono = telefonos::where('id', $cabeceraPedido->id_telefonos)->first();
 
             $informacionPedido = [
                 'pedido_encabezado' => $cabeceraPedido,
