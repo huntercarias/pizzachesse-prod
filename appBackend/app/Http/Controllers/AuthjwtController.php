@@ -1045,6 +1045,7 @@ class AuthjwtController extends Controller
 
             $cabeceraPedidos = pedido_encabezado::where('status_pedido', 'CREACION-PEDIDO')
                                      ->orWhere('status_pedido', 'CREACION PEDIDO')
+                                     ->orWhere('status_pedido', 'SOLICITADO')
                                      ->get();
             if (! $cabeceraPedidos->count()) {
                 return response()->json(['mensaje' => 'No hay elementos'], 404);

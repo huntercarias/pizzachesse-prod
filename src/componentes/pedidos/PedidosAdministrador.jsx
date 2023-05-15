@@ -103,12 +103,12 @@ const PedidosAdministrador = () => {
                                     {producto.forma_pago === 1 ? 'Cash' : productos.forma_pago === 2 ? 'POS' : 'BOTON DE PAGO'}
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(producto.id)}>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(producto.id_carrito)}>
                                         INFORMACION CLIENTE
                                     </button>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(producto.id)}>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(producto.id_carrito)}>
                                         DETALLE PEDIDO
                                     </button>
                                 </td>

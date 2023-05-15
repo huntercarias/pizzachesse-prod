@@ -129,7 +129,7 @@ const Pedidos = () => {
                                 </td>
 
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(producto.id)}>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(producto.id_carrito)}>
                                         DETALLE PEDIDO
                                     </button>
                                 </td>
