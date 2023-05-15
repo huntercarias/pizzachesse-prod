@@ -44,9 +44,9 @@ const PedidosAdministrador = () => {
     async function SeleccionarDireccion(id) {
         try {
             const formData = new FormData();
-            formData.append("status_pedido", "CREACION PEDIDO");
-            formData.append("id_direcciones", id);
-            const response = await axios.post(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/RealizaPedido`, formData, {
+            formData.append("status_pedido", "EN PROCESO");
+            formData.append("id", id);
+            const response = await axios.post(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/CambioStatusPedido`, formData, {
                 headers: {
                     Authorization: `Bearer ${miToken}`,
                 },
@@ -54,9 +54,9 @@ const PedidosAdministrador = () => {
 
             // window.location.reload();
             console.log(response.data.data);
-            alert("seleccion exitosa");
+            //alert("seleccion exitosa");
 
-            navigate('/DetalleTelefono');
+            //navigate('/DetalleTelefono');
             //setCargando(false);
         } catch (error) {
             //setError('Ocurrió un error al eliminar el producto. Por favor, inténtalo de nuevo más tarde.');
@@ -67,8 +67,9 @@ const PedidosAdministrador = () => {
     }
 
 
-    async function handleEditarClick(id) {
-        navigate(`/DetalleProductosAdmin/${id}`);
+    async function handleEditarClick(id_carrito, id) {
+        SeleccionarDireccion(id);
+        navigate(`/DetalleProductosAdmin/${id_carrito}`);
     };
 
 
@@ -94,7 +95,7 @@ const PedidosAdministrador = () => {
                         <p>NO TIENE PEDIDOS...</p>
                     ) : productos.length > 0 ? (
                         productos.map((producto) => (
-                            <tr key={productos.id}>
+                            <tr key={producto.id}>
 
                                 <th scope="row">{producto.id_carrito}</th>
                                 <td>Q {producto.total}</td>
@@ -102,13 +103,9 @@ const PedidosAdministrador = () => {
                                 <td>
                                     {producto.forma_pago === 1 ? 'Cash' : productos.forma_pago === 2 ? 'POS' : 'BOTON DE PAGO'}
                                 </td>
+
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(producto.id_carrito)}>
-                                        INFORMACION CLIENTE
-                                    </button>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(producto.id_carrito)}>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(producto.id_carrito, producto.id)}>
                                         DETALLE PEDIDO
                                     </button>
                                 </td>

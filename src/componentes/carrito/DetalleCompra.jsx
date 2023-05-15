@@ -109,7 +109,7 @@ const DetalleCompra = () => {
 
     return (
         <div>
-            <h1>Detalle Direcciones</h1>
+            <h1>Confirmacion direcciones</h1>
             <button type="button" className="btn btn-sm btn-outline-secondary">
                 <a href="http://localhost:3000/RegistroDireccionTelefono">REGISTRAR DIRECCIONES Y TELEFONOS</a>
             </button>
@@ -129,37 +129,53 @@ const DetalleCompra = () => {
                         <th scope="col">LOTE</th>
                     </tr>
                 </thead>
-                <tbody>
-                    {cargando ? (
-                        <p>Cargando productos...</p>
-                    ) : error ? (
-                        <button type="button" className="btn btn-sm btn-outline-secondary">
-                            <a href="http://localhost:3000/RegistroDireccionTelefono">REGISTRAR DIRECCIONES Y TELEFONOS</a>
-                        </button>
-                    ) : (
-                        <tbody>
-                            {productos.direcciones && Object.keys(productos.direcciones).length > 0 ? (
-                                <tr key={productos.direcciones.id}>
-                                    <th scope="row">{productos.direcciones.nomenclatura}</th>
-                                    <td>{productos.direcciones.zona}</td>
-                                    <td>{productos.direcciones.ciudad}</td>
-                                    <td>{productos.direcciones.departamento}</td>
-                                    <td>{productos.direcciones.municipio}</td>
-                                    <td>{productos.direcciones.lote}</td>
-                                </tr>
-                            ) : null}
 
-                            {productos.telefonos && Object.keys(productos.telefonos).length > 0 ? (
-                                <tr key={productos.telefonos.id}>
-                                    <th scope="row">{productos.telefonos.numero_telefono}</th>
-                                    <td>{productos.telefonos.extension}</td>
-                                    <td>{productos.telefonos.numero_celular}</td>
-                                    <td>{productos.telefonos.numero_de_whatzap}</td>
-                                </tr>
-                            ) : null}
-                        </tbody>
-                    )}
+                {cargando ? (
+                    <p>Cargando productos...</p>
+                ) : error ? (
+                    <button type="button" className="btn btn-sm btn-outline-secondary">
+                        <a href="http://localhost:3000/RegistroDireccionTelefono">REGISTRAR DIRECCIONES Y TELEFONOS</a>
+                    </button>
+                ) : (
+                    <tbody>
+                        {productos.direcciones && Object.keys(productos.direcciones).length > 0 ? (
+                            <tr key={productos.direcciones.id}>
+                                <th scope="row">{productos.direcciones.nomenclatura}</th>
+                                <td>{productos.direcciones.zona}</td>
+                                <td>{productos.direcciones.ciudad}</td>
+                                <td>{productos.direcciones.departamento}</td>
+                                <td>{productos.direcciones.municipio}</td>
+                                <td>{productos.direcciones.lote}</td>
+                            </tr>
+                        ) : null}
+
+
+                    </tbody>
+                )}
+            </table>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th scope="col">NUMERO TELEFONO</th>
+                        <th scope="col">EXTENSION</th>
+                        <th scope="col">NUMERO CELULAR</th>
+                        <th scope="col">NUMERO DE WHATZAP</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {productos.telefonos && Object.keys(productos.telefonos).length > 0 ? (
+                        <tr key={productos.telefonos.id}>
+                            <th scope="row">{productos.telefonos.numero_telefono}</th>
+                            <td>{productos.telefonos.extension}</td>
+                            <td>{productos.telefonos.numero_celular}</td>
+                            <td>{productos.telefonos.numero_de_whatzap}</td>
+                        </tr>
+                    ) : null}
                 </tbody>
+
+
                 <tbody>
                     {cargando ? (
                         <p>Cargando productos...</p>

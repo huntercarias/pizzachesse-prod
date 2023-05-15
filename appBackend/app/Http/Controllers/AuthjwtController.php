@@ -8,11 +8,11 @@ use App\Models\direcciones;
 use App\Models\pedido_encabezado;
 use App\Models\telefonos;
 use App\Models\User;
+use Carbon\Carbon;
 use Exception;
 use FileNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -1195,18 +1195,131 @@ class AuthjwtController extends Controller
     {
         try {
             $user = auth()->user(); // Obtiene el usuario autenticado
+            if (! $user->count()) {
+                return response()->json(['mensaje' => 'No Autorizado'], 404);
+            }
+            $mesActual = Carbon::now()->month;
+            $añoActual = Carbon::now()->year;
 
-            $totalesPorProducto = detalleCarrito::select('id_productos', DB::raw('SUM(total) as total'))
-            ->groupBy('id_productos')
+            $detalleCarrito = pedido_encabezado::select('productos.id_tiposproducto', 'productos.descripcion', pedido_encabezado::raw('SUM(detalle_carritos.total) as total_por_tipo'))
+            ->join('detalle_carritos', 'pedido_encabezados.id_carrito', '=', 'detalle_carritos.id_carrito_compras')
+            ->join('productos', 'detalle_carritos.id_productos', '=', 'productos.id')
+            ->whereMonth('pedido_encabezados.created_at', $mesActual)
+            ->whereYear('pedido_encabezados.created_at', $añoActual)
+            ->groupBy('productos.id_tiposproducto', 'productos.descripcion')
             ->get();
 
-            if (! $totalesPorProducto->count()) {
+            if (! $detalleCarrito->count()) {
                 return response()->json(['mensaje' => 'No hay elementos'], 404);
             }
 
             return response()->json([
                 'mensaje' => 'Pedido cargado',
-                'data' => $totalesPorProducto,
+                'data' => $detalleCarrito,
+            ]);
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $exception->errors(),
+            ]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function MostrarResultadosProductoMensual(Request $request)
+    {
+        try {
+            $user = auth()->user(); // Obtiene el usuario autenticado
+            if (! $user->count()) {
+                return response()->json(['mensaje' => 'No Autorizado'], 404);
+            }
+            $mesActual = Carbon::now()->month;
+            $añoActual = Carbon::now()->year;
+
+            $detalleCarrito = pedido_encabezado::select('productos.id', 'productos.descripcion', pedido_encabezado::raw('SUM(detalle_carritos.total) as total_por_producto'))
+            ->join('detalle_carritos', 'pedido_encabezados.id_carrito', '=', 'detalle_carritos.id_carrito_compras')
+            ->join('productos', 'detalle_carritos.id_productos', '=', 'productos.id')
+            ->whereMonth('pedido_encabezados.created_at', $mesActual)
+            ->whereYear('pedido_encabezados.created_at', $añoActual)
+            ->groupBy('productos.id', 'productos.descripcion')
+            ->get();
+
+            if (! $detalleCarrito->count()) {
+                return response()->json(['mensaje' => 'No hay elementos'], 404);
+            }
+
+            return response()->json([
+                'mensaje' => 'Pedido cargado',
+                'data' => $detalleCarrito,
+            ]);
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $exception->errors(),
+            ]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function CambioStatusPedido(Request $request)
+    {
+        try {
+            $user = auth()->user(); // Obtiene el usuario autenticado
+            if (! $user->count()) {
+                return response()->json(['mensaje' => 'No Autorizado'], 404);
+            }
+            $request->validate([
+                'id' => ['required', 'numeric'],
+                'status_pedido' => ['nullable', 'string', 'min:2'],
+            ]);
+
+            $cabeceraPedidoupdate = pedido_encabezado::findOrFail($request->input('id'));
+
+            if (! $cabeceraPedidoupdate->count()) {
+                return response()->json(['mensaje' => 'NO HAY PEDIDOS'], 404);
+            }
+
+            if (! empty($request->input('status_pedido'))) {
+                $cabeceraPedidoupdate->status_pedido = $request->input('status_pedido');
+            }
+
+            $cabeceraPedidoupdate->save();
+
+            return response()->json([
+                'mensaje' => 'pedido cargado',
+                'data' => $cabeceraPedidoupdate,
             ]);
         } catch (ValidationException $exception) {
             return response()->json([

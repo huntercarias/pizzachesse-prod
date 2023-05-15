@@ -43,7 +43,7 @@ const Calzonec = (props) => {
     const navigate = useNavigate();
 
     async function handleEditarClick(id) {
-        navigate(`/UpdatePizza/${id}`);
+        navigate(`/DetalleProducto/${id}`);
     };
 
     return (

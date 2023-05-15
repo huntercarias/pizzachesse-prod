@@ -65,7 +65,7 @@ export const NavbarAdministrador = () => {
                         <NavLink className="nav-link" to="/AddProducto"><h3>AGREGAR PRODUCTOS</h3></NavLink>
                     </a></li>
                     <li><a class="dropdown-item" href="#">
-                        <NavLink className="nav-link" to="/Circulares"><h3>RESUMEN DE VENTAS</h3></NavLink>
+                        <NavLink className="nav-link" to="/ReporteVentasMes"><h3>RESUMEN DE VENTAS</h3></NavLink>
                     </a></li>
                     <li><a class="dropdown-item" href="#">
                         <NavLink className="nav-link" to="/PedidosSolicitados"><h3>PEDIDOS ENTRANTES</h3></NavLink>
