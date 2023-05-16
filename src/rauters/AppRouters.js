@@ -37,7 +37,7 @@ import Graficas from '../componentes/graficas/Graficas';
 import AddPizza from '../componentes/productos/AddPizza';
 import PedidosEnProcesoAdmin from '../componentes/pedidos/PedidosEnProcesoAdmin';
 import ReporteVentasMes from '../componentes/graficas/ReporteVentasMes';
-
+import DetalleCompraa from '../componentes/pedidos/DetalleCompra';
 
 const productoPizza = 1;
 const productoLazana = 2;
@@ -71,6 +71,7 @@ export const AppRouter = () => {
                 <Route exact path='/RegistroAdmin/:id' element={<RegistroAdmin />} />
                 <Route exact path='/PedidosRealizadosUsuarios' element={<Pedidos />} />
                 <Route exact path='/ReporteVentasMes' element={<ReporteVentasMes />} />
+                <Route exact path='/DetalleCompraaAdmin/:id' element={<DetalleCompraa />} />
 
                 <Route exact path='/DetalleCompra' element={<DetalleCompra />} />
                 <Route exact path='/ProductosCarritoCompra' element={<ProductosCarritoCompras />} />

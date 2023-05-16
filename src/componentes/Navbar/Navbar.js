@@ -78,7 +78,7 @@ export const Navbar = () => {
                     usuario.rol === "ADMINISTRADOR" ? (
                         <div className="row">
                             <NavbarAdministrador />
-                            <h5> {miToken}</h5>
+
                             <h5> {usuario.email} </h5>
                             <h5> {usuario.rol} </h5>
                         </div>
@@ -87,7 +87,6 @@ export const Navbar = () => {
                         <div className="row">
                             <NavbarCliente />
                             <div className="col-sm-4 col-md-3 col-lg-2">
-                                <h5> {miToken}</h5>
                                 <h5> {usuario.email} </h5>
                                 <h5> {usuario.rol} </h5>
                             </div>

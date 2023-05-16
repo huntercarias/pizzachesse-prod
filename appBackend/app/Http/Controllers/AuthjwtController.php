@@ -944,6 +944,77 @@ class AuthjwtController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
+    public function InformacionDireccionTelefono(Request $request)
+    {
+        try {
+            $user = auth()->user(); // Obtiene el usuario autenticado
+
+            if (! $user->count()) {
+
+                return response()->json(['mensaje' => 'NO AUTORIZADO'], 404);
+            }
+
+            $request->validate([
+                'id' => ['required', 'numeric'],
+            ]);
+
+            $cabeceraPedido = pedido_encabezado::where('id', $request->input('id'))
+
+                                    ->first();
+
+            if (! $cabeceraPedido->count()) {
+                $cabeceraPedido = pedido_encabezado::create([
+                    'id_usuario' => $user->id,
+                    'id_carrito' => $cabeceraCarrito->id,
+
+                    'total' => $cabeceraCarrito->total,
+                    'status_pedido' => 'CREACION PEDIDO',
+                    'id_direcciones' => 0,
+                    'id_telefonos' => 0,
+                    'forma_pago' => 0,
+                    'id_repartidor' => 0,
+                ]);
+            }
+
+            $informacionPDirecciones = direcciones::where('id', $cabeceraPedido->id_direcciones)->first();
+            $informacionPTelefono = telefonos::where('id', $cabeceraPedido->id_telefonos)->first();
+
+            $informacionPedido = [
+                'pedido_encabezado' => $cabeceraPedido,
+                'direcciones' => $informacionPDirecciones,
+                'telefonos' => $informacionPTelefono,
+            ];
+
+            //->join('detalleCarrito', 'pedido_encabezado.id_carrito', '=', 'detalleCarrito.id_carrito_compras')
+            return response()->json([
+                'mensaje' => 'pedido cargado',
+                'data' => $informacionPedido,
+            ]);
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $exception->errors(),
+            ]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function EliminarProductoCarrito(Request $request)
     {
         $request->validate([
@@ -1157,6 +1228,7 @@ class AuthjwtController extends Controller
 
             $cabeceraPedidos = pedido_encabezado::where('status_pedido', 'EN-PROCESO')
                                      ->orWhere('status_pedido', 'EN PROCESO')
+                                     ->orWhere('status_pedido', 'ENVIADO')
                                      ->get();
             if (! $cabeceraPedidos->count()) {
                 return response()->json(['mensaje' => 'No hay elementos'], 404);

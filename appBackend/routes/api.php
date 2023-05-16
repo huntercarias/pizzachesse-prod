@@ -65,6 +65,7 @@ Route::group([
     Route::post('ListaPedidoEnProceso', [AuthjwtController::class, 'MostrarPedidosEnProceso']);
     Route::post('CambioStatusPedido', [AuthjwtController::class, 'CambioStatusPedido']);
     Route::post('MostrarResultadosProductoMensual', [AuthjwtController::class, 'MostrarResultadosProductoMensual']);
+    Route::post('AdminInformacionDireccionTelefono', [AuthjwtController::class, 'InformacionDireccionTelefono']);
 
     // Rutas protegidas con jwt.auth
     Route::middleware(['jwt.auth'])->group(function () {

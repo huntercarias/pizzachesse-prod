@@ -44,18 +44,19 @@ const PedidosEnProcesoAdmin = () => {
     async function SeleccionarDireccion(id) {
         try {
             const formData = new FormData();
-            formData.append("status_pedido", "EN PROCESO");
-            const response = await axios.post(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/RealizaSolicituInicial`, formData, {
+            formData.append("status_pedido", "ENVIADO");
+            formData.append("id", id);
+            const response = await axios.post(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/CambioStatusPedido`, formData, {
                 headers: {
                     Authorization: `Bearer ${miToken}`,
                 },
             });
 
-            // window.location.reload();
+            window.location.reload();
             console.log(response.data.data);
-            alert("seleccion exitosa");
+            //alert("seleccion exitosa");
 
-            navigate('/DetalleTelefono');
+            //navigate('/DetalleTelefono');
             //setCargando(false);
         } catch (error) {
             //setError('Ocurrió un error al eliminar el producto. Por favor, inténtalo de nuevo más tarde.');
@@ -64,6 +65,10 @@ const PedidosEnProcesoAdmin = () => {
             alert("error en seleccion intente mas tarde");
         }
     }
+
+    async function handleclienteClick(id) {
+        navigate(`/DetalleCompraaAdmin/${id}`);
+    };
 
 
     async function handleEditarClick(id) {
@@ -102,13 +107,18 @@ const PedidosEnProcesoAdmin = () => {
                                     {producto.forma_pago === 1 ? 'Cash' : productos.forma_pago === 2 ? 'POS' : 'BOTON DE PAGO'}
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(producto.id)}>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleclienteClick(producto.id)}>
                                         INFORMACION CLIENTE
                                     </button>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(producto.id)}>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(producto.id_carrito)}>
                                         DETALLE PEDIDO
+                                    </button>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => SeleccionarDireccion(producto.id)}>
+                                        ENVIAR PEDIDO
                                     </button>
                                 </td>
                             </tr>
