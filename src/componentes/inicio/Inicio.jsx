@@ -34,44 +34,28 @@ const Inicio = () => {
     return (
         <div className="container">
             <div className="row">
-
-                {cargando ? (
-                    <p>Cargando productos...</p>
-                ) : error ? (
-                    <p>{error}</p>
-                ) : productos.length > 0 ? (
-                    productos.map((producto) => (
-                        <div className="container">
-                            <div className="row">
-                                {producto.id === 1 ? (
-                                    <div className="col-lg-12">
-                                        <a href={`/Pizzac`}>
-
-                                            <p>{producto.descripcion}</p>
-                                            <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="100%" height="700" />
-                                        </a>
-                                    </div>
-                                ) : (
-
-
-                                    <div className="col-6 col-md-4">
-                                        <a href={`/Lazanac`}>
-                                            <p>{producto.descripcion}</p>
-                                            <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="100%" height="700" />
-                                        </a>
-                                    </div>
-
-
-
-                                )}
-                            </div>
-                        </div>
-                    ))
-                ) : (
-                    <p>No se encontraron productos.</p>
-                )}
+                <div className="container">
+                    <div className="row">
+                        {cargando ? (
+                            <p>Cargando productos...</p>
+                        ) : error ? (
+                            <p>{error}</p>
+                        ) : productos.length > 0 ? (
+                            productos.map((producto) => (
+                                <div className="col-lg-6 col-6 col-md-2">
+                                    <a href={producto.id === 1 ? '/Pizzac' : '/Lazanac'}>
+                                        <h1>{producto.descripcion}</h1>
+                                        <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} className="rounded mx-auto d-block" width="100%" height="700" />
+                                    </a>
+                                </div>
+                            ))
+                        ) : (
+                            <p>No se encontraron productos.</p>
+                        )}
+                    </div>
+                </div>
             </div>
-        </div >
+        </div>
     );
 };
 
