@@ -9,6 +9,7 @@ use App\Models\pedido_encabezado;
 use App\Models\telefonos;
 use App\Models\User;
 use Carbon\Carbon;
+use Dompdf\Dompdf;
 use Exception;
 use FileNotFoundException;
 use Illuminate\Database\QueryException;
@@ -1076,7 +1077,11 @@ class AuthjwtController extends Controller
         try {
             $user = auth()->user(); // Obtiene el usuario autenticado
 
-            $cabeceraPedidos = pedido_encabezado::where('id_usuario', $user->id)->get();
+            //$cabeceraPedidos = pedido_encabezado::where('id_usuario', $user->id)->get();
+
+            $cabeceraPedidos = pedido_encabezado::where('id_usuario', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
             if (! $cabeceraPedidos->count()) {
                 return response()->json(['mensaje' => 'No hay elementos'], 404);
@@ -1117,6 +1122,7 @@ class AuthjwtController extends Controller
             $cabeceraPedidos = pedido_encabezado::where('status_pedido', 'CREACION-PEDIDO')
                                      ->orWhere('status_pedido', 'CREACION PEDIDO')
                                      ->orWhere('status_pedido', 'SOLICITADO')
+
                                      ->get();
             if (! $cabeceraPedidos->count()) {
                 return response()->json(['mensaje' => 'No hay elementos'], 404);
@@ -1393,6 +1399,90 @@ class AuthjwtController extends Controller
                 'mensaje' => 'pedido cargado',
                 'data' => $cabeceraPedidoupdate,
             ]);
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $exception->errors(),
+            ]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function MostrarResultadosProductoMensualPDF(Request $request)
+    {
+        try {
+            $user = auth()->user(); // Obtiene el usuario autenticado
+            if (! $user) {
+                return response()->json(['mensaje' => 'No Autorizado'], 404);
+            }
+
+            $mesActual = Carbon::now()->month;
+            $añoActual = Carbon::now()->year;
+
+            $detalleCarrito = pedido_encabezado::select('productos.id', 'productos.descripcion', pedido_encabezado::raw('SUM(detalle_carritos.total) as total_por_producto'))
+                ->join('detalle_carritos', 'pedido_encabezados.id_carrito', '=', 'detalle_carritos.id_carrito_compras')
+                ->join('productos', 'detalle_carritos.id_productos', '=', 'productos.id')
+                ->whereMonth('pedido_encabezados.created_at', $mesActual)
+                ->whereYear('pedido_encabezados.created_at', $añoActual)
+                ->groupBy('productos.descripcion', 'productos.id')
+                ->get();
+
+            if ($detalleCarrito->isEmpty()) {
+                return response()->json(['mensaje' => 'No hay elementos'], 404);
+            }
+
+            $html = '<html><body>';
+            $html .= '<div class="container">';
+            $html .= '<h1 class="text-center">REPORTE MENSUAL</h1>';
+
+            $html .= '<h2 class="text-center">REPORTE POR TIPO DE PRODUCTO</h2>';
+            $html .= '<table class="table mx-auto">';
+            $html .= '<thead><tr><th class="text-center">ID TIPO PRODUCTO</th><th class="text-center">DESCRIPCION GRUPO</th><th class="text-center">TOTAL POR TIPO DE PRODUCTO</th></tr></thead>';
+            $html .= '<tbody>';
+            foreach ($detalleCarrito as $producto) {
+                $html .= '<tr>';
+                $html .= '<td class="text-center">'.$producto->id.'</td>';
+                $html .= '<td class="text-center">'.$producto->descripcion.'</td>';
+                $html .= '<td class="text-center">'.$producto->total_por_producto.'</td>';
+                $html .= '</tr>';
+            }
+            $html .= '</tbody>';
+            $html .= '</table>';
+
+            $html .= '</div>';
+            $html .= '</body></html>';
+
+            // Crear una instancia de Dompdf
+            $dompdf = new Dompdf();
+
+            // Cargar los datos en HTML para el PDF
+            $dompdf->loadHtml($html);
+
+            // Renderizar el PDF
+            $dompdf->render();
+
+            // Obtener el contenido del PDF generado
+            $pdfContent = $dompdf->output();
+
+            // Generar el nombre del archivo PDF
+            $fileName = 'resultados_producto_mensual.pdf';
+
+            // Guardar el contenido del PDF en un archivo local
+            file_put_contents($fileName, $pdfContent);
+
+            // Descargar el archivo PDF
+            return response()->download($fileName)->deleteFileAfterSend(true);
         } catch (ValidationException $exception) {
             return response()->json([
                 'mensaje' => 'Error al crear el registro en la base de datos.',

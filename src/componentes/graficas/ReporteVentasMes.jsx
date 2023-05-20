@@ -72,6 +72,31 @@ const ReporteVentasMes = () => {
     }, []);
 
 
+    const descargarPDF = () => {
+        axios({
+            url: 'http://localhost/pizzachesse-prod/appBackend/public/api/auth/MostrarResultadosProductoMensualPDF',
+            method: 'POST',
+            responseType: 'blob', // Especifica el tipo de respuesta como blob (binary large object)
+            headers: {
+                Authorization: `Bearer ${miToken}`,
+            },
+        })
+            .then(response => {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'resultados_producto_mensual.pdf'); // Nombre de archivo deseado para la descarga
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                console.error('Error al descargar el PDF:', error);
+            });
+    };
+
+
 
 
     return (
@@ -146,6 +171,8 @@ const ReporteVentasMes = () => {
                 </tbody>
 
             </table>
+
+            <button onClick={descargarPDF}>GENERA REPORTE EN PDF</button>
         </div>
     );
 };

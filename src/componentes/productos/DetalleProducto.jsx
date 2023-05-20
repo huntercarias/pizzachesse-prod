@@ -70,6 +70,7 @@ const DetalleProducto = () => {
             });
             //setUsuario(response.data);
             alert("Agregado al carrito de compras")
+            navigate('/');
             //window.location.reload();
             //console.log(response);
             //valida_existe_carrito(usuario.id);

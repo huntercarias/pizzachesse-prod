@@ -90,10 +90,10 @@ const DetalleCompra = () => {
             });
 
             // window.location.reload();
-            console.log(response.data.data);
-            alert("seleccion exitosa");
+            //console.log(response.data.data);
+            //alert("PEDIDO REALIZADO");
 
-            //navigate('/DetalleTelefono');
+            // navigate('/PedidosRealizadosUsuarios');
             //setCargando(false);
         } catch (error) {
             //setError('Ocurrió un error al eliminar el producto. Por favor, inténtalo de nuevo más tarde.');

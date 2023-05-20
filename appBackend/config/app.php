@@ -195,6 +195,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+        // Dompdf\ServiceProvider::class,
     ],
 
     /*
@@ -209,7 +210,18 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
+        //     'PDF' => Dompdf\Facade::class,
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
+    // 'aliases' => [
+    // ...
+
+    //    'PDF' => Dompdf\Facade::class,
+
+    // ...
+    //],
+    // 'aliases' => Facade::getFacadeAliases() + [
+    //    'PDF' => Dompdf\Facade::class,
+    //],
 
 ];

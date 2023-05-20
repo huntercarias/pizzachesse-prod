@@ -56,7 +56,7 @@ const DetalleDirecciones = () => {
             // window.location.reload();
             console.log(response.data.data);
             //setCargando(false);
-            alert("seleccion exitosa");
+            //alert("seleccion exitosa");
             navigate('/DetalleCompra');
         } catch (error) {
             //setError('Ocurrió un error al eliminar el producto. Por favor, inténtalo de nuevo más tarde.');

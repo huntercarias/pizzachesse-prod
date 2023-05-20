@@ -101,7 +101,9 @@ const DetalleCompra = () => {
         }
     }
 
-
+    async function handleEditarClick() {
+        navigate('/PagoTarjeta');
+    };
 
 
 
@@ -219,18 +221,12 @@ const DetalleCompra = () => {
                         Con POS
                     </label>
                 </div>
-                <div>
-                    <label>
-                        <input
-                            type="radio"
-                            value="paymentButton"
-                            checked={paymentMethod === "paymentButton"}
-                            onChange={handlePaymentMethodChange}
-                        />
-                        Botón de pago
-                    </label>
-                </div>
-                <button type="submit">Pagar</button>
+
+                <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick()}>
+                    PAGO CON TARJETA DE CREDITO
+                </button>
+
+                <button type="submit">REALIZAR PEDIDO</button>
             </form>
 
         </div>

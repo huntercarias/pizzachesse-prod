@@ -55,7 +55,7 @@ const DetalleDirecciones = () => {
 
             // window.location.reload();
             console.log(response.data.data);
-            alert("seleccion exitosa");
+            //alert("seleccion exitosa");
 
             navigate('/DetalleTelefono');
             //setCargando(false);
