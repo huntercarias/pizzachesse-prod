@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import '../../App.css';
 import axios from "axios";
 
-const baseURL = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/register`;
+const baseURL = `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/register`;
 
 
 

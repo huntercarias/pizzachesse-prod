@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 export const NavbarAdministrador = () => {
     //`${process.env.REACT_APP_API_URL}/Login`
     const navigate = useNavigate();
-    const baseURL = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/logout`;
+    const baseURL = `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/logout`;
 
     // consulta token almacenado en la localstorage
     const miToken = localStorage.getItem('miToken');

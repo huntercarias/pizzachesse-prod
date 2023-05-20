@@ -3,7 +3,7 @@ import '../../App.css';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
-const baseURL = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/register`;
+const baseURL = `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/register`;
 
 
 
@@ -60,7 +60,7 @@ const PagoTarjeta = () => {
 
             formData.append("status_pedido", "SOLICITADO");
             formData.append("forma_pago", 3);
-            const response = await axios.post(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/RealizaSolicituInicial`, formData, {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/RealizaSolicituInicial`, formData, {
                 headers: {
                     Authorization: `Bearer ${miToken}`,
                 },
@@ -84,7 +84,7 @@ const PagoTarjeta = () => {
     const [errorA, setErrorA] = useState(null);
     const [SaldoCarrito, setSaldoCarrito] = useState([]);
 
-    const baseURLsaldo = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/ConsultaCarritoCompras`;
+    const baseURLsaldo = `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/ConsultaCarritoCompras`;
 
     const consulta_Saldo = async () => {
         try {

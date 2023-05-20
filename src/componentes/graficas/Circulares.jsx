@@ -7,7 +7,7 @@ const Circulares = () => {
     const [productos, setProductos] = useState([]);
     const [cargando, setCargando] = useState(false);
     const [error, setError] = useState(null);
-    const baseURLusuario = 'http://localhost/pizzachesse-prod/appBackend/public/api/auth/ReporteTiposProductos';
+    const baseURLusuario = `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/ReporteTiposProductos`;
     const miToken = localStorage.getItem('miToken');
     const navigate = useNavigate();
 

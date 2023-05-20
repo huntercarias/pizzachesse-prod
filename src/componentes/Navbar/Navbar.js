@@ -25,7 +25,7 @@ export const Navbar = () => {
     const [cargandoU, setCargandoU] = useState(true);
     const [error, setError] = useState(null);
 
-    const baseURL = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/me`;
+    const baseURL = `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/me`;
 
     // consulta token almacenado en la localstorage
     //const miToken = localStorage.getItem('miToken');

@@ -3,7 +3,7 @@ import '../../App.css';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
-const baseURL = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/GuardaDireccionTelefono`;
+const baseURL = `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/GuardaDireccionTelefono`;
 
 
 

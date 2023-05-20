@@ -13,7 +13,7 @@ const Calzonec = (props) => {
 
     const fetchProductos = async () => {
         try {
-            const response = await axios.get(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/getAllProductos?page=${currentPage}&tipoproducto=${props.variable}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/appBackend/public/api/getAllProductos?page=${currentPage}&tipoproducto=${props.variable}`);
             setProductos(response.data.data);
             console.log(response.data.data);
             setCargando(false);
@@ -30,7 +30,7 @@ const Calzonec = (props) => {
 
     async function handleDelete(id) {
         try {
-            const response = await axios.delete(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/eliminaProducto?id=${id}`);
+            const response = await axios.delete(`${process.env.REACT_APP_API_URL}/appBackend/public/api/eliminaProducto?id=${id}`);
             setProductos(prevProductos => prevProductos.filter(producto => producto.id !== id));
             console.log(response.data.data);
             setCargando(false);

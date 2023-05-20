@@ -12,7 +12,7 @@ const DetalleProducto = () => {
     const [error, setError] = useState(null);
     const [productos, setProductos] = useState([]);
 
-    const baseURLproductos = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/getProducto?id=${params.id}`;
+    const baseURLproductos = `${process.env.REACT_APP_API_URL}/appBackend/public/api/getProducto?id=${params.id}`;
     const fetchProductos = async () => {
         try {
             const response = await axios.get(baseURLproductos);
@@ -47,7 +47,7 @@ const DetalleProducto = () => {
     };
 
 
-    const baseURLusuario = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/StoreProducto`;
+    const baseURLusuario = `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/StoreProducto`;
     //const baseURLusuario = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/ShowDetalleCarrito`;
     // consulta token almacenado en la localstorage
     const miToken = localStorage.getItem('miToken');

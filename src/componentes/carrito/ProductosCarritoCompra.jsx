@@ -10,7 +10,7 @@ const ProductosCarritoCompra = () => {
     const [error, setError] = useState(null);
     const [productos, setProductos] = useState([]);
 
-    const baseURLusuario = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/ShowDetalleCarrito`;
+    const baseURLusuario = `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/ShowDetalleCarrito`;
     // consulta token almacenado en la localstorage
     const miToken = localStorage.getItem('miToken');
     const navigate = useNavigate();
@@ -41,7 +41,7 @@ const ProductosCarritoCompra = () => {
 
     async function handleDelete(id) {
         try {
-            const response = await axios.delete(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/EliminarProductoCarrito?id=${id}`, {
+            const response = await axios.delete(`${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/EliminarProductoCarrito?id=${id}`, {
                 headers: {
                     Authorization: `Bearer ${miToken}`,
                 },
@@ -60,7 +60,7 @@ const ProductosCarritoCompra = () => {
     const [errorA, setErrorA] = useState(null);
     const [SaldoCarrito, setSaldoCarrito] = useState([]);
 
-    const baseURLsaldo = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/ConsultaCarritoCompras`;
+    const baseURLsaldo = `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/ConsultaCarritoCompras`;
 
     const consulta_Saldo = async () => {
         try {

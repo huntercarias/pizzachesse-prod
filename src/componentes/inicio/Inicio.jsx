@@ -12,7 +12,7 @@ const Inicio = () => {
 
     const fetchProductos = async () => {
         try {
-            const response = await axios.get(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/getAlltipoProductos`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/appBackend/public/api/getAlltipoProductos`);
             setProductos(response.data.data);
             console.log(response.data.data);
             setCargando(false);

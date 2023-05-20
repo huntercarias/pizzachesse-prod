@@ -3,7 +3,7 @@ import '../../App.css';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
-const baseURL = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/login`;
+const baseURL = `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/login`;
 
 const Login = () => {
     const navigate = useNavigate();
@@ -28,13 +28,14 @@ const Login = () => {
         const formData = new FormData();
         formData.append("email", formState.email);
         formData.append("password", formState.password);
+        //console.log(baseURL);
         try {
             const response = await axios.post(baseURL, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
             });
-            console.log(response.data.access_token);
+            //console.log(response.data.access_token);
             //almacena variable en la locallstorage de la maquina
 
             localStorage.setItem('miToken', response.data.access_token);

@@ -8,7 +8,7 @@ export const NavbarCliente = () => {
     //`${process.env.REACT_APP_API_URL}/Login`
 
     //console.log("estoy aqui ciente");
-    const baseURL = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/logout`;
+    const baseURL = `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/logout`;
 
     // consulta token almacenado en la localstorage
     const miToken = localStorage.getItem('miToken');

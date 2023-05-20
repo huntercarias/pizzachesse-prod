@@ -3,7 +3,7 @@ import image1 from '../../imagenes/logoPizzaCheese.jpg';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 
-const baseURL = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/updateProducto`;
+const baseURL = `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/updateProducto`;
 // consulta token almacenado en la localstorage
 const miToken = localStorage.getItem('miToken');
 
@@ -80,7 +80,7 @@ const UpdatePizza = () => {
 
     const fetchProductos = async () => {
         try {
-            const response = await axios.get(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/getProducto?id=${params.id}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/appBackend/public/api/getProducto?id=${params.id}`);
             console.log(response.data.data);
             const { id, id_tiposproducto, descripcion, ruta_imagen, monto } = response.data.data;
             setFormState({ ...formState, descripcion, id_tiposproducto, monto });

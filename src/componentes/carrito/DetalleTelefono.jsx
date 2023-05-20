@@ -9,7 +9,7 @@ const DetalleDirecciones = () => {
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
     const [productos, setProductos] = useState([]);
-    const baseURLusuario = `http://localhost/pizzachesse-prod/appBackend/public/api/auth/ConsultaTelefonos`;
+    const baseURLusuario = `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/ConsultaTelefonos`;
     //const baseURLusuario = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/ShowDetalleCarrito`;
     // consulta token almacenado en la localstorage
     const miToken = localStorage.getItem('miToken');
@@ -47,7 +47,7 @@ const DetalleDirecciones = () => {
             const formData = new FormData();
             formData.append("status_pedido", "CREACION PEDIDO");
             formData.append("id_telefonos", id);
-            const response = await axios.post(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/RealizaPedido`, formData, {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/RealizaPedido`, formData, {
                 headers: {
                     Authorization: `Bearer ${miToken}`,
                 },
@@ -70,7 +70,7 @@ const DetalleDirecciones = () => {
     const [errorA, setErrorA] = useState(null);
     const [SaldoCarrito, setSaldoCarrito] = useState([]);
 
-    const baseURLsaldo = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/ConsultaCarritoCompras`;
+    const baseURLsaldo = `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/ConsultaCarritoCompras`;
 
     const consulta_Saldo = async () => {
         try {

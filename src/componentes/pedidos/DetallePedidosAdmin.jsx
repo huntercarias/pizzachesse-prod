@@ -11,7 +11,7 @@ const DetallePedidosAdmin = () => {
     const [error, setError] = useState(null);
     const [productos, setProductos] = useState([]);
 
-    const baseURLusuario = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/ListaDetallePedido`;
+    const baseURLusuario = `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/ListaDetallePedido`;
     // consulta token almacenado en la localstorage
     const miToken = localStorage.getItem('miToken');
     const navigate = useNavigate();

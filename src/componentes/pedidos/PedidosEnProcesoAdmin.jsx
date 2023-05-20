@@ -9,7 +9,7 @@ const PedidosEnProcesoAdmin = () => {
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
     const [productos, setProductos] = useState([]);
-    const baseURLusuario = `http://localhost/pizzachesse-prod/appBackend/public/api/auth/ListaPedidoEnProceso`;
+    const baseURLusuario = `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/ListaPedidoEnProceso`;
     // consulta token almacenado en la localstorage
     const miToken = localStorage.getItem('miToken');
     const navigate = useNavigate();
@@ -46,7 +46,7 @@ const PedidosEnProcesoAdmin = () => {
             const formData = new FormData();
             formData.append("status_pedido", "ENVIADO");
             formData.append("id", id);
-            const response = await axios.post(`http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/CambioStatusPedido`, formData, {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/CambioStatusPedido`, formData, {
                 headers: {
                     Authorization: `Bearer ${miToken}`,
                 },

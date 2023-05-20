@@ -10,7 +10,7 @@ const ReporteVentasMes = () => {
     const [error, setError] = useState(null);
     const [productos, setProductos] = useState([]);
 
-    const baseURLusuario = 'http://localhost/pizzachesse-prod/appBackend/public/api/auth/ReporteTiposProductos';
+    const baseURLusuario = `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/ReporteTiposProductos`;
     //const baseURLusuario = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/ShowDetalleCarrito`;
     // consulta token almacenado en la localstorage
     const miToken = localStorage.getItem('miToken');
@@ -40,7 +40,7 @@ const ReporteVentasMes = () => {
     const [cargandoA, setCargandoA] = useState(true);
     const [errorA, setErrorA] = useState(null);
     const [productosA, setProductosA] = useState([]);
-    const baseURLusuarioA = 'http://localhost/pizzachesse-prod/appBackend/public/api/auth/MostrarResultadosProductoMensual';
+    const baseURLusuarioA = `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/MostrarResultadosProductoMensual`;
     //const baseURLusuario = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/ShowDetalleCarrito`;
     // consulta token almacenado en la localstorage
     const [usuarioA, setUsuarioA] = useState([]);
@@ -74,7 +74,7 @@ const ReporteVentasMes = () => {
 
     const descargarPDF = () => {
         axios({
-            url: 'http://localhost/pizzachesse-prod/appBackend/public/api/auth/MostrarResultadosProductoMensualPDF',
+            url: `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/MostrarResultadosProductoMensualPDF`,
             method: 'POST',
             responseType: 'blob', // Especifica el tipo de respuesta como blob (binary large object)
             headers: {

@@ -3,7 +3,7 @@ import axios from "axios";
 import image1 from '../../imagenes/logoPizzaCheese.jpg';
 import { useNavigate } from 'react-router-dom';
 
-const baseURL = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBackend/public/api/auth/ADDProductos`;
+const baseURL = `${process.env.REACT_APP_API_URL}/appBackend/public/api/auth/ADDProductos`;
 // consulta token almacenado en la localstorage
 const miToken = localStorage.getItem('miToken');
 
