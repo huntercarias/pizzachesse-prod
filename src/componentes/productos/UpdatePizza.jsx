@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import image1 from '../../imagenes/logoPizzaCheese.jpg';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
@@ -8,6 +8,7 @@ const baseURL = `http://${process.env.REACT_APP_API_URL}/pizzachesse-prod/appBac
 const miToken = localStorage.getItem('miToken');
 
 const UpdatePizza = () => {
+    const navigate = useNavigate();
     const params = useParams();
 
     // Función para manejar los cambios en los campos del formulario
@@ -45,10 +46,12 @@ const UpdatePizza = () => {
             });
             alert(`${response.data.mensaje}\n${response.data.data.descripcion}`);
             console.log(response.data.data.descripcion);
-            window.location.reload();
+            navigate('/');
+            //window.location.reload();
         } catch (error) {
             console.log(error);
-            alert('Error al agregar Producto');
+            alert('Error al actualizar Producto');
+            navigate('/');
         }
     };
 

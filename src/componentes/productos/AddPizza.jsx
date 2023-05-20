@@ -55,11 +55,12 @@ function AddPizza() {
             });
             alert(response.data.mensaje + "\n" + response.data.data.descripcion);
             console.log(response.data.data.descripcion);
-            navigate('/AddProducto');
-            window.location.reload();
+            navigate('/');
+            //window.location.reload();
         } catch (error) {
             console.log(error);
-            alert("Error al agregar Producto");
+            alert("Error al agregar Producto intente mas tarde");
+            navigate('/');
         }
     };
 

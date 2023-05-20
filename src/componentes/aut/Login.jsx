@@ -41,7 +41,7 @@ const Login = () => {
             navigate('/');
             window.location.reload();
         } catch (error) {
-            alert(error.message);
+            //alert(error.message);
             localStorage.setItem('miToken', "");
             alert("Error Login");
             console.log("Error");
