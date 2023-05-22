@@ -100,7 +100,7 @@ class AuthjwtController extends Controller
             $validator = Validator::make($request->all(), [
                 'name' => 'required',
                 'email' => 'required|string|email|max:100|unique:users',
-                'password' => 'required|string|min:6',
+                'password' => 'required|string|min:3',
                 'rol' => 'required|string|min:2',
             ]);
 

@@ -45,6 +45,15 @@ const productoCalzone = 3;
 const productoCombos = 4;
 const productoBebidas = 5;
 
+
+
+
+
+
+function NotFound() {
+    return <h1>Página no encontrada</h1>;
+}
+
 export const AppRouter = () => {
     return (
         <Router>
@@ -87,6 +96,7 @@ export const AppRouter = () => {
                 <Route exact path='/DetalleProductosAdmin/:id' element={<DetallePedidosAdmin />} />
                 <Route exact path='/PedidosEnProceso' element={<PedidosEnProcesoAdmin />} />
                 <Route exact path='/PagoTarjeta' element={<PagoTarjeta />} />
+                <Route path="*" element={<NotFound />} />
             </Routes>
         </Router>
     )

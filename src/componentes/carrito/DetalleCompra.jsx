@@ -105,16 +105,16 @@ const DetalleCompra = () => {
         navigate('/PagoTarjeta');
     };
 
-
+    async function enviaruta(ruta) {
+        navigate(ruta);
+    };
 
 
 
     return (
         <div>
             <h1>Confirmacion direcciones</h1>
-            <button type="button" className="btn btn-sm btn-outline-secondary">
-                <a href="http://localhost:3000/RegistroDireccionTelefono">REGISTRAR DIRECCIONES Y TELEFONOS</a>
-            </button>
+            <button class="btn btn-primary btn-block" onClick={() => enviaruta("/RegistroDireccionTelefono")}>REGISTRAR DIRECCIONES Y TELEFONOS</button>
 
 
             <table className="table">
@@ -135,9 +135,7 @@ const DetalleCompra = () => {
                 {cargando ? (
                     <p>Cargando productos...</p>
                 ) : error ? (
-                    <button type="button" className="btn btn-sm btn-outline-secondary">
-                        <a href="http://localhost:3000/RegistroDireccionTelefono">REGISTRAR DIRECCIONES Y TELEFONOS</a>
-                    </button>
+                    <button class="btn btn-primary btn-block" onClick={() => enviaruta("/RegistroDireccionTelefono")}>REGISTRAR DIRECCIONES Y TELEFONOS</button>
                 ) : (
                     <tbody>
                         {productos.direcciones && Object.keys(productos.direcciones).length > 0 ? (

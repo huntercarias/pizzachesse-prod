@@ -40,9 +40,10 @@ const RegistroAdmin = () => {
                     "Content-Type": "multipart/form-data",
                 },
             });
-            alert(response.data.mensaje + "\n" + response.data.data.descripcion);
+            //alert(response.data.mensaje + "\n" + response.data.data.descripcion);
+            alert("REGISTRADO EXITOSAMENTE");
             console.log(response.data);
-            navigate('/');
+            navigate('/Login');
         } catch (error) {
             alert(error.message);
             alert("Error Login");
@@ -148,9 +149,6 @@ const RegistroAdmin = () => {
 
                                 <button type="submit" class="btn btn-primary btn-block">Registrarse</button>
                             </form>
-                        </div>
-                        <div class="card-footer">
-                            <p class="text-center">¿Ya tienes cuenta? <a href="#">Inicia sesión aquí</a></p>
                         </div>
                     </div>
                 </div>

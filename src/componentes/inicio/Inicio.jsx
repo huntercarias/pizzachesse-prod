@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../App.css';
 import image12 from '../../imagenes/horno_inicio_fondo_pantalla.jpg';
+import { useNavigate } from 'react-router-dom';
 
 const Inicio = () => {
     const [productos, setProductos] = useState([]);
@@ -31,6 +32,25 @@ const Inicio = () => {
         fetchProductos();
     }, []);
 
+    const navigate = useNavigate();
+
+    async function handleEditarClick(id) {
+
+        if (id == 1) {
+            navigate(`/Pizzac`);
+        } else if (id == 2) {
+            navigate(`/Lazanac`);
+        } else if (id == 3) {
+            navigate(`/Calzonec`);
+        } else if (id == 4) {
+            navigate(`/Combosc`);
+        } else {
+            navigate(`/Bebidasc`);
+        }
+
+    };
+
+
     return (
         <div className="container">
             <div className="row">
@@ -42,8 +62,8 @@ const Inicio = () => {
                             <p>{error}</p>
                         ) : productos.length > 0 ? (
                             productos.map((producto) => (
-                                <div className="col-lg-6 col-6 col-md-2">
-                                    <a href={producto.id === 1 ? '/Pizzac' : '/Lazanac'}>
+                                <div className="col-lg-6 col-12 col-md-12">
+                                    <a onClick={() => handleEditarClick(producto.id)}>
                                         <h1>{producto.descripcion}</h1>
                                         <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} className="rounded mx-auto d-block" width="100%" height="700" />
                                     </a>

@@ -54,6 +54,10 @@ const RegistroDireccionTelefono = () => {
         }
     };
 
+    async function enviaruta(ruta) {
+        navigate(ruta);
+    };
+
 
     return (
         <div class="container">
@@ -192,9 +196,7 @@ const RegistroDireccionTelefono = () => {
                                     ></input>
                                 </div>
 
-                                <button type="button" class="btn btn-sm btn-outline-secondary" >
-                                    <a href="http://localhost:3000/DetalleDireccionTelefono">ATRAS</a>
-                                </button>
+                                <button class="btn btn-primary btn-block" onClick={() => enviaruta("/DetalleDireccionTelefono")}>ATRAS</button>
                                 <button type="submit" class="btn btn-primary btn-block">Registrarse</button>
 
                             </form>

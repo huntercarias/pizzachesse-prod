@@ -49,6 +49,10 @@ const Login = () => {
         }
     };
 
+    async function handleEditarClick(ruta) {
+        navigate(ruta);
+    };
+
     return (
         <div class="container">
             <div class="row justify-content-center mt-5">
@@ -89,7 +93,7 @@ const Login = () => {
                             </form>
                         </div>
                         <div class="card-footer">
-                            <p class="text-center">¿No tienes cuenta? <a href="http://localhost:3000/Registro">Regístrate aquí</a></p>
+                            <p class="text-center">¿No tienes cuenta? <button class="btn btn-primary btn-block" onClick={() => handleEditarClick("/Registro")}>Regístrate aquí</button></p>
                         </div>
                     </div>
                 </div>

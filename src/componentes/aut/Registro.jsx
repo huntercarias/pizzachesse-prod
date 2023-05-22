@@ -33,22 +33,18 @@ const Registro = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post(baseURL, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
-            alert(response.data.mensaje + "\n" + response.data.data.descripcion);
-            console.log(response);
-            navigate('/');
+            //console.log(formData);
+            const response = await axios.post(baseURL, formData);
+            //console.log(response);
+            alert("REGISTRADO EXITOSAMENTE");
+            navigate('/Login');
 
         } catch (error) {
-            alert(error.message);
-            alert("Error Login");
-            console.log(error);
+            //alert(error.message);
+            alert("ERROR LOGIN INTENTE DE NUEVO");
+            //console.log(error);
         }
     };
-
 
     return (
         <div class="container">
@@ -148,9 +144,7 @@ const Registro = () => {
                                 <button type="submit" class="btn btn-primary btn-block">Registrarse</button>
                             </form>
                         </div>
-                        <div class="card-footer">
-                            <p class="text-center">¿Ya tienes cuenta? <a href="#">Inicia sesión aquí</a></p>
-                        </div>
+
                     </div>
                 </div>
             </div>

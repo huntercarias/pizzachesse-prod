@@ -83,7 +83,9 @@ const ProductosCarritoCompra = () => {
     };
 
 
-
+    async function enviaruta(ruta) {
+        navigate(ruta);
+    };
 
 
     return (
@@ -115,9 +117,9 @@ const ProductosCarritoCompra = () => {
                                 <td>
                                     {producto.descripcion}
                                 </td>
-                                <td>{producto.extra_queso === 1 ? "si" : "no"}</td>
-                                <td>{producto.extra_jamon === 1 ? "si" : "no"}</td>
-                                <td>{producto.extra_peperoni === 1 ? "si" : "no"}</td>
+                                <td>{producto.extra_queso === 1 ? "SI" : "NO"}</td>
+                                <td>{producto.extra_jamon === 1 ? "SI" : "NO"}</td>
+                                <td>{producto.extra_peperoni === 1 ? "SI" : "NO"}</td>
                                 <td>{producto.cantidad}</td>
                                 <td>
                                     {producto.total}
@@ -143,9 +145,8 @@ const ProductosCarritoCompra = () => {
                             <td colspan="2">Total:</td>
                             <td> {SaldoCarrito.total}</td>
                             <td>
-                                <button type="button" class="btn btn-sm btn-outline-secondary" >
-                                    <a href="http://localhost:3000/DetalleDireccionTelefono"> RELIZAR PEDIDO</a>
-                                </button>
+
+                                <button class="btn btn-primary btn-block" onClick={() => enviaruta("/DetalleDireccionTelefono")}>RELIZAR PEDIDO</button>
                             </td>
                         </tr>
                     )}

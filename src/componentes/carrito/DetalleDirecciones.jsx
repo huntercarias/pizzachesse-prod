@@ -94,15 +94,17 @@ const DetalleDirecciones = () => {
     };
 
 
+    async function enviaruta(ruta) {
+        navigate(ruta);
+    };
 
 
 
     return (
         <div>
             <h1>Detalle Direcciones</h1>
-            <button type="button" className="btn btn-sm btn-outline-secondary">
-                <a href="http://localhost:3000/RegistroDireccionTelefono">REGISTRAR DIRECCIONES Y TELEFONOS</a>
-            </button>
+
+            <button class="btn btn-primary btn-block" onClick={() => enviaruta("/RegistroDireccionTelefono")}>REGISTRAR DIRECCIONES Y TELEFONOS</button>
             <table className="table">
                 <thead>
                     <tr>
@@ -119,9 +121,8 @@ const DetalleDirecciones = () => {
                     {cargando ? (
                         <p>Cargando productos...</p>
                     ) : error ? (
-                        <button type="button" className="btn btn-sm btn-outline-secondary">
-                            <a href="http://localhost:3000/RegistroDireccionTelefono">REGISTRAR DIRECCIONES Y TELEFONOS</a>
-                        </button>
+
+                        <button class="btn btn-primary btn-block" onClick={() => enviaruta("/RegistroDireccionTelefono")}>REGISTRAR DIRECCIONES Y TELEFONOS</button>
                     ) : productos.length > 0 ? (
                         productos.map((producto) => (
                             <tr key={producto.id}>
@@ -140,9 +141,8 @@ const DetalleDirecciones = () => {
                             </tr>
                         ))
                     ) : (
-                        <button type="button" className="btn btn-sm btn-outline-secondary">
-                            <a href="http://localhost:3000/RegistroDireccionTelefono">REGISTRAR DIRECCIONES Y TELEFONOS</a>
-                        </button>
+
+                        <button class="btn btn-primary btn-block" onClick={() => enviaruta("/RegistroDireccionTelefono")}>REGISTRAR DIRECCIONES Y TELEFONOS</button>
                     )}
                 </tbody>
 

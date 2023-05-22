@@ -46,7 +46,7 @@ export const NavbarAdministrador = () => {
                     <h1>MENU</h1>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">
+                    <li><a class="dropdown-item" href="/Pizza">
                         <NavLink className="nav-link" to="/Pizza"> <h3>PIZZA</h3></NavLink>
                     </a></li>
                     <li><a class="dropdown-item" href="/Lazana">
