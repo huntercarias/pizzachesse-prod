@@ -102,45 +102,48 @@ const Pedidos = () => {
         <div>
             <h1>PEDIDOS REALIZADOS</h1>
 
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th scope="col">CARRITO</th>
-                        <th scope="col">TOTAL</th>
-                        <th scope="col">ESTATUS PEDIDO</th>
-                        <th scope="col">FORMA DE PAGO</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div class="bd-example-snippet bd-code-snippet"><div class="bd-example">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">CARRITO</th>
+                            <th scope="col">TOTAL</th>
+                            <th scope="col">ESTATUS PEDIDO</th>
+                            <th scope="col">FORMA DE PAGO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                    {cargando ? (
-                        <p>Cargando productos...</p>
-                    ) : error ? (
-                        <p>NO TIENE PEDIDOS...</p>
-                    ) : productos.length > 0 ? (
-                        productos.map((producto) => (
-                            <tr key={productos.id}>
+                        {cargando ? (
+                            <p>Cargando productos...</p>
+                        ) : error ? (
+                            <p>NO TIENE PEDIDOS...</p>
+                        ) : productos.length > 0 ? (
+                            productos.map((producto) => (
+                                <tr key={productos.id}>
 
-                                <th scope="row">{producto.id_carrito}</th>
-                                <td>Q {producto.total}</td>
-                                <td>{producto.status_pedido}</td>
-                                <td>
-                                    {producto.forma_pago === 1 ? 'Cash' : productos.forma_pago === 2 ? 'POS' : 'BOTON DE PAGO'}
-                                </td>
+                                    <th scope="row">{producto.id_carrito}</th>
+                                    <td>Q {producto.total}</td>
+                                    <td>{producto.status_pedido}</td>
+                                    <td>
+                                        {producto.forma_pago === 1 ? 'EFECTIVO' : producto.forma_pago === 2 ? 'POS' : producto.forma_pago === 3 ? 'BOTON DE PAGO' : ''}
+                                    </td>
 
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(producto.id_carrito)}>
-                                        DETALLE PEDIDO
-                                    </button>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
-                        <p>en espera</p>
-                    )}
-                </tbody>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick(producto.id_carrito)}>
+                                            DETALLE PEDIDO
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <p>en espera</p>
+                        )}
+                    </tbody>
 
-            </table>
+                </table>
+            </div>
+            </div>
         </div>
     );
 };

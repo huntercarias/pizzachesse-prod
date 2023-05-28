@@ -91,57 +91,61 @@ const ProductosCarritoCompra = () => {
     return (
         <div>
             <h1>Detalle de Carrito de Compras</h1>
-            <table class="table">
-                <thead >
-                    <tr>
-                        <th scope="col">.</th>
-                        <th scope="col">NOMBRE</th>
-                        <th scope="col">EXTRA QUESO</th>
-                        <th scope="col">EXTRA JAMON</th>
-                        <th scope="col">EXTRA PEPPERONI</th>
-                        <th scope="col">CANTIDAD</th>
-                        <th scope="col">MONTO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {cargando ? (
-                        <p>Cargando productos...</p>
-                    ) : error ? (
-                        <p>{error}</p>
-                    ) : productos.length > 0 ? (
-                        productos.map((producto) => (
-                            <tr key={producto.id}>
-                                <th scope="row">
-                                    <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="60%" height="225" />
-                                </th>
-                                <td>
-                                    {producto.descripcion}
-                                </td>
-                                <td>{producto.extra_queso === 1 ? "SI" : "NO"}</td>
-                                <td>{producto.extra_jamon === 1 ? "SI" : "NO"}</td>
-                                <td>{producto.extra_peperoni === 1 ? "SI" : "NO"}</td>
-                                <td>{producto.cantidad}</td>
-                                <td>
-                                    {producto.total}
 
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleDelete(producto.id)} >
-                                        ELIMINAR
-                                    </button>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
-                        <p>No se encontraron productos.</p>
-                    )}
-                </tbody>
+
+            <div class="album py-5 bg-body-tertiary">
+                <div class="container">
+                    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-3 g-3">
+
+                        {cargando ? (
+                            <p>Cargando productos...</p>
+                        ) : error ? (
+                            <p>{error}</p>
+                        ) : productos.length > 0 ? (
+                            productos.map((producto) => (
+                                <div className="col" key={producto.id}>
+                                    <div class="card shadow-sm">
+                                        <div class="container text-center">
+                                            <p>{producto.descripcion}</p>
+                                        </div>
+
+                                        <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="100%" height="225" />
+                                        <div class="card-body">
+                                            <p class="card-text"></p>
+
+                                            <div class="card-body">
+                                                <h5 class="card-text">EXTRA QUESO = {producto.extra_queso === 1 ? "SI" : "NO"}</h5>
+                                                <h5 class="card-text">EXTRA JAMON = {producto.extra_jamon === 1 ? "SI" : "NO"}</h5>
+                                                <h5 class="card-text">EXTRA PEPERONI ={producto.extra_peperoni === 1 ? "SI" : "NO"}</h5>
+                                                <h5 class="card-text">CANTIDAD ={producto.cantidad}</h5>
+                                                <h5 class="card-text">MONTO = Q{producto.total}</h5>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="btn-group">
+
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleDelete(producto.id)} >
+                                                        ELIMINAR
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <p>No se encontraron productos.</p>
+                        )}
+                    </div>
+                </div>
+            </div>
+            <table class="table">
                 <tfoot>
                     {cargandoA && <p>Cargando...</p>}
                     {errorA && <p>Error cargando el Detalle del producto</p>}
                     {!cargandoA && (
 
-                        <tr>
+                        <tr >
                             <td colspan="2">Total:</td>
                             <td> {SaldoCarrito.total}</td>
                             <td>
@@ -152,6 +156,7 @@ const ProductosCarritoCompra = () => {
                     )}
                 </tfoot>
             </table>
+
         </div>
     );
 };

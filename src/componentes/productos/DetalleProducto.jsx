@@ -113,13 +113,6 @@ const DetalleProducto = () => {
                                     {productos.monto}
                                 </div>
 
-
-
-
-
-
-
-
                                 <div class="form-group">
                                     <label>Extras:</label>
                                     <div>

@@ -89,9 +89,9 @@ const DetalleCompra = () => {
 
             // window.location.reload();
             console.log(response.data.data);
-            alert("seleccion exitosa");
+            alert("PEDIDO REALIZADO");
 
-            //navigate('/DetalleTelefono');
+            navigate('/PedidosRealizadosUsuarios');
             //setCargando(false);
         } catch (error) {
             //setError('Ocurrió un error al eliminar el producto. Por favor, inténtalo de nuevo más tarde.');
@@ -117,114 +117,115 @@ const DetalleCompra = () => {
             <button class="btn btn-primary btn-block" onClick={() => enviaruta("/RegistroDireccionTelefono")}>REGISTRAR DIRECCIONES Y TELEFONOS</button>
 
 
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th colSpan="6">DIRECCION</th>
-                    </tr>
-                    <tr>
-                        <th scope="col">NOMENCLATURA</th>
-                        <th scope="col">ZONA</th>
-                        <th scope="col">CIUDAD</th>
-                        <th scope="col">DEPARTAMENTO</th>
-                        <th scope="col">MUNICIPIO</th>
-                        <th scope="col">LOTE</th>
-                    </tr>
-                </thead>
-
-                {cargando ? (
-                    <p>Cargando productos...</p>
-                ) : error ? (
-                    <button class="btn btn-primary btn-block" onClick={() => enviaruta("/RegistroDireccionTelefono")}>REGISTRAR DIRECCIONES Y TELEFONOS</button>
-                ) : (
-                    <tbody>
-                        {productos.direcciones && Object.keys(productos.direcciones).length > 0 ? (
-                            <tr key={productos.direcciones.id}>
-                                <th scope="row">{productos.direcciones.nomenclatura}</th>
-                                <td>{productos.direcciones.zona}</td>
-                                <td>{productos.direcciones.ciudad}</td>
-                                <td>{productos.direcciones.departamento}</td>
-                                <td>{productos.direcciones.municipio}</td>
-                                <td>{productos.direcciones.lote}</td>
-                            </tr>
-                        ) : null}
-
-
-                    </tbody>
-                )}
-            </table>
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th scope="col">NUMERO TELEFONO</th>
-                        <th scope="col">EXTENSION</th>
-                        <th scope="col">NUMERO CELULAR</th>
-                        <th scope="col">NUMERO DE WHATZAP</th>
-
-                    </tr>
-                </thead>
-                <tbody>
-
-                    {productos.telefonos && Object.keys(productos.telefonos).length > 0 ? (
-                        <tr key={productos.telefonos.id}>
-                            <th scope="row">{productos.telefonos.numero_telefono}</th>
-                            <td>{productos.telefonos.extension}</td>
-                            <td>{productos.telefonos.numero_celular}</td>
-                            <td>{productos.telefonos.numero_de_whatzap}</td>
+            <div class="bd-example-snippet bd-code-snippet"><div class="bd-example">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">NOMENCLATURA</th>
+                            <th scope="col">ZONA</th>
+                            <th scope="col">CIUDAD</th>
+                            <th scope="col">DEPARTAMENTO</th>
+                            <th scope="col">MUNICIPIO</th>
+                            <th scope="col">LOTE</th>
                         </tr>
-                    ) : null}
-                </tbody>
-
-
-                <tbody>
+                    </thead>
                     {cargando ? (
                         <p>Cargando productos...</p>
                     ) : error ? (
-                        <tr>
-                            <td colSpan="4">
-                                <h1>error</h1>
-                            </td>
-                        </tr>
+                        <button class="btn btn-primary btn-block" onClick={() => enviaruta("/RegistroDireccionTelefono")}>REGISTRAR DIRECCIONES Y TELEFONOS</button>
                     ) : (
-                        <tr>
-                            <td>SALDO:</td>
-                            <td>Q {productos.pedido_encabezado ? productos.pedido_encabezado.total : 0}</td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+                        <tbody>
+                            {productos.direcciones && Object.keys(productos.direcciones).length > 0 ? (
+                                <tr scope="row" key={productos.direcciones.id}>
+                                    <th scope="row">{productos.direcciones.nomenclatura}</th>
+                                    <td>{productos.direcciones.zona}</td>
+                                    <td>{productos.direcciones.ciudad}</td>
+                                    <td>{productos.direcciones.departamento}</td>
+                                    <td>{productos.direcciones.municipio}</td>
+                                    <td>{productos.direcciones.lote}</td>
+                                </tr>
+                            ) : null}
 
+
+                        </tbody>
+                    )}
+                </table>
+            </div></div>
+
+            <div class="bd-example-snippet bd-code-snippet"><div class="bd-example">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">NUMERO TELEFONO</th>
+                            <th scope="col">EXTENSION</th>
+                            <th scope="col">NUMERO CELULAR</th>
+                            <th scope="col">NUMERO DE WHATSAPP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {productos.telefonos && Object.keys(productos.telefonos).length > 0 ? (
+                            <tr key={productos.telefonos.id}>
+                                <th scope="row">{productos.telefonos.numero_telefono}</th>
+                                <td>{productos.telefonos.extension}</td>
+                                <td>{productos.telefonos.numero_celular}</td>
+                                <td>{productos.telefonos.numero_de_whatzap}</td>
+                            </tr>
+                        ) : null}
+                    </tbody>
+
+
+
+                    <tbody>
+                        {cargando ? (
+                            <p>Cargando productos...</p>
+                        ) : error ? (
+                            <tr>
+                                <td colSpan="4">
+                                    <h1>error</h1>
+                                </td>
+                            </tr>
+                        ) : (
+                            <tr>
+                                <th scope="row">SALDO:</th>
+                                <td>Q {productos.pedido_encabezado ? productos.pedido_encabezado.total : 0}</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div></div>
 
 
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label>
-                        <input
-                            type="radio"
-                            value="cash"
-                            checked={paymentMethod === "cash"}
-                            onChange={handlePaymentMethodChange}
-                        />
-                        Con efectivo
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        <input
-                            type="radio"
-                            value="pos"
-                            checked={paymentMethod === "pos"}
-                            onChange={handlePaymentMethodChange}
-                        />
-                        Con POS
-                    </label>
-                </div>
+                <div class="mb-3">
+                    <div>
+                        <label>
+                            <input
+                                type="radio"
+                                value="cash"
+                                checked={paymentMethod === "cash"}
+                                onChange={handlePaymentMethodChange}
+                            />
+                            Con efectivo
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input
+                                type="radio"
+                                value="pos"
+                                checked={paymentMethod === "pos"}
+                                onChange={handlePaymentMethodChange}
+                            />
+                            Con POS
+                        </label>
+                    </div>
 
-                <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick()}>
-                    PAGO CON TARJETA DE CREDITO
-                </button>
-
-                <button type="submit">REALIZAR PEDIDO</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onClick={() => handleEditarClick()}>
+                        PAGO CON TARJETA DE CREDITO
+                    </button>
+                </div>
+                <button type="submit" class="btn btn-primary">REALIZAR PEDIDO</button>
             </form>
 
         </div>

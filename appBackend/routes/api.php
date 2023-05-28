@@ -5,6 +5,7 @@ use App\Http\Controllers\CarritoComprasController;
 use App\Http\Controllers\PersonasController;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\TiposproductoController;
+use App\Http\Controllers\WhatsAppController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,6 +41,8 @@ Route::post('EliminarCarritoCompras', [CarritoComprasController::class, 'destroy
 Route::get('getAllProductos', [ProductosController::class, 'index']);
 //hay que eliminar este de persona por que no lo voy a usar
 Route::post('RegistraPersona', [PersonasController::class, 'store']);
+
+Route::post('enviar-mensaje', [WhatsAppController::class, 'sendMessage']);
 
 Route::group([
     'middleware' => 'api',

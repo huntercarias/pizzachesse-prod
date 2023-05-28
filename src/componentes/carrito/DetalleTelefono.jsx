@@ -103,45 +103,41 @@ const DetalleDirecciones = () => {
             <h1>Detalle Telefono</h1>
 
             <button class="btn btn-primary btn-block" onClick={() => enviaruta("/RegistroDireccionTelefono")}>REGISTRAR DIRECCIONES Y TELEFONOS</button>
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th scope="col">NUMERO TELEFONO</th>
-                        <th scope="col">EXTENSION</th>
-                        <th scope="col">NUMERO CELULAR</th>
-                        <th scope="col">NUMERO DE WHATZAP</th>
+            <div class="bd-example-snippet bd-code-snippet"><div class="bd-example">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">NUMERO TELEFONO</th>
+                            <th scope="col">EXTENSION</th>
+                            <th scope="col">NUMERO CELULAR</th>
+                            <th scope="col">NUMERO  WHATSAPP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                    </tr>
-                </thead>
-                <tbody>
 
-                    {cargando ? (
-                        <p>Cargando productos...</p>
-                    ) : error ? (
-                        <button class="btn btn-primary btn-block" onClick={() => enviaruta("/RegistroDireccionTelefono")}>REGISTRAR DIRECCIONES Y TELEFONOS</button>
-                    ) : productos.length > 0 ? (
-                        productos.map((producto) => (
-                            <tr key={producto.id}>
+                        {cargando ? (
+                            <p>Cargando productos...</p>
+                        ) : error ? (
+                            <button class="btn btn-primary btn-block" onClick={() => enviaruta("/RegistroDireccionTelefono")}>REGISTRAR DIRECCIONES Y TELEFONOS</button>
+                        ) : productos.length > 0 ? (
+                            productos.map((producto) => (
 
-                                <th scope="row">{producto.numero_telefono}</th>
-                                <td>{producto.extension}</td>
-                                <td>{producto.numero_celular}</td>
-                                <td>{producto.numero_de_whatzap}</td>
-
-                                <td>
-                                    <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => SeleccionarDireccion(producto.id)}>
-                                        SELECCIONAR
-                                    </button>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
-                        <button class="btn btn-primary btn-block" onClick={() => enviaruta("/RegistroDireccionTelefono")}>REGISTRAR DIRECCIONES Y TELEFONOS</button>
-                    )}
-                </tbody>
-
-            </table>
+                                <tr key={producto.id} class="table-warning" onClick={() => SeleccionarDireccion(producto.id)}>
+                                    <th scope="row">{producto.numero_telefono}</th>
+                                    <td>{producto.extension}</td>
+                                    <td>{producto.numero_celular}</td>
+                                    <td>{producto.numero_de_whatzap}</td>
+                                </tr>
+                            ))
+                        ) : (
+                            <button class="btn btn-primary btn-block" onClick={() => enviaruta("/RegistroDireccionTelefono")}>REGISTRAR DIRECCIONES Y TELEFONOS</button>
+                        )}
+                    </tbody>
+                </table>
+            </div></div>
         </div>
+
     );
 };
 

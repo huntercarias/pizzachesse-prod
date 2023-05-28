@@ -52,29 +52,29 @@ const Inicio = () => {
 
 
     return (
-        <div className="container">
-            <div className="row">
-                <div className="container">
-                    <div className="row">
-                        {cargando ? (
-                            <p>Cargando productos...</p>
-                        ) : error ? (
-                            <p>{error}</p>
-                        ) : productos.length > 0 ? (
-                            productos.map((producto) => (
-                                <div className="col-lg-6 col-12 col-md-12">
-                                    <a onClick={() => handleEditarClick(producto.id)}>
-                                        <h1>{producto.descripcion}</h1>
-                                        <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} className="rounded mx-auto d-block" width="100%" height="700" />
-                                    </a>
-                                </div>
-                            ))
-                        ) : (
-                            <p>No se encontraron productos.</p>
-                        )}
+        <div className="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
+            {cargando ? (
+                <p>Cargando productos...</p>
+            ) : error ? (
+                <p>{error}</p>
+            ) : productos.length > 0 ? (
+                productos.map((producto) => (
+                    <div className="col" key={producto.id} onClick={() => handleEditarClick(producto.id)}>
+                        <div className="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg"
+                            style={{ backgroundImage: `url(data:image/jpg;base64,${producto.ruta_imagen})` }}>
+                            <div className="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                                <h3 className="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">{producto.titulo_corto}</h3>
+
+                                <a onClick={() => handleEditarClick(producto.id)}>
+                                    <h1>{producto.descripcion}</h1>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                ))
+            ) : (
+                <p>No se encontraron productos.</p>
+            )}
         </div>
     );
 };

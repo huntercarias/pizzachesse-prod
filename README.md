@@ -41,5 +41,9 @@ php artisan vendor:publish
 hnc
 php artisan jwt:secret
 
+## INSTALACION DE TWILIO PARA ENVIAR MENSAJES DE WHATZAP
+composer require twilio/sdk
+php artisan make:controller WhatsAppController
+
 
 

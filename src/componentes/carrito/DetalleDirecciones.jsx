@@ -105,48 +105,46 @@ const DetalleDirecciones = () => {
             <h1>Detalle Direcciones</h1>
 
             <button class="btn btn-primary btn-block" onClick={() => enviaruta("/RegistroDireccionTelefono")}>REGISTRAR DIRECCIONES Y TELEFONOS</button>
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th scope="col">NOMENCLATURA</th>
-                        <th scope="col">ZONA</th>
-                        <th scope="col">CIUDAD</th>
-                        <th scope="col">DEPARTAMENTO</th>
-                        <th scope="col">MUNICIPIO</th>
-                        <th scope="col">LOTE</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div class="bd-example-snippet bd-code-snippet"><div class="bd-example">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">NOMENCLATURA</th>
+                            <th scope="col">ZONA</th>
+                            <th scope="col">CIUDAD</th>
+                            <th scope="col">DEPARTAMENTO</th>
+                            <th scope="col">MUNICIPIO</th>
+                            <th scope="col">LOTE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                    {cargando ? (
-                        <p>Cargando productos...</p>
-                    ) : error ? (
 
-                        <button class="btn btn-primary btn-block" onClick={() => enviaruta("/RegistroDireccionTelefono")}>REGISTRAR DIRECCIONES Y TELEFONOS</button>
-                    ) : productos.length > 0 ? (
-                        productos.map((producto) => (
-                            <tr key={producto.id}>
+                        {cargando ? (
+                            <p>Cargando productos...</p>
+                        ) : error ? (
 
-                                <th scope="row">{producto.nomenclatura}</th>
-                                <td>{producto.zona}</td>
-                                <td>{producto.ciudad}</td>
-                                <td>{producto.departamento}</td>
-                                <td>{producto.municipio}</td>
-                                <td>{producto.lote}</td>
-                                <td>
-                                    <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => SeleccionarDireccion(producto.id)}>
-                                        SELECCIONAR
-                                    </button>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
+                            <button class="btn btn-primary btn-block" onClick={() => enviaruta("/RegistroDireccionTelefono")}>REGISTRAR DIRECCIONES Y TELEFONOS</button>
+                        ) : productos.length > 0 ? (
+                            productos.map((producto) => (
+                                <tr key={producto.id} onClick={() => SeleccionarDireccion(producto.id)}>
 
-                        <button class="btn btn-primary btn-block" onClick={() => enviaruta("/RegistroDireccionTelefono")}>REGISTRAR DIRECCIONES Y TELEFONOS</button>
-                    )}
-                </tbody>
+                                    <th scope="row">{producto.nomenclatura}</th>
+                                    <td>{producto.zona}</td>
+                                    <td>{producto.ciudad}</td>
+                                    <td>{producto.departamento}</td>
+                                    <td>{producto.municipio}</td>
+                                    <td>{producto.lote}</td>
+                                </tr>
+                            ))
+                        ) : (
 
-            </table>
+                            <button class="btn btn-primary btn-block" onClick={() => enviaruta("/RegistroDireccionTelefono")}>REGISTRAR DIRECCIONES Y TELEFONOS</button>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+            </div>
         </div>
     );
 };
