@@ -66,17 +66,6 @@ const DetallePedidosAdmin = () => {
                             productos.map((producto) => (
                                 <tr key={producto.id}>
                                     <th scope="row" >
-
-
-
-
-
-
-
-
-
-
-
                                         <img src={`data:image/jpg;base64,${producto.ruta_imagen}`} alt={`Imagen de ${producto.descripcion}`} class="rounded mx-auto d-block" width="60%" height="225" />
                                     </th>
                                     <td>
