@@ -11,11 +11,11 @@
 </head>
 
 <body>
-    <h1>{{ $details['title'] }}</h1>
+    <p>{{ $details['title'] }}</p>
     <p>{{ $details['body'] }}</p>
-    <p class="lead">
-        Fue registrado exitosamente.
-    </p>
+    <h1>
+        {{ $details['mensaje'] }}
+    </h1>
 
 </body>
 
