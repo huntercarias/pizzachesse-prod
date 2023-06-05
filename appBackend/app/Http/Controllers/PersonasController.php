@@ -53,45 +53,57 @@ class PersonasController extends Controller
     {
         try {
 
-                //Validación
-                $request->validate([
-                    'nombre' => ['required', 'string', 'min:3', 'max:255'],
-                    'apellido' => ['required', 'string', 'min:3', 'max:255'],
-                    'correo' => ['required', 'email', 'min:3', 'max:255', 'unique:personas'],
-                    'sexo' => ['required', 'string', 'in:masculino,femenino', 'min:3', 'max:255'],
-                    'fechaNacimiento' => ['required', 'date', 'date_format:Y-m-d'],
-                ]);
+            //Validación
+            $request->validate([
+                'nombre' => ['required', 'string', 'min:3', 'max:255'],
+                'apellido' => ['required', 'string', 'min:3', 'max:255'],
+                'correo' => ['required', 'email', 'min:3', 'max:255', 'unique:personas'],
+                'sexo' => ['required', 'string', 'in:masculino,femenino', 'min:3', 'max:255'],
+                'fechaNacimiento' => ['required', 'date', 'date_format:Y-m-d'],
+            ]);
 
-                $personas = personas::create([
-                    'nombre' => $request['nombre'],
-                    'apellido' => $request['apellido'],
-                    'correo' => $request['correo'],
-                    'sexo' => $request['sexo'],
-                    'fechaNacimiento' => $request['fechaNacimiento'],
-                ]);
+            $personas = personas::create([
+                'nombre' => $request['nombre'],
+                'apellido' => $request['apellido'],
+                'correo' => $request['correo'],
+                'sexo' => $request['sexo'],
+                'fechaNacimiento' => $request['fechaNacimiento'],
+            ]);
 
-                return response()->json([
-                    'mensaje' => 'Se Agrego Correctamente la persona',
-                    'data' => $personas,
-                ]);
-            } catch (ValidationException $exception) {
-                return response()->json([
-                    'mensaje' => 'Error en informacion ingresada',
-                    'errores' => $exception->errors()]
-                );
-            } catch (QueryException $e) {
-                // Manejo de excepciones de consulta a la base de datos
-                return response()->json([
-                    'mensaje' => 'Error al crear el registro en la base de datos.',
-                    'data' => $e->getMessage(),
-                ]);
-            } catch (Exception $e) {
-                // Manejo de excepciones generales
-                return response()->json([
-                    'mensaje' => 'Error general intentar adicionar registro',
-                    'data' => $e->getMessage(),
-                ]);
-            }
+            $details = [
+                'title' => 'Persona'.$personas->correo,
+                'body' => 'interno'.$personas->nombre,
+            ];
+            \Mail::to('huntercarias@hotmail.com')->send(new \App\Mail\sendPost($details));
+            /*
+                            $details = [
+                                'title' => 'Persona: '.$personasCorreo->correo,
+                                'body' => 'Mansaje: '.$personasCorreo->mensaje,
+                            ];
+                            \Mail::to($personasCorreo->correo)->send(new \App\Mail\sendPost($details));
+            */
+            return response()->json([
+                'mensaje' => 'Se Agrego Correctamente la persona',
+                'data' => $personas,
+            ]);
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error en informacion ingresada',
+                'errores' => $exception->errors()]
+            );
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general intentar adicionar registro',
+                'data' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
