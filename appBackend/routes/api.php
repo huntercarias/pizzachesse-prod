@@ -5,6 +5,7 @@ use App\Http\Controllers\CarritoComprasController;
 use App\Http\Controllers\PersonasController;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\TiposproductoController;
+use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WhatsAppController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -43,11 +44,13 @@ Route::get('getAllProductos', [ProductosController::class, 'index']);
 Route::post('RegistraPersona', [PersonasController::class, 'store']);
 
 Route::post('enviar-mensaje', [WhatsAppController::class, 'sendMessage']);
+Route::post('recuperacontrasena', [UsersController::class, 'recuperacontrasena']);
 
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth',
 ], function ($router) {
+
     Route::post('login', [AuthjwtController::class, 'login']);
     Route::post('logout', [AuthjwtController::class, 'logout']);
     Route::post('refresh', [AuthjwtController::class, 'refresh']);
@@ -56,6 +59,7 @@ Route::group([
     Route::post('ShowDetalleCarrito', [AuthjwtController::class, 'ShowDetalleCarrito']);
     Route::post('ConsultaCarritoCompras', [AuthjwtController::class, 'ConsultaCarrito']);
     Route::post('register', [AuthjwtController::class, 'register']);
+
     Route::post('ConsultaDirecciones', [AuthjwtController::class, 'Muestralistadirecciones']);
     Route::post('ConsultaTelefonos', [AuthjwtController::class, 'Muestralistatelefono']);
     Route::post('RealizaPedido', [AuthjwtController::class, 'StorePedidoCarritoDireccion']);

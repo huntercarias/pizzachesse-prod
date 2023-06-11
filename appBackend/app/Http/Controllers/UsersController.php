@@ -2,64 +2,74 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\users;
+use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class UsersController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function recuperacontrasena(Request $request)
     {
-        //
-    }
+        try {
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|string|email|max:100|exists:users',
+            ]);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+            if ($validator->fails()) {
+                return response()->json($validator->errors()->toJson(), 400);
+            }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(users $users)
-    {
-        //
-    }
+            $longitud = 8;
+            // Generar una secuencia de bytes aleatorios
+            $bytes = random_bytes($longitud);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(users $users)
-    {
-        //
-    }
+            // Convertir los bytes en una cadena legible
+            $contrasena = bin2hex($bytes);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, users $users)
-    {
-        //
-    }
+            return response()->json([
+                'message' => '¡Contraseña restaurada exitosamente!',
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(users $users)
-    {
-        //
+            ], 201);
+            $user = User::where('email', $request->email)->first();
+
+            if (! $user) {
+                // El usuario no existe, manejar el error
+                return response()->json(['error' => 'No se encontró ningún usuario con ese correo electrónico.'], 404);
+            }
+            $user->password = bcrypt($contrasena);
+            $user->save();
+
+            $details = [
+                'title' => 'Correo: '.$request->email,
+                'body' => 'Contraseña: '.$contrasena,
+                'mensaje' => 'Contraseña restablecida',
+            ];
+            \Mail::to('huntercarias@hotmail.com')->send(new \App\Mail\sendPost($details));
+
+            return response()->json([
+                'message' => '¡Contraseña restaurada exitosamente!',
+                'user' => $user,
+            ], 201);
+        } catch (ValidationException $exception) {
+            return response()->json([
+                'mensaje' => 'Error en la información ingresada',
+                'errores' => $exception->errors(),
+            ]);
+        } catch (QueryException $e) {
+            // Manejo de excepciones de consulta a la base de datos
+            return response()->json([
+                'mensaje' => 'Error al crear el registro en la base de datos.',
+                'data' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            // Manejo de excepciones generales
+            return response()->json([
+                'mensaje' => 'Error general al intentar restaurar la contraseña.',
+                'data' => $e->getMessage(),
+            ]);
+        }
     }
 }
