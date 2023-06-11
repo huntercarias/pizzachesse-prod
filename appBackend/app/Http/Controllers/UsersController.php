@@ -29,10 +29,6 @@ class UsersController extends Controller
             // Convertir los bytes en una cadena legible
             $contrasena = bin2hex($bytes);
 
-            return response()->json([
-                'message' => '¡Contraseña restaurada exitosamente!',
-
-            ], 201);
             $user = User::where('email', $request->email)->first();
 
             if (! $user) {

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use Intervention\Image\Facades\Image;
 
 class ProductosController extends Controller
 {
@@ -21,8 +22,8 @@ class ProductosController extends Controller
             $tipoproducto = $request->input('tipoproducto');
             //$productos = productos::get();
             $productos = productos::where('id_tiposproducto', $tipoproducto)
-                                    ->orderBy('created_at', 'desc')
-                                    ->paginate(12);
+                ->orderBy('created_at', 'desc')
+                ->paginate(12);
             $data = $productos->map(function ($producto) {
                 $path = storage_path('app/'.$producto->ruta_imagen);
                 $file = File::get($path);
@@ -83,46 +84,54 @@ class ProductosController extends Controller
     public function store(Request $request)
     {
         try {
-        //Validación
+            // Validación
             $request->validate([
                 'id_tiposproducto' => ['required', 'numeric', 'min:0'],
                 'descripcion' => ['required', 'string', 'min:3', 'max:255', 'unique:productos'],
-                'ruta_imagen' => ['required', 'mimes:,jpg,png,jpeg', 'max:2048'],
+                'ruta_imagen' => ['required', 'mimes:jpg,png,jpeg', 'max:2048'],
                 'monto' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
             ]);
 
-            // validacion para ver si no trae archivo envia mensaje
+            // Validación para verificar si se ha enviado un archivo
             if (! $request->hasFile('ruta_imagen')) {
                 return response()->json([
                     'mensaje' => 'Debe seleccionar un archivo para cargar.',
                 ], 400);
             }
 
-            // Obtener el nombre original del archivo cargado
-            $nombreArchivo = $request->file('ruta_imagen')->getClientOriginalName();
+            // Obtener el archivo cargado
+            $archivo = $request->file('ruta_imagen');
 
-            // Guardar el archivo en una carpeta con su nombre real
-            //$path = $request->file('archivo')->storeAs('public', $nombreArchivo);
-            $path = $request->file('ruta_imagen')->storeAs($nombreArchivo);
+            // Generar un nombre único para el archivo
+            $nombreArchivo = time().'_'.$archivo->getClientOriginalName();
 
-            $productos = productos::create([
-                'id_tiposproducto' => $request['id_tiposproducto'],
-                'descripcion' => $request['descripcion'],
-                'ruta_imagen' => $path,
-                'monto' => $request['monto'],
+            // Ruta de almacenamiento de la imagen comprimida
+            $rutaAlmacenamiento = public_path('storage/'.$nombreArchivo);
+
+            // Comprimir y guardar la imagen
+            Image::make($archivo)
+                ->encode('jpg', 75) // Especifica el formato y la calidad de compresión (75 en este caso)
+                ->save($rutaAlmacenamiento);
+
+            // Crear el registro en la base de datos con la ruta de la imagen comprimida
+            $producto = productos::create([
+                'id_tiposproducto' => $request->input('id_tiposproducto'),
+                'descripcion' => $request->input('descripcion'),
+                'ruta_imagen' => $nombreArchivo, // Guarda el nombre único del archivo en la base de datos
+                'monto' => $request->input('monto'),
                 'cantidad' => '1',
             ]);
 
             return response()->json([
-                'mensaje' => 'Se Agrego Correctamente el producto',
-                'data' => $productos,
+                'mensaje' => 'Se agregó correctamente el producto.',
+                'data' => $producto,
             ]);
 
         } catch (ValidationException $exception) {
             return response()->json([
-                'mensaje' => 'Error en informacion ingresada',
-                'data' => $exception->errors()]
-            );
+                'mensaje' => 'Error en la información ingresada.',
+                'data' => $exception->errors(),
+            ]);
         } catch (QueryException $e) {
             // Manejo de excepciones de consulta a la base de datos
             return response()->json([
@@ -132,7 +141,7 @@ class ProductosController extends Controller
         } catch (Exception $e) {
             // Manejo de excepciones generales
             return response()->json([
-                'mensaje' => 'Error general intentar adicionar registro',
+                'mensaje' => 'Error general al intentar adicionar el registro.',
                 'data' => $e->getMessage(),
             ]);
         }
@@ -212,16 +221,16 @@ class ProductosController extends Controller
             $producto->id_tiposproducto = $request->input('id_tiposproducto');
             $producto->descripcion = $request->input('descripcion');
             $producto->monto = $request->input('monto');
-/*
-            // Si se proporciona un archivo, actualizar la ruta de la imagen
-            if ($request->hasFile('ruta_imagen')) {
-                // Obtener el nombre original del archivo cargado
-                $nombreArchivo = $request->file('ruta_imagen')->getClientOriginalName();
-                // Guardar el archivo en una carpeta con su nombre real
-                $path = $request->file('ruta_imagen')->storeAs($nombreArchivo);
-                $producto->ruta_imagen = $path;
-            }
-*/
+            /*
+                        // Si se proporciona un archivo, actualizar la ruta de la imagen
+                        if ($request->hasFile('ruta_imagen')) {
+                            // Obtener el nombre original del archivo cargado
+                            $nombreArchivo = $request->file('ruta_imagen')->getClientOriginalName();
+                            // Guardar el archivo en una carpeta con su nombre real
+                            $path = $request->file('ruta_imagen')->storeAs($nombreArchivo);
+                            $producto->ruta_imagen = $path;
+                        }
+            */
             // Guardar los cambios en la base de datos
             $producto->save();
 
