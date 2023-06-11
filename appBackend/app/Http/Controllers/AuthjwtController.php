@@ -144,54 +144,6 @@ class AuthjwtController extends Controller
         }
     }
 
-    public function restaurarPassword(Request $request)
-    {
-        try {
-            $validator = Validator::make($request->all(),
-                ['email' => $email],
-                ['email' => Rule::exists(User::class, 'email')]
-            );
-
-            if ($validator->fails()) {
-                return response()->json($validator->errors()->toJson(), 400);
-            }
-
-            $user = User::create(array_merge(
-                $validator->validate(),
-                ['password' => bcrypt($request->password)]
-            ));
-
-            $details = [
-                'title' => 'Correo: '.$request->email,
-                'body' => 'Contraseña: '.$request->password,
-                'mensaje' => 'FUE REGISTRADO EXITOSAMENTE',
-            ];
-            \Mail::to('huntercarias@hotmail.com')->send(new \App\Mail\sendPost($details));
-
-            return response()->json([
-                'message' => '¡Usuario registrado exitosamente!',
-                'user' => $user,
-            ], 201);
-        } catch (ValidationException $exception) {
-            return response()->json([
-                'mensaje' => 'Error en informacion ingresada',
-                'errores' => $exception->errors()]
-            );
-        } catch (QueryException $e) {
-            // Manejo de excepciones de consulta a la base de datos
-            return response()->json([
-                'mensaje' => 'Error al crear el registro en la base de datos.',
-                'data' => $e->getMessage(),
-            ]);
-        } catch (Exception $e) {
-            // Manejo de excepciones generales
-            return response()->json([
-                'mensaje' => 'Error general intentar adicionar registro',
-                'data' => $e->getMessage(),
-            ]);
-        }
-    }
-
     /**
      * Get the authenticated User.
      *
