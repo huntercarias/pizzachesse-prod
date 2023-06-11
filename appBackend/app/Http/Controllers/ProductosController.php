@@ -84,7 +84,7 @@ class ProductosController extends Controller
     public function store(Request $request)
     {
         try {
-            // Validación
+            //Validación
             $request->validate([
                 'id_tiposproducto' => ['required', 'numeric', 'min:0'],
                 'descripcion' => ['required', 'string', 'min:3', 'max:255', 'unique:productos'],
@@ -92,12 +92,15 @@ class ProductosController extends Controller
                 'monto' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
             ]);
 
-            // Validación para verificar si se ha enviado un archivo
+            // validacion para ver si no trae archivo envia mensaje
             if (! $request->hasFile('ruta_imagen')) {
                 return response()->json([
                     'mensaje' => 'Debe seleccionar un archivo para cargar.',
                 ], 400);
             }
+
+            // Obtener el nombre original del archivo cargado
+            //$nombreArchivo = $request->file('ruta_imagen')->getClientOriginalName();
 
             // Obtener el archivo cargado
             $archivo = $request->file('ruta_imagen');
@@ -105,33 +108,33 @@ class ProductosController extends Controller
             // Generar un nombre único para el archivo
             $nombreArchivo = time().'_'.$archivo->getClientOriginalName();
 
-            // Ruta de almacenamiento de la imagen comprimida
-            $rutaAlmacenamiento = public_path('storage/'.$nombreArchivo);
-
+            // Guardar el archivo en una carpeta con su nombre real
+            //$path = $request->file('archivo')->storeAs('public', $nombreArchivo);
+            $path = $request->file('ruta_imagen')->storeAs($nombreArchivo);
+            //$path = $request->file('ruta_imagen')->storeAs('public/storage', $nombreArchivo);
             // Comprimir y guardar la imagen
             Image::make($archivo)
-                ->encode('jpg', 75) // Especifica el formato y la calidad de compresión (75 en este caso)
-                ->save($rutaAlmacenamiento);
+                ->encode(null, 75) // Especifica el formato y la calidad de compresión (75 en este caso)
+                ->save($path);
 
-            // Crear el registro en la base de datos con la ruta de la imagen comprimida
-            $producto = productos::create([
-                'id_tiposproducto' => $request->input('id_tiposproducto'),
-                'descripcion' => $request->input('descripcion'),
-                'ruta_imagen' => $nombreArchivo, // Guarda el nombre único del archivo en la base de datos
-                'monto' => $request->input('monto'),
+            $productos = productos::create([
+                'id_tiposproducto' => $request['id_tiposproducto'],
+                'descripcion' => $request['descripcion'],
+                'ruta_imagen' => $path,
+                'monto' => $request['monto'],
                 'cantidad' => '1',
             ]);
 
             return response()->json([
-                'mensaje' => 'Se agregó correctamente el producto.',
-                'data' => $producto,
+                'mensaje' => 'Se Agrego Correctamente el producto',
+                'data' => $productos,
             ]);
 
         } catch (ValidationException $exception) {
             return response()->json([
-                'mensaje' => 'Error en la información ingresada.',
-                'data' => $exception->errors(),
-            ]);
+                'mensaje' => 'Error en informacion ingresada',
+                'data' => $exception->errors()]
+            );
         } catch (QueryException $e) {
             // Manejo de excepciones de consulta a la base de datos
             return response()->json([
@@ -141,7 +144,7 @@ class ProductosController extends Controller
         } catch (Exception $e) {
             // Manejo de excepciones generales
             return response()->json([
-                'mensaje' => 'Error general al intentar adicionar el registro.',
+                'mensaje' => 'Error general intentar adicionar registro',
                 'data' => $e->getMessage(),
             ]);
         }
